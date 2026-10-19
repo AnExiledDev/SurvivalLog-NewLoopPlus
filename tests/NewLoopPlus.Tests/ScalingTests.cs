@@ -166,6 +166,127 @@ public class ScaledValuesTests
         Assert.Null(Doubling().Scaled(1));
         Assert.Null(Doubling().Original(1));
     }
+
+    [Fact]
+    public void A_changed_multiplier_scales_the_game_s_own_value_and_never_compounds()
+    {
+        var factor = 2;
+        var values = new ScaledValues<int, int>((_, value) => value * factor);
+
+        values.Next(1, 10);
+        factor = 3;
+        values.Rescale();
+
+        Assert.Equal((int?)30, values.Next(1, 20));
+        Assert.Null(values.Next(1, 30));
+        Assert.Equal((int?)10, values.Original(1));
+    }
+
+    [Fact]
+    public void Two_changes_before_the_next_check_still_replace_the_value_in_the_table()
+    {
+        var factor = 2;
+        var values = new ScaledValues<int, int>((_, value) => value * factor);
+
+        values.Next(1, 10);
+        factor = 3;
+        values.Rescale();
+        factor = 5;
+        values.Rescale();
+
+        Assert.Equal((int?)50, values.Next(1, 20));
+        Assert.Equal((int?)10, values.Original(1));
+    }
+
+    [Fact]
+    public void A_reload_after_a_change_is_taken_as_the_game_s_new_value()
+    {
+        var factor = 2;
+        var values = new ScaledValues<int, int>((_, value) => value * factor);
+
+        values.Next(1, 10);
+        factor = 3;
+        values.Rescale();
+        values.Next(1, 20);
+
+        Assert.Equal((int?)21, values.Next(1, 7));
+        Assert.Equal((int?)7, values.Original(1));
+    }
+
+    [Fact]
+    public void Once_replaced_the_old_value_counts_as_a_reload_again()
+    {
+        var factor = 2;
+        var values = new ScaledValues<int, int>((_, value) => value * factor);
+
+        values.Next(1, 10);
+        factor = 3;
+        values.Rescale();
+        values.Next(1, 20);
+
+        Assert.Equal((int?)60, values.Next(1, 20));
+        Assert.Equal((int?)20, values.Original(1));
+    }
+}
+
+/// <summary>A new endless game starts with the game's 500 points times the player's setting.</summary>
+public class EndlessGrantTests
+{
+    [Theory]
+    [InlineData(2, 1000)]
+    [InlineData(0.5, 250)]
+    [InlineData(0, 0)]
+    [InlineData(-1, 0)]
+    public void The_starting_points_follow_their_own_multiplier(double multiplier, int expected)
+    {
+        Assert.Equal(expected, new PointsMultipliers(1, 1, 1, 1, multiplier).EndlessGrant(500));
+    }
+
+    [Fact]
+    public void The_overall_multiplier_does_not_touch_the_starting_points()
+    {
+        Assert.Equal(500, new PointsMultipliers(3, 1, 1, 1).EndlessGrant(500));
+    }
+
+    [Fact]
+    public void A_starting_points_setting_alone_counts_as_a_change()
+    {
+        Assert.True(new PointsMultipliers(1, 1, 1, 1, 2).ChangesAnything);
+    }
+}
+
+/// <summary>The loop bonus is paid once, as the loop reward screen opens after a run.</summary>
+public class StartingBonusTests
+{
+    [Fact]
+    public void The_bonus_is_paid_when_the_screen_opens_after_a_run()
+    {
+        Assert.Equal((int?)50, StartingBonus.Due(StartingBonus.AfterRunMode, isAlreadyWaiting: false, 50));
+    }
+
+    [Fact]
+    public void Reopening_the_screen_in_the_same_loop_pays_nothing_more()
+    {
+        Assert.Null(StartingBonus.Due(StartingBonus.AfterRunMode, isAlreadyWaiting: true, 50));
+    }
+
+    [Fact]
+    public void Opening_the_screen_from_the_menu_pays_nothing()
+    {
+        Assert.Null(StartingBonus.Due(1, isAlreadyWaiting: false, 50));
+    }
+
+    [Fact]
+    public void A_bonus_of_0_pays_nothing()
+    {
+        Assert.Null(StartingBonus.Due(StartingBonus.AfterRunMode, isAlreadyWaiting: false, 0));
+    }
+
+    [Fact]
+    public void A_huge_bonus_is_capped()
+    {
+        Assert.Equal((int?)StartingBonus.Max, StartingBonus.Due(StartingBonus.AfterRunMode, isAlreadyWaiting: false, int.MaxValue));
+    }
 }
 
 /// <summary>The game caches two of the scaled values the first time it reads them.</summary>

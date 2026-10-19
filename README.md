@@ -9,12 +9,15 @@ End a run whenever you like and go straight to the death screen, so you can star
 - **Shows what you will get**: in a normal run the dialog shows the Planning Points the death screen will pay, split into survival points, crises and days survived. In Casual mode it says the run gives no Planning Points. In endless and challenge runs it says the run is settled on that mode's own results screen.
 - **The game's own death**: on confirm the pause menu closes, and as soon as the game runs again the run ends exactly as a death does. The death screen, the settlement and the save are the game's own.
 - **Planning Points multipliers**: one overall setting, plus one each for the three parts a run pays: survival points, crises and events, and days survived. The death screen, its breakdown and the End Run preview all show the scaled points.
+- **Starting bonus**: extra Planning Points at the start of each new loop, paid as the loop reward screen opens after a run, so you can spend them right there.
+- **Endless starting points**: a multiplier for the 500 Planning Points a new endless game starts with.
+- **Change it in game**: the points multipliers and the starting bonus can be changed on the Mod Manager's Mods screen and apply at once.
 - **Loop reward costs**: one multiplier for what every loop reward upgrade costs, plus your own multiplier for single talents by ID. The upgrade screen shows, checks and charges the new price, and its reset refunds what you paid.
 - **Log file**: every confirm, the points preview and how the end went are written to `BepInEx\new-loop-plus.log`.
 
 The button only shows in a loaded run past the tutorial that has not already ended. The button and the dialog follow the game's language, English or Simplified Chinese.
 
-New Loop Plus adds no data of its own to your save. You can remove it at any time; points and costs go back to the game's own at the next start. Settings are in [CONFIG.md](CONFIG.md).
+New Loop Plus adds no data of its own to your save. You can remove it at any time; points and costs go back to the game's own at the next start. A starting bonus already paid stays paid. Settings are in [CONFIG.md](CONFIG.md).
 
 ## Known issues and limits
 
@@ -27,11 +30,13 @@ New Loop Plus adds no data of its own to your save. You can remove it at any tim
 
 - Survival Log 1.1.18902. Built and tested on this version; a game update can break it until the mod is updated.
 - The [BepInEx Pack for Survival Log](https://www.nexusmods.com/survivallog/mods/12), the BepInEx 6 (IL2CPP) build for the game.
+- [Exiled's Toolkit](https://github.com/AnExiledDev/SurvivalLog-ExiledToolkit) 0.4.0 or newer, which applies changed settings at once. New Loop Plus does not load without it.
 
 ## Install
 
 1. Install the [BepInEx Pack for Survival Log](https://www.nexusmods.com/survivallog/mods/12) (if no other mods were installed before, start the game once so BepInEx finishes setup, then quit).
-2. Copy `NewLoopPlus.dll` into the `BepInEx\plugins` folder inside the game folder (the folder with `SurvivalLog.exe`).
+2. Install Exiled's Toolkit: download `ExiledToolkit-x.y.z.zip` from [its latest release](https://github.com/AnExiledDev/SurvivalLog-ExiledToolkit/releases/latest) or from Nexus Mods, and extract it into the game folder (the folder with `SurvivalLog.exe`).
+3. Copy `NewLoopPlus.dll` into the `BepInEx\plugins` folder inside the game folder (the folder with `SurvivalLog.exe`).
 
 ## Uninstall
 
@@ -39,7 +44,7 @@ Delete `NewLoopPlus.dll` from the `BepInEx\plugins` folder. For a clean slate, a
 
 ## Troubleshooting
 
-Check `BepInEx\LogOutput.log` for `===== New Loop Plus 0.2.0 started`. The same line, plus every confirm, the points preview and how the end went, is in `BepInEx\new-loop-plus.log`, which survives restarts.
+Check `BepInEx\LogOutput.log` for `===== New Loop Plus 0.3.0 started`. The same line, plus every confirm, the points preview and how the end went, is in `BepInEx\new-loop-plus.log`, which survives restarts.
 
 With any multiplier set, the log also says what was scaled, such as `survival points now convert at ...` or `... loop reward levels now cost ...`. A per-talent entry it could not read is named there too.
 
@@ -59,7 +64,7 @@ dotnet build src/NewLoopPlus -c Release -p:GameDir="C:\path\to\Survival Log"
 
 `GameDir` is the game folder. The default in the project file is a local path you will almost certainly need to override. The output DLL is at `src\NewLoopPlus\bin\Release\NewLoopPlus.dll`.
 
-The unit tests cover the pure rules (the points preview, the confirm-then-end flow, the page messages, the texts, and the points and cost multipliers) and need nothing from the game:
+The unit tests cover the pure rules (the points preview, the confirm-then-end flow, the page messages, the texts, the points and cost multipliers, and the starting bonus) and need nothing from the game:
 
 ```
 dotnet test tests/NewLoopPlus.Tests

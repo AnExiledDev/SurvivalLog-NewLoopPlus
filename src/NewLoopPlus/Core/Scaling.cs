@@ -5,19 +5,22 @@ namespace NewLoopPlus.Core;
 
 /// <summary>
 /// How much the Planning Points a run earns are scaled. Each part is multiplied by its own setting and by
-/// <paramref name="Overall"/>; a negative setting counts as 0.
+/// <paramref name="Overall"/>; a negative setting counts as 0. <paramref name="EndlessStart"/> scales the points an
+/// endless game starts with, which no run earned, so <paramref name="Overall"/> leaves it alone.
 /// </summary>
-public sealed record PointsMultipliers(double Overall, double Survival, double Crisis, double Record)
+public sealed record PointsMultipliers(double Overall, double Survival, double Crisis, double Record, double EndlessStart = 1)
 {
     public static readonly PointsMultipliers None = new(1, 1, 1, 1);
 
-    public bool ChangesAnything => SurvivalFactor != 1 || CrisisFactor != 1 || RecordFactor != 1;
+    public bool ChangesAnything => SurvivalFactor != 1 || CrisisFactor != 1 || RecordFactor != 1 || EndlessStartFactor != 1;
 
     private double SurvivalFactor => Factor(Survival);
 
     private double CrisisFactor => Factor(Crisis);
 
     private double RecordFactor => Factor(Record);
+
+    private double EndlessStartFactor => Math.Max(0, EndlessStart);
 
     /// <summary>The game's survival points to Planning Points rate. The game holds it in single precision.</summary>
     public float SurvivalRate(float original) => (float)(original * SurvivalFactor);
@@ -29,6 +32,9 @@ public sealed record PointsMultipliers(double Overall, double Survival, double C
     /// A crisis or event reward. Only rewards are scaled; a penalty (0 or less) stays as the game set it.
     /// </summary>
     public int EventReward(int original) => original <= 0 ? original : Scaling.Round(original * CrisisFactor);
+
+    /// <summary>The Planning Points a new endless game starts with.</summary>
+    public int EndlessGrant(int original) => Scaling.Round(original * EndlessStartFactor);
 
     private double Factor(double part) => Math.Max(0, part) * Math.Max(0, Overall);
 }

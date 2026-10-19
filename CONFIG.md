@@ -1,6 +1,6 @@
 # New Loop Plus settings
 
-Settings live in `BepInEx\config\com.dev.survivallog.newloopplus.cfg`, created the first time the game starts with the mod. Edit the file while the game is closed; changes apply at the next game start. Delete the file to get the defaults back. Every multiplier goes from 0 to 100, and 1 is the game's own amount.
+Settings live in `BepInEx\config\com.dev.survivallog.newloopplus.cfg`, created the first time the game starts with the mod. Change it in game on the Mod Manager's Mods screen, or edit the file while the game is closed. Points, Endless and Loop settings apply at once; Costs settings apply at the next game start. Delete the file to get the defaults back. Every multiplier goes from 0 to 100, and 1 is the game's own amount.
 
 ## Points
 
@@ -12,6 +12,18 @@ Settings live in `BepInEx\config\com.dev.survivallog.newloopplus.cfg`, created t
 | `RecordMultiplier` | `1` | Multiplies the Planning Points paid for each survived day. |
 
 Each part uses its own setting times `OverallMultiplier`, so `OverallMultiplier = 2` with `SurvivalMultiplier = 1.5` pays 3 times the survival part.
+
+## Endless
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| `StartingPointsMultiplier` | `1` | Multiplies the Planning Points a new endless game starts with (500 in the game). 0 starts with none. `OverallMultiplier` does not apply to it. |
+
+## Loop
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| `StartingBonus` | `0` | Extra Planning Points paid at the start of each new loop, as the loop reward screen opens after a run, so they can be spent there. Goes from 0 to 100000. 0 pays none. |
 
 ## Costs
 
