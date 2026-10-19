@@ -13,17 +13,20 @@ End a run whenever you like and go straight to the death screen, so you can star
 - **Endless starting points**: a multiplier for the 500 Planning Points a new endless game starts with.
 - **Change it in game**: the points multipliers and the starting bonus can be changed on the Mod Manager's Mods screen and apply at once.
 - **Loop reward costs**: one multiplier for what every loop reward upgrade costs, plus your own multiplier for single talents by ID. The upgrade screen shows, checks and charges the new price, and its reset refunds what you paid.
+- **Talents file**: `BepInEx\config\NewLoopPlus.Talents.json` lets you change loop rewards by hand: costs, buffs, text, extra levels, and new talents copied from existing ones. It ships with ten talents the game has in its data but never offers, all switched off. Five work as the game left them (Driver, No-Till Soil, Trailblazer, Liaison, Radio Station). Five were unfinished and get new effects from the mod (Well-Connected, Last-Minute Preparation, Resourceful, Yoga Master, Shut-In). See [CONFIG.md](CONFIG.md#talents-file).
 - **Log file**: every confirm, the points preview and how the end went are written to `BepInEx\new-loop-plus.log`.
 
 The button only shows in a loaded run past the tutorial that has not already ended. The button and the dialog follow the game's language, English or Simplified Chinese.
 
-New Loop Plus adds no data of its own to your save. You can remove it at any time; points and costs go back to the game's own at the next start. A starting bonus already paid stays paid. Settings are in [CONFIG.md](CONFIG.md).
+With every talent in the talents file switched off, New Loop Plus adds no data of its own to your save. A switched-on talent can leave its levels, and with Last-Minute Preparation its door and window buffs, in the save; switch it off and play a run before removing the mod. You can remove it at any time; points and costs go back to the game's own at the next start. A starting bonus already paid stays paid. Settings are in [CONFIG.md](CONFIG.md).
 
 ## Known issues and limits
 
 - If the game is still paused five seconds after the pause menu closes (another window holding the game paused, for example), the run is not ended and a short message says so. Close that window and try again.
 - Points are whole numbers, so scaled values are rounded (halves round up). A small reward times a small multiplier can round to 0.
 - Crisis and event penalties that take Planning Points away are not scaled.
+- The talents file is read once at game start. Changes need a restart.
+- The talents that were unfinished in the game are the mod's own design, and their text was rewritten to match what they now do.
 - The points preview is worked out the way the game settles a death. If a value it needs cannot be read, the dialog says the death screen will show the points instead.
 
 ## Requirements
@@ -40,13 +43,13 @@ New Loop Plus adds no data of its own to your save. You can remove it at any tim
 
 ## Uninstall
 
-Delete `NewLoopPlus.dll` from the `BepInEx\plugins` folder. For a clean slate, also delete `BepInEx\config\com.dev.survivallog.newloopplus.cfg` and `BepInEx\new-loop-plus.log`.
+Delete `NewLoopPlus.dll` from the `BepInEx\plugins` folder. For a clean slate, also delete `BepInEx\config\com.dev.survivallog.newloopplus.cfg`, `BepInEx\config\NewLoopPlus.Talents.json` and `BepInEx\new-loop-plus.log`.
 
 ## Troubleshooting
 
-Check `BepInEx\LogOutput.log` for `===== New Loop Plus 0.3.0 started`. The same line, plus every confirm, the points preview and how the end went, is in `BepInEx\new-loop-plus.log`, which survives restarts.
+Check `BepInEx\LogOutput.log` for `===== New Loop Plus 0.4.0 started`. The same line, plus every confirm, the points preview and how the end went, is in `BepInEx\new-loop-plus.log`, which survives restarts.
 
-With any multiplier set, the log also says what was scaled, such as `survival points now convert at ...` or `... loop reward levels now cost ...`. A per-talent entry it could not read is named there too.
+With any multiplier set, the log also says what was scaled, such as `survival points now convert at ...` or `... loop reward levels now cost ...`. A per-talent entry it could not read is named there too. The talents file adds a line such as `talents file: enabled 1006, 2017; 10 table rows written`, plus a line for each entry it skipped and why.
 
 If End Run does not show in the pause menu, make sure you are in a loaded run past the tutorial. If the run did not end after you confirmed, the message on screen and the log say why.
 
@@ -64,7 +67,7 @@ dotnet build src/NewLoopPlus -c Release -p:GameDir="C:\path\to\Survival Log"
 
 `GameDir` is the game folder. The default in the project file is a local path you will almost certainly need to override. The output DLL is at `src\NewLoopPlus\bin\Release\NewLoopPlus.dll`.
 
-The unit tests cover the pure rules (the points preview, the confirm-then-end flow, the page messages, the texts, the points and cost multipliers, and the starting bonus) and need nothing from the game:
+The unit tests cover the pure rules (the points preview, the confirm-then-end flow, the page messages, the texts, the points and cost multipliers, the starting bonus, and reading and applying the talents file) and need nothing from the game:
 
 ```
 dotnet test tests/NewLoopPlus.Tests

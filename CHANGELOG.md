@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.4.0
+
+- A talents file, `BepInEx\config\NewLoopPlus.Talents.json`, for changing loop rewards by hand: costs, buffs, text, extra levels and new talents. Read once at game start.
+- Ten talents the game never offers are in the file, all switched off: Driver, No-Till Soil, Trailblazer, Liaison and Radio Station as the game left them, and Well-Connected, Last-Minute Preparation, Resourceful, Yoga Master and Shut-In with new effects in place of the unfinished ones.
+
 ## 0.3.0
 
 - A starting bonus for each new loop: extra Planning Points paid as the loop reward screen opens after a run, so you can spend them there.

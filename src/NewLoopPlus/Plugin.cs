@@ -14,7 +14,8 @@ namespace NewLoopPlus;
 public sealed class Plugin : BasePlugin
 {
     private const string Guid = "com.dev.survivallog.newloopplus";
-    private const string Version = "0.3.0";
+    private const string Version = "0.4.0";
+    private const string TalentsFileName = "NewLoopPlus.Talents.json";
     private const float MaxMultiplier = 100f;
     private const string AppliesAtRestart = "ModManager.Restart";
 
@@ -32,16 +33,23 @@ public sealed class Plugin : BasePlugin
         AddComponent<EndRunTicker>();
         LoopStartBonus.Apply(harmony, log.Write);
         LiveSettings.Watch(BindStartingBonus(), bonus => LoopStartBonus.Bonus = bonus);
-        StartScaling(BindCosts(log.Write), log.Write);
+        StartScaling(BindCosts(log.Write), TalentFileStore.Load(Path.Combine(Paths.ConfigPath, TalentsFileName), log.Write), log.Write);
     }
 
-    /// <summary>The points tables are always checked, because a multiplier changed in game may need them put back.</summary>
-    private void StartScaling(CostMultipliers costs, System.Action<string> log)
+    /// <summary>
+    /// The points tables are always checked, because a multiplier changed in game may need them put back. The talents
+    /// file is written before the costs are scaled, so a cost it sets is scaled like the game's own.
+    /// </summary>
+    private void StartScaling(CostMultipliers costs, TalentFile talents, System.Action<string> log)
     {
         var points = new PointsTables(log);
+        var reinforce = talents.ReinforceGroups();
 
         WatchPoints(points, log);
         ScaleTicker.Checks.Add(points.Tick);
+        ScaleTicker.Checks.Add(new TalentTables(talents, log).Tick);
+
+        if (reinforce.Count > 0) ScaleTicker.Checks.Add(new DoorWindowReinforcement(reinforce, log).Tick);
 
         if (costs.ChangesAnything) ScaleTicker.Checks.Add(new TalentCosts(costs, log).Tick);
         else log("loop reward costs are the game's own");

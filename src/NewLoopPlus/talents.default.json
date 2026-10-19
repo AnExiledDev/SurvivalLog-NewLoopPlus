@@ -1,0 +1,142 @@
+// New Loop Plus talents file. Changes apply the next time the game starts.
+//
+// Every entry below starts switched off. Set "enabled": true on a talent to add it to the loop rewards.
+// Delete this file to get the defaults back.
+//
+// A talent entry:
+//   "id"          the talent ID (row IDs are id * 10 + level, so at most 9 levels)
+//   "enabled"     true or false; a switched-off entry changes nothing, its buffs and effects included
+//   "copyFrom"    for a new talent ID: the talent whose rows it starts from
+//   "name", "description", "levelText"   text, either "plain" or { "en": "...", "zh": "..." }
+//   "fields"      any Config_Talent field for every level, such as { "ShowType": 2 }
+//   "levels"      one { } per level: "cost", "buff", "description", "levelText", "fields".
+//                 More levels than the game has adds levels; fewer hides the rest.
+//   "buffs", "effects"   Config_Buff and Config_Effect rows this talent changes or makes (see below)
+//   "reinforce"   { "talentBuff": A, "doorWindowBuff": B }: while the owner has buff A, every home door
+//                 and window gets buff B
+//
+// A buff or effect entry: "id", an optional "copyFrom" (needed to make a new row), and "fields",
+// named as the game's tables name them (ConfigName, IntValue0, BuffSatietyDel, EffectConfigId...).
+// The "buffs" and "effects" lists at the bottom always apply.
+{
+  "talents": [
+    // Cut talents that work as the game left them.
+    { "id": 1006, "enabled": false },  // Driver: buy vehicles, shorter travel time
+    { "id": 2017, "enabled": false },  // No-Till Soil: replant without tilling
+    { "id": 3076, "enabled": false },  // Trailblazer: Planning Points for each crisis overcome
+    { "id": 4004, "enabled": false },  // Liaison (endless): three camps call for aid once more
+    { "id": 4006, "enabled": false },  // Radio Station (endless): aid requests announced a day early
+
+    // Cut talents the game left unfinished, finished by New Loop Plus.
+    {
+      "id": 1008,  // Well-Connected
+      "enabled": false,
+      "description": {
+        "en": "Before the disaster, your Special Supplier contact leaves rare medicine in your home's cabinets.",
+        "zh": "灾难前，特殊供应商会在居所的柜子里留下稀有药物"
+      },
+      "levelText": { "en": "1 item / 1 item / 2 items / 2 items / 3 items", "zh": "1件 / 1件 / 2件 / 2件 / 3件" },
+      "effects": [
+        // IntValue0 is the random item group (227: rare medicine), IntValue1 how many items.
+        { "id": 200100810, "fields": { "ConfigName": "Buff/PreDisaster_AddRandomItem", "IntValue0": 227, "IntValue1": 1 } },
+        { "id": 200100820, "fields": { "ConfigName": "Buff/PreDisaster_AddRandomItem", "IntValue0": 227, "IntValue1": 1 } },
+        { "id": 200100830, "fields": { "ConfigName": "Buff/PreDisaster_AddRandomItem", "IntValue0": 227, "IntValue1": 2 } },
+        { "id": 200100840, "fields": { "ConfigName": "Buff/PreDisaster_AddRandomItem", "IntValue0": 227, "IntValue1": 2 } },
+        { "id": 200100850, "fields": { "ConfigName": "Buff/PreDisaster_AddRandomItem", "IntValue0": 227, "IntValue1": 3 } }
+      ]
+    },
+    {
+      "id": 1010,  // Last-Minute Preparation
+      "enabled": false,
+      "description": {
+        "en": "Your home's doors and windows are reinforced, raising their Max Durability.",
+        "zh": "居所的门窗得到加固，耐久上限提高"
+      },
+      "levelText": { "en": "+100 / +200 / +300 / +400 / +500", "zh": "+100 / +200 / +300 / +400 / +500" },
+      "effects": [
+        // The talent's own buffs become plain markers; the reinforcement is the door and window buffs below.
+        { "id": 200101010, "fields": { "ConfigName": "Buff/Buff_Empty" } },
+        { "id": 200101020, "fields": { "ConfigName": "Buff/Buff_Empty" } },
+        { "id": 200101030, "fields": { "ConfigName": "Buff/Buff_Empty" } },
+        { "id": 200101040, "fields": { "ConfigName": "Buff/Buff_Empty" } },
+        { "id": 200101050, "fields": { "ConfigName": "Buff/Buff_Empty" } },
+        // Max Durability added to each door and window (copies of the game's Reinforce effect).
+        { "id": 200101011, "copyFrom": 200000009, "fields": { "IntValue0": 100 } },
+        { "id": 200101021, "copyFrom": 200000009, "fields": { "IntValue0": 200 } },
+        { "id": 200101031, "copyFrom": 200000009, "fields": { "IntValue0": 300 } },
+        { "id": 200101041, "copyFrom": 200000009, "fields": { "IntValue0": 400 } },
+        { "id": 200101051, "copyFrom": 200000009, "fields": { "IntValue0": 500 } }
+      ],
+      "buffs": [
+        { "id": 101011, "copyFrom": 9, "fields": { "EffectConfigId": 200101011 } },
+        { "id": 101021, "copyFrom": 9, "fields": { "EffectConfigId": 200101021 } },
+        { "id": 101031, "copyFrom": 9, "fields": { "EffectConfigId": 200101031 } },
+        { "id": 101041, "copyFrom": 9, "fields": { "EffectConfigId": 200101041 } },
+        { "id": 101051, "copyFrom": 9, "fields": { "EffectConfigId": 200101051 } }
+      ],
+      "reinforce": [
+        { "talentBuff": 101010, "doorWindowBuff": 101011 },
+        { "talentBuff": 101020, "doorWindowBuff": 101021 },
+        { "talentBuff": 101030, "doorWindowBuff": 101031 },
+        { "talentBuff": 101040, "doorWindowBuff": 101041 },
+        { "talentBuff": 101050, "doorWindowBuff": 101051 }
+      ]
+    },
+    {
+      "id": 2004,  // Resourceful
+      "enabled": false,
+      "description": {
+        "en": "Before the disaster, raw materials salvaged from junk are left in your home's cabinets.",
+        "zh": "灾难前，从废品中回收的基础材料会留在居所的柜子里"
+      },
+      "levelText": { "en": "3 items / 5 items / 7 items / 9 items / 12 items", "zh": "3件 / 5件 / 7件 / 9件 / 12件" },
+      "effects": [
+        // IntValue0 is the random item group (222: raw materials), IntValue1 how many items.
+        { "id": 200200410, "fields": { "ConfigName": "Buff/PreDisaster_AddRandomItem", "BuffStaminaMax": 0, "IntValue0": 222, "IntValue1": 3 } },
+        { "id": 200200420, "fields": { "ConfigName": "Buff/PreDisaster_AddRandomItem", "BuffStaminaMax": 0, "IntValue0": 222, "IntValue1": 5 } },
+        { "id": 200200430, "fields": { "ConfigName": "Buff/PreDisaster_AddRandomItem", "BuffStaminaMax": 0, "IntValue0": 222, "IntValue1": 7 } },
+        { "id": 200200440, "fields": { "ConfigName": "Buff/PreDisaster_AddRandomItem", "BuffStaminaMax": 0, "IntValue0": 222, "IntValue1": 9 } },
+        { "id": 200200450, "fields": { "ConfigName": "Buff/PreDisaster_AddRandomItem", "BuffStaminaMax": 0, "IntValue0": 222, "IntValue1": 12 } }
+      ]
+    },
+    {
+      "id": 2006,  // Yoga Master
+      "enabled": false,
+      "levelText": { "en": "10% / 15% / 20% / 25% / 30%", "zh": "10% / 15% / 20% / 25% / 30%" },
+      "levels": [
+        { "description": { "en": "After yoga, Satiety drops 10% slower while Vim and Vigor lasts.", "zh": "修炼瑜伽后，「神清气爽」期间饱腹下降减少10%" } },
+        { "description": { "en": "After yoga, Satiety drops 15% slower while Vim and Vigor lasts.", "zh": "修炼瑜伽后，「神清气爽」期间饱腹下降减少15%" } },
+        { "description": { "en": "After yoga, Satiety drops 20% slower while Vim and Vigor lasts.", "zh": "修炼瑜伽后，「神清气爽」期间饱腹下降减少20%" } },
+        { "description": { "en": "After yoga, Satiety drops 25% slower while Vim and Vigor lasts.", "zh": "修炼瑜伽后，「神清气爽」期间饱腹下降减少25%" } },
+        { "description": { "en": "After yoga, Satiety drops 30% slower while Vim and Vigor lasts.", "zh": "修炼瑜伽后，「神清气爽」期间饱腹下降减少30%" } }
+      ],
+      "effects": [
+        // Active only while the owner has buff IntValue0 (2: Vim and Vigor, from yoga).
+        { "id": 200200610, "fields": { "ConfigName": "Buff/Buff_CondOnOtherBuff", "IntValue0": 2, "BuffSatietyDel": -0.10 } },
+        { "id": 200200620, "fields": { "ConfigName": "Buff/Buff_CondOnOtherBuff", "IntValue0": 2, "BuffSatietyDel": -0.15 } },
+        { "id": 200200630, "fields": { "ConfigName": "Buff/Buff_CondOnOtherBuff", "IntValue0": 2, "BuffSatietyDel": -0.20 } },
+        { "id": 200200640, "fields": { "ConfigName": "Buff/Buff_CondOnOtherBuff", "IntValue0": 2, "BuffSatietyDel": -0.25 } },
+        { "id": 200200650, "fields": { "ConfigName": "Buff/Buff_CondOnOtherBuff", "IntValue0": 2, "BuffSatietyDel": -0.30 } }
+      ]
+    },
+    {
+      "id": 2007,  // Shut-In
+      "enabled": false,
+      "description": {
+        "en": "While Lonely, recover 1 Morale every few hours.",
+        "zh": "处于「孤独」状态时，每隔几小时恢复1点心态"
+      },
+      "levelText": { "en": "Every 5h / 4h / 3h / 2h / 1h", "zh": "每5小时 / 4小时 / 3小时 / 2小时 / 1小时" },
+      "effects": [
+        // Active only while the owner has buff IntValue0 (20100: Lonely). BuffInterval is in game seconds.
+        { "id": 200200710, "fields": { "ConfigName": "Buff/Buff_CondOnOtherBuff", "BuffHealthMax": 0, "IntValue0": 20100, "BuffInterval": 18000, "BuffMoraleInterval": 1 } },
+        { "id": 200200720, "fields": { "ConfigName": "Buff/Buff_CondOnOtherBuff", "BuffHealthMax": 0, "IntValue0": 20100, "BuffInterval": 14400, "BuffMoraleInterval": 1 } },
+        { "id": 200200730, "fields": { "ConfigName": "Buff/Buff_CondOnOtherBuff", "BuffHealthMax": 0, "IntValue0": 20100, "BuffInterval": 10800, "BuffMoraleInterval": 1 } },
+        { "id": 200200740, "fields": { "ConfigName": "Buff/Buff_CondOnOtherBuff", "BuffHealthMax": 0, "IntValue0": 20100, "BuffInterval": 7200, "BuffMoraleInterval": 1 } },
+        { "id": 200200750, "fields": { "ConfigName": "Buff/Buff_CondOnOtherBuff", "BuffHealthMax": 0, "IntValue0": 20100, "BuffInterval": 3600, "BuffMoraleInterval": 1 } }
+      ]
+    }
+  ],
+  "buffs": [],
+  "effects": []
+}

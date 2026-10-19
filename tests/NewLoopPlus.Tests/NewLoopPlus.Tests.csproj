@@ -11,6 +11,7 @@
   <!-- The pure core is compiled straight in, so the tests need none of the game or BepInEx assemblies. -->
   <ItemGroup>
     <Compile Include="..\..\src\NewLoopPlus\Core\*.cs" Link="Core\%(Filename)%(Extension)" />
+    <None Include="..\..\src\NewLoopPlus\talents.default.json" Link="talents.default.json" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
   <ItemGroup>
