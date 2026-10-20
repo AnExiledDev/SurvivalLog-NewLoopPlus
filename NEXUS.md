@@ -1,0 +1,116 @@
+Name: New Loop Plus
+Summary: End a run from the pause menu and start a new loop at once. Tune how many Planning Points runs earn and what loop rewards cost. 可以从暂停菜单结束一局，立即开始新轮回，并调整每局获得的信念点和天赋升级的消耗。
+
+Description (BBCode):
+Want a fresh loop without waiting for your character to die? New Loop Plus adds an End Run button to the pause menu. Confirm, and the run ends exactly as a death does: the death screen, the settlement and the save are the game's own. It also lets you tune how many Planning Points a run earns and what loop rewards cost.
+
+[size=5]Main features[/size]
+[list]
+[*][b]End Run button[/b]: the pause menu gets an End Run button, right above Save & Exit.[/*]
+[*][b]Always asks first[/b]: nothing ends until you click End Run in the confirm dialog. Cancel, or a click outside it, leaves the run alone.[/*]
+[*][b]Shows what you will get[/b]: in a normal run the dialog shows the Planning Points the death screen will pay, split into survival points, crises and days survived.[/*]
+[*][b]Planning Points multipliers[/b]: one overall setting, plus one each for survival points, crises and events, and days survived. The death screen and the End Run preview show the scaled points.[/*]
+[*][b]Starting bonus[/b]: extra Planning Points at the start of each new loop, paid as the loop reward screen opens, so you can spend them right there.[/*]
+[*][b]Endless starting points[/b]: a multiplier for the 500 Planning Points a new endless game starts with.[/*]
+[*][b]Loop reward costs[/b]: one multiplier for what every loop reward upgrade costs, plus your own multiplier for single talents by ID. Resetting the upgrade screen refunds what you paid.[/*]
+[*][b]Talents file[/b]: [font=Courier New]BepInEx\config\NewLoopPlus.Talents.json[/font] lets you change loop rewards by hand: costs, buffs, text, extra levels and new talents. It ships with ten talents the game has in its data but never offers, all switched off. Driver, No-Till Soil, Trailblazer, Liaison and Radio Station work as the game left them. Well-Connected, Last-Minute Preparation, Resourceful, Yoga Master and Shut-In were unfinished and get new effects from the mod.[/*]
+[/list]
+With every talent in the talents file switched off, New Loop Plus adds no data of its own to your save. A switched-on talent can leave its levels in the save; switch it off and play a run before removing the mod. Points and costs go back to the game's own at the next start.
+
+Works in English and Chinese.
+
+[size=5]Known issues[/size]
+[list]
+[*]If the game is still paused five seconds after the pause menu closes (another window holding it paused, for example), the run is not ended and a short message says so. Close that window and try again.[/*]
+[*]Points are whole numbers, so scaled values are rounded. A small reward times a small multiplier can round to 0.[/*]
+[*]Crisis and event penalties that take Planning Points away are not scaled.[/*]
+[*]The talents file is read once at game start. Changes need a restart.[/*]
+[/list]
+
+[size=5]Requirements[/size]
+[list]
+[*]Survival Log 1.1.18902. A game update can break it until the mod is updated.[/*]
+[*][url=https://www.nexusmods.com/survivallog/mods/12]BepInEx for Survival Log[/url]. Install it first.[/*]
+[*]Optional: [url=https://www.nexusmods.com/survivallog/mods/61]Exiled's Toolkit[/url] 0.4.0 or newer. With it, the points multipliers and the starting bonus changed on the Mod Manager's Mods screen take effect without restarting the game. Without it, they take effect at the next game start.[/*]
+[/list]
+
+[size=5]Installation[/size]
+[list=1]
+[*]Install [url=https://www.nexusmods.com/survivallog/mods/12]BepInEx[/url] [i](if no other mods were installed before, start the game once so BepInEx finishes setup, then quit)[/i].[/*]
+[*]Optional, to change settings without a restart: install Exiled's Toolkit the same way. Download its zip and extract it into the game folder.[/*]
+[*]Download the zip from the Files tab.[/*]
+[*]Extract it into the game folder (the folder with [font=Courier New]SurvivalLog.exe[/font]). The zip holds a BepInEx folder, so the DLL lands in the right place. When asked, merge the folders. The result should be:
+[code]C:\Program Files (x86)\Steam\steamapps\common\Survival Log\BepInEx\plugins\NewLoopPlus.dll[/code][/*]
+[/list]
+
+[size=5]Uninstall[/size]
+Delete [font=Courier New]NewLoopPlus.dll[/font] from the [font=Courier New]BepInEx\plugins[/font] folder. A starting bonus already paid stays paid.
+
+[size=5]Configuration[/size]
+To change settings, edit [font=Courier New]BepInEx\config\com.dev.survivallog.newloopplus.cfg[/font] while the game is closed, or do it in game on the Mod Manager's Mods screen (see [url=https://github.com/AnExiledDev/SurvivalLog-NewLoopPlus/blob/main/CONFIG.md]CONFIG.md[/url] for every setting; the cfg file explains each setting in English and Chinese). The points multipliers and the starting bonus take effect at once; cost settings take effect at the next game start. Without Exiled's Toolkit installed, every change takes effect at the next game start.
+
+[size=5]Feedback[/size]
+Found a bug or have an idea? Come say hi on the [url=https://discord.gg/trTsyxUFqg]Core Directive Discord[/url], or post in this page's Posts tab. For bugs, please include [font=Courier New]BepInEx\LogOutput.log[/font] and [font=Courier New]BepInEx\new-loop-plus.log[/font].
+To reach me directly, message [b]exiled.dev[/b] on Discord; you can find me in the [url=https://discord.gg/MZGg4gQAUe]official Survival Log Discord[/url]. I'm also on X as [url=https://x.com/AnExiledDev]@AnExiledDev[/url].
+Coming soon: a Survival Log wiki with detailed documentation for all of my mods.
+
+[size=5]Source and license[/size]
+Open source under MIT: [url=https://github.com/AnExiledDev/SurvivalLog-NewLoopPlus]github.com/AnExiledDev/SurvivalLog-NewLoopPlus[/url]
+
+[line]
+[size=5]简体中文[/size]
+
+不想等角色死亡就开始新的轮回？New Loop Plus 在暂停菜单里加了一个「结束本局」按钮。确认后，本局会像角色死亡一样结束：结算界面、结算和存档都是游戏原本的。你还可以调整每局获得的信念点和天赋升级的消耗。
+
+[size=5]主要功能[/size]
+[list]
+[*][b]「结束本局」按钮[/b]：暂停菜单中保存退出按钮的上方多了一个「结束本局」按钮。[/*]
+[*][b]先确认再结束[/b]：只有在确认窗口中点击「结束本局」后才会结束。点击「取消」或窗口外部，本局照常继续。[/*]
+[*][b]预先显示收益[/b]：普通模式下，确认窗口会显示结算界面将给出的信念点，并按生存点、危机和生存天数分开列出。[/*]
+[*][b]信念点倍数[/b]：一个总倍数，另有生存点、危机与事件、生存天数各一个倍数。结算界面和「结束本局」的预览都会显示调整后的信念点。[/*]
+[*][b]开局奖励[/b]：每次开始新轮回时额外获得信念点，在一局结束后打开轮回奖励界面时发放，可以当场使用。[/*]
+[*][b]无尽模式初始信念点[/b]：新开无尽模式时的 500 初始信念点可以乘以一个倍数。[/*]
+[*][b]天赋消耗[/b]：一个倍数调整所有天赋升级消耗的信念点，也可以按天赋 ID 单独设置倍数。在升级界面重置时会退还已花费的信念点。[/*]
+[*][b]天赋文件[/b]：可以在 [font=Courier New]BepInEx\config\NewLoopPlus.Talents.json[/font] 中手动修改天赋：消耗、增益、文字、额外等级，以及新天赋。文件中自带十个游戏数据里有但从未开放的天赋，默认全部关闭。「载具驾驶」、「免翻土」、「开拓者」、「联络员」和「无线电台」保持游戏原样。「人脉网络」、「临阵磨枪」、「资源回收」、「瑜伽大师」和「宅人之心」在游戏中没有做完，由模组赋予了新效果。[/*]
+[/list]
+天赋文件中所有天赋都关闭时，New Loop Plus 不会往存档里添加任何自己的数据。开启的天赋可能会把等级留在存档中；移除模组前请先关闭它并玩一局。信念点和消耗会在下次启动游戏时恢复为游戏原本的数值。
+
+支持英文和中文。
+
+[size=5]已知问题[/size]
+[list]
+[*]如果暂停菜单关闭五秒后游戏仍处于暂停状态（例如有其他窗口让游戏保持暂停），本局不会结束，屏幕上会有简短提示。关闭那个窗口后再试一次。[/*]
+[*]信念点是整数，调整后的数值会四舍五入。较小的奖励乘以较小的倍数可能变成 0。[/*]
+[*]危机和事件扣除的信念点不会被调整。[/*]
+[*]天赋文件只在游戏启动时读取一次，修改后需要重启游戏。[/*]
+[/list]
+
+[size=5]前置要求[/size]
+[list]
+[*]Survival Log 1.1.18902。游戏更新后模组可能暂时失效，直到模组更新为止。[/*]
+[*][url=https://www.nexusmods.com/survivallog/mods/12]BepInEx for Survival Log[/url]，请先安装。[/*]
+[*]可选：[url=https://www.nexusmods.com/survivallog/mods/61]Exiled's Toolkit[/url] 0.4.0 或更新版本。装了它，在 Mod Manager 的「模组」界面改动的信念点倍数和开局奖励无需重启游戏即可生效；没装的话，改动在下次启动游戏时生效。[/*]
+[/list]
+
+[size=5]安装[/size]
+[list=1]
+[*]安装 [url=https://www.nexusmods.com/survivallog/mods/12]BepInEx[/url] [i]（如果之前没有装过其他模组，先启动一次游戏，让 BepInEx 完成初始化，然后退出）[/i]。[/*]
+[*]可选（改动设置无需重启游戏）：用同样的方式安装 Exiled's Toolkit，下载它的压缩包并解压到游戏目录。[/*]
+[*]在「文件」页下载压缩包。[/*]
+[*]把压缩包解压到游戏目录（[font=Courier New]SurvivalLog.exe[/font] 所在的文件夹）。压缩包里带有 BepInEx 文件夹，DLL 会自动放到正确位置。如果提示合并文件夹，选择合并。解压后应为：
+[code]C:\Program Files (x86)\Steam\steamapps\common\Survival Log\BepInEx\plugins\NewLoopPlus.dll[/code][/*]
+[/list]
+
+[size=5]卸载[/size]
+从 [font=Courier New]BepInEx\plugins[/font] 文件夹中删除 [font=Courier New]NewLoopPlus.dll[/font]。已经发放的开局奖励不会收回。
+
+[size=5]配置[/size]
+可以在游戏内 Mod Manager 的「模组」界面修改，也可以在游戏关闭时编辑 [font=Courier New]BepInEx\config\com.dev.survivallog.newloopplus.cfg[/font]。配置文件中每项设置都有中文说明，完整说明见 [url=https://github.com/AnExiledDev/SurvivalLog-NewLoopPlus/blob/main/CONFIG.md]CONFIG.md[/url]（英文）。信念点倍数和开局奖励的改动立即生效；消耗相关的设置在下次启动游戏时生效。没装 Exiled's Toolkit 的话，所有改动都在下次启动游戏时生效。
+
+[size=5]反馈[/size]
+发现 bug 或有好点子？欢迎来 [url=https://discord.gg/trTsyxUFqg]Core Directive Discord[/url] 打个招呼，或在本页的「Posts」标签里发帖。报告 bug 时，请附上 [font=Courier New]BepInEx\LogOutput.log[/font] 和 [font=Courier New]BepInEx\new-loop-plus.log[/font]。
+想直接联系我，可以在 Discord 上给 [b]exiled.dev[/b] 发消息，我在 [url=https://discord.gg/MZGg4gQAUe]Survival Log 官方 Discord[/url] 里。也可以在 X 上找我：[url=https://x.com/AnExiledDev]@AnExiledDev[/url]。
+即将推出：Survival Log 维基，收录我所有模组的详细说明。
+
+[size=5]源代码与许可[/size]
+基于 MIT 许可开源：[url=https://github.com/AnExiledDev/SurvivalLog-NewLoopPlus]github.com/AnExiledDev/SurvivalLog-NewLoopPlus[/url]

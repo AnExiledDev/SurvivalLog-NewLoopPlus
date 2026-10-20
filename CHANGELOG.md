@@ -4,6 +4,8 @@
 
 - A talents file, `BepInEx\config\NewLoopPlus.Talents.json`, for changing loop rewards by hand: costs, buffs, text, extra levels and new talents. Read once at game start.
 - Ten talents the game never offers are in the file, all switched off: Driver, No-Till Soil, Trailblazer, Liaison and Radio Station as the game left them, and Well-Connected, Last-Minute Preparation, Resourceful, Yoga Master and Shut-In with new effects in place of the unfinished ones.
+- Exiled's Toolkit 0.4.0 or newer is optional. With it, the points multipliers and the starting bonus changed on the Mods screen take effect without a restart; without it, at the next game start.
+- The Mods screen links this changelog.
 
 ## 0.3.0
 

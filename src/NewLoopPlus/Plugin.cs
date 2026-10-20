@@ -2,7 +2,6 @@ using System.IO;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Unity.IL2CPP;
-using ExiledToolkit;
 using HarmonyLib;
 using NewLoopPlus.Adapters;
 using NewLoopPlus.Core;
@@ -10,7 +9,7 @@ using NewLoopPlus.Core;
 namespace NewLoopPlus;
 
 [BepInPlugin(Guid, "New Loop Plus", Version)]
-[BepInDependency(ExiledToolkit.Plugin.Guid, ">=0.4.0")]
+[BepInDependency(OptionalLive.ToolkitGuid, BepInDependency.DependencyFlags.SoftDependency)]
 public sealed class Plugin : BasePlugin
 {
     private const string Guid = "com.dev.survivallog.newloopplus";
@@ -21,6 +20,8 @@ public sealed class Plugin : BasePlugin
 
     public override void Load()
     {
+        if (!OptionalLive.IsToolkitInstalled) Log.LogInfo(OptionalLive.MissingNote);
+
         var log = new ModLog(Log, Path.Combine(Paths.BepInExRootPath, "new-loop-plus.log"));
         var harmony = new Harmony(Guid);
         var page = new WebPage(log.Write);
@@ -32,7 +33,7 @@ public sealed class Plugin : BasePlugin
         EndRunTicker.Log = log.Write;
         AddComponent<EndRunTicker>();
         LoopStartBonus.Apply(harmony, log.Write);
-        LiveSettings.Watch(BindStartingBonus(), bonus => LoopStartBonus.Bonus = bonus);
+        OptionalLive.Watch(BindStartingBonus(), bonus => LoopStartBonus.Bonus = bonus);
         StartScaling(BindCosts(log.Write), TalentFileStore.Load(Path.Combine(Paths.ConfigPath, TalentsFileName), log.Write), log.Write);
     }
 
@@ -76,7 +77,7 @@ public sealed class Plugin : BasePlugin
             "Multiplies the Planning Points a new endless game starts with (500 in the game). 0 starts with none.\n" +
             "新开无尽模式时初始信念点（游戏中为 500）乘以这个倍数。0 为没有初始信念点。");
 
-        LiveSettings.Watch(() =>
+        OptionalLive.Watch(() =>
         {
             var multipliers = new PointsMultipliers(Rounded(overall), Rounded(survival), Rounded(crisis), Rounded(record), Rounded(endless));
 

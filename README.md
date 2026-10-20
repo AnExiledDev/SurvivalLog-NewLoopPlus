@@ -11,7 +11,7 @@ End a run whenever you like and go straight to the death screen, so you can star
 - **Planning Points multipliers**: one overall setting, plus one each for the three parts a run pays: survival points, crises and events, and days survived. The death screen, its breakdown and the End Run preview all show the scaled points.
 - **Starting bonus**: extra Planning Points at the start of each new loop, paid as the loop reward screen opens after a run, so you can spend them right there.
 - **Endless starting points**: a multiplier for the 500 Planning Points a new endless game starts with.
-- **Change it in game**: the points multipliers and the starting bonus can be changed on the Mod Manager's Mods screen and apply at once.
+- **Change it in game**: with Exiled's Toolkit installed, the points multipliers and the starting bonus can be changed on the Mod Manager's Mods screen and apply at once.
 - **Loop reward costs**: one multiplier for what every loop reward upgrade costs, plus your own multiplier for single talents by ID. The upgrade screen shows, checks and charges the new price, and its reset refunds what you paid.
 - **Talents file**: `BepInEx\config\NewLoopPlus.Talents.json` lets you change loop rewards by hand: costs, buffs, text, extra levels, and new talents copied from existing ones. It ships with ten talents the game has in its data but never offers, all switched off. Five work as the game left them (Driver, No-Till Soil, Trailblazer, Liaison, Radio Station). Five were unfinished and get new effects from the mod (Well-Connected, Last-Minute Preparation, Resourceful, Yoga Master, Shut-In). See [CONFIG.md](CONFIG.md#talents-file).
 - **Log file**: every confirm, the points preview and how the end went are written to `BepInEx\new-loop-plus.log`.
@@ -33,12 +33,12 @@ With every talent in the talents file switched off, New Loop Plus adds no data o
 
 - Survival Log 1.1.18902. Built and tested on this version; a game update can break it until the mod is updated.
 - The [BepInEx Pack for Survival Log](https://www.nexusmods.com/survivallog/mods/12), the BepInEx 6 (IL2CPP) build for the game.
-- [Exiled's Toolkit](https://github.com/AnExiledDev/SurvivalLog-ExiledToolkit) 0.4.0 or newer, which applies changed settings at once. New Loop Plus does not load without it.
+- Optional: [Exiled's Toolkit](https://github.com/AnExiledDev/SurvivalLog-ExiledToolkit) 0.4.0 or newer. With it, the points multipliers and the starting bonus changed on the Mod Manager's Mods screen take effect without restarting the game. Without it, they take effect at the next game start. Cost settings always apply at the next game start.
 
 ## Install
 
 1. Install the [BepInEx Pack for Survival Log](https://www.nexusmods.com/survivallog/mods/12) (if no other mods were installed before, start the game once so BepInEx finishes setup, then quit).
-2. Install Exiled's Toolkit: download `ExiledToolkit-x.y.z.zip` from [its latest release](https://github.com/AnExiledDev/SurvivalLog-ExiledToolkit/releases/latest) or from Nexus Mods, and extract it into the game folder (the folder with `SurvivalLog.exe`).
+2. Optional, to change settings without a restart: install Exiled's Toolkit. Download `ExiledToolkit-x.y.z.zip` from [its latest release](https://github.com/AnExiledDev/SurvivalLog-ExiledToolkit/releases/latest) or from [Nexus Mods](https://www.nexusmods.com/survivallog/mods/61), and extract it into the game folder (the folder with `SurvivalLog.exe`).
 3. Copy `NewLoopPlus.dll` into the `BepInEx\plugins` folder inside the game folder (the folder with `SurvivalLog.exe`).
 
 ## Uninstall
@@ -56,6 +56,10 @@ If End Run does not show in the pause menu, make sure you are in a loaded run pa
 ## Feedback and bug reports
 
 Found a bug, have an idea, or something feels off? Come say so on the Core Directive Discord: https://discord.gg/trTsyxUFqg . When reporting a bug, attach `BepInEx\LogOutput.log` and `BepInEx\new-loop-plus.log`.
+
+To reach me directly, message `exiled.dev` on Discord; you can find me in the [official Survival Log Discord](https://discord.gg/MZGg4gQAUe). I'm also on X as [@AnExiledDev](https://x.com/AnExiledDev).
+
+A Survival Log wiki with detailed documentation for all of my mods is coming soon.
 
 ## Build
 
