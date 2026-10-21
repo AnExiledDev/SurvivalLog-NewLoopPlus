@@ -37,7 +37,7 @@ With every talent in the talents file switched off, New Loop Plus adds no data o
 - Survival Log 1.1.18902. Built and tested on this version; a game update can break it until the mod is updated.
 - The [BepInEx Pack for Survival Log](https://www.nexusmods.com/survivallog/mods/12), the BepInEx 6 (IL2CPP) build for the game.
 - Optional: [Exiled's Toolkit](https://github.com/AnExiledDev/SurvivalLog-ExiledToolkit) 0.4.0 or newer. With it, the points multipliers and the starting bonus changed on the Mod Manager's Mods screen take effect without restarting the game. Without it, they take effect at the next game start. Cost settings always apply at the next game start.
-- Optional: [Mod Manager](https://github.com/AnExiledDev/SurvivalLog-ModManager) 0.7.0 or newer, for the Talents tab. Without it, edit the talents file by hand.
+- Optional: [Mod Manager](https://www.nexusmods.com/survivallog/mods/73) 0.7.0 or newer, for the Talents tab. Without it, edit the talents file by hand.
 
 ## Install
 
