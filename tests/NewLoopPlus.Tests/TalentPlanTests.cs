@@ -22,9 +22,25 @@ public class TalentPlanTests
         public bool HasBuff(int id) => Buffs.Contains(id);
 
         public IReadOnlyList<int> TalentLevels(int talentId) => Talents.TryGetValue(talentId, out var levels) ? levels : new int[0];
+
+        /// <summary>Talent 1006 runs VehicleTimeReduce; PreDisaster_AddGold is run only by talent 1002's first level.</summary>
+        public GiveTemplate? Template(string script, int talentId, int lv) => script switch
+        {
+            "VehicleTimeReduce" => new GiveTemplate(200100610, 100610),
+            "PreDisaster_AddGold" => new GiveTemplate(200100210, 100210),
+            _ => null,
+        };
+
+        /// <summary>A level whose game buff is not the usual TalentID * 100 + level * 10, keyed by its talent row ID.</summary>
+        public Dictionary<int, int> OddLevelBuffs { get; } = new();
+
+        public int? LevelBuff(int talentId, int lv) =>
+            OddLevelBuffs.TryGetValue(talentId * 10 + lv, out var odd) ? odd : talentId == 1006 && lv <= 5 ? 100600 + lv * 10 : null;
     }
 
-    private static TalentPlan Plan(string json) => TalentPlan.Build(TalentFile.Parse(json), new FakeTables());
+    private static TalentPlan Plan(string json) => Plan(json, new FakeTables());
+
+    private static TalentPlan Plan(string json, FakeTables tables) => TalentPlan.Build(TalentFile.Parse(json), tables);
 
     private static FieldValue? Field(RowEdit row, string field) => row.Fields.LastOrDefault(set => set.Field == field)?.Value;
 
@@ -162,6 +178,132 @@ public class TalentPlanTests
 
         Assert.Equal(9, Assert.Single(plan.Rows).Id);
         Assert.Equal(3, plan.Problems.Count);
+    }
+
+    [Fact]
+    public void A_give_makes_an_effect_and_a_buff_per_level_numbered_after_the_talent_and_copied_from_the_script_template()
+    {
+        var plan = Plan("""
+            { "talents": [ { "id": 3076, "gives": [ { "effect": "game:PreDisaster_AddGold", "levels": [ { "IntValue0": 100 }, { "IntValue0": 200 } ] } ] } ] }
+            """);
+        var effect = Row(plan, Table.Effect, 200307610);
+        var buff = Row(plan, Table.Buff, 307610);
+
+        Assert.Empty(plan.Problems);
+        Assert.Equal(200100210, effect.CopyFrom);
+        Assert.Equal(new FieldValue.Number(200307610), Field(effect, "ID"));
+        Assert.Equal(new FieldValue.Number(100), Field(effect, "IntValue0"));
+        Assert.Equal(new FieldValue.Number(200), Field(Row(plan, Table.Effect, 200307620), "IntValue0"));
+        Assert.Equal(new FieldValue.Number(200), Field(Row(plan, Table.Effect, 200307630), "IntValue0"));
+        Assert.Equal(100210, buff.CopyFrom);
+        Assert.Equal(new FieldValue.Number(200307610), Field(buff, "EffectConfigId"));
+        Assert.Equal(new FieldValue.Flag(true), Field(buff, "IsHide"));
+        Assert.Equal(new FieldValue.Number(307610), Field(Row(plan, Table.Talent, 30761), "BuffID"));
+        Assert.Equal(new FieldValue.Number(307630), Field(Row(plan, Table.Talent, 30763), "BuffID"));
+        Assert.Empty(plan.Companions);
+    }
+
+    [Fact]
+    public void Every_give_after_the_first_rides_along_with_the_level_buff_and_keeps_its_choice_at_every_level()
+    {
+        var plan = Plan("""
+            { "talents": [ { "id": 3076, "levels": [ {}, {} ], "gives": [
+              { "effect": "game:PreDisaster_AddGold" },
+              { "effect": "game:PreDisaster_AddGold", "choice": { "StrValue0": "Production" } },
+              { "effect": "game:VehicleTimeReduce" } ] } ] }
+            """);
+
+        Assert.Empty(plan.Problems);
+        Assert.Equal(new[] { 307610, 307620 }, plan.Companions.Select(companion => companion.LevelBuff));
+        Assert.Equal(new[] { 307611, 307612 }, plan.Companions[0].Buffs);
+        Assert.Equal(new[] { 307621, 307622 }, plan.Companions[1].Buffs);
+        Assert.Equal(new FieldValue.Text("Production"), Field(Row(plan, Table.Effect, 200307621), "StrValue0"));
+        Assert.Equal(200100610, Row(plan, Table.Effect, 200307622).CopyFrom);
+    }
+
+    [Fact]
+    public void The_first_give_may_take_over_the_level_buff_the_game_already_gives()
+    {
+        var plan = Plan("""{ "talents": [ { "id": 1006, "gives": [ { "effect": "game:PreDisaster_AddGold", "levels": [ { "IntValue0": 50 } ] } ] } ] }""");
+
+        Assert.Empty(plan.Problems);
+        Assert.Equal(200100210, Row(plan, Table.Effect, 200100610).CopyFrom);
+        Assert.Equal(new FieldValue.Number(100650), Field(Row(plan, Table.Talent, 10065), "BuffID"));
+    }
+
+    [Fact]
+    public void A_give_that_would_overwrite_a_game_row_skips_the_whole_talent()
+    {
+        var tables = new FakeTables();
+
+        tables.Buffs.Add(100631);
+
+        var plan = Plan("""{ "talents": [ { "id": 1006, "gives": [ { "effect": "game:VehicleTimeReduce" }, { "effect": "game:VehicleTimeReduce" } ] } ] }""", tables);
+
+        Assert.Empty(plan.Rows);
+        Assert.Empty(plan.Companions);
+        Assert.Contains("100631", Assert.Single(plan.Problems));
+    }
+
+    [Fact]
+    public void Only_the_first_give_may_take_over_the_level_buff()
+    {
+        var tables = new FakeTables();
+
+        tables.Buffs.Add(307611);
+        tables.OddLevelBuffs[30761] = 307611;
+
+        var plan = Plan("""{ "talents": [ { "id": 3076, "gives": [ { "effect": "game:VehicleTimeReduce" }, { "effect": "game:VehicleTimeReduce" } ] } ] }""", tables);
+
+        Assert.Empty(plan.Rows);
+        Assert.Contains("307611", Assert.Single(plan.Problems));
+    }
+
+    [Fact]
+    public void A_give_cannot_reuse_a_buff_the_file_already_makes()
+    {
+        var plan = Plan("""
+            { "buffs": [ { "id": 307610, "copyFrom": 9 } ],
+              "talents": [ { "id": 3076, "gives": [ { "effect": "game:PreDisaster_AddGold" } ] } ] }
+            """);
+
+        Assert.Equal(307610, Assert.Single(plan.Rows).Id);
+        Assert.Contains("307610", Assert.Single(plan.Problems));
+    }
+
+    [Theory]
+    [InlineData("game:NoSuchScript", "NoSuchScript")]
+    [InlineData("mod:Example", "mod:Example")]
+    public void A_give_the_game_cannot_run_skips_the_talent_and_names_the_effect(string effect, string named)
+    {
+        var plan = Plan($$"""{ "talents": [ { "id": 3076, "gives": [ { "effect": "game:PreDisaster_AddGold" }, { "effect": "{{effect}}" } ] } ] }""");
+
+        Assert.Empty(plan.Rows);
+        Assert.Contains(named, Assert.Single(plan.Problems));
+    }
+
+    [Fact]
+    public void Gives_need_a_four_digit_talent_id_and_at_most_ten_of_them()
+    {
+        var eleven = string.Join(",", Enumerable.Repeat("""{ "effect": "game:PreDisaster_AddGold" }""", 11));
+        var plan = Plan($$"""
+            { "talents": [ { "id": 31271, "copyFrom": 3076, "gives": [ { "effect": "game:PreDisaster_AddGold" } ] },
+              { "id": 1006, "gives": [ {{eleven}} ] } ] }
+            """);
+
+        Assert.Empty(plan.Rows);
+        Assert.Equal(2, plan.Problems.Count);
+        Assert.Contains(plan.Problems, problem => problem.Contains("31271"));
+        Assert.Contains(plan.Problems, problem => problem.Contains("11 gives"));
+    }
+
+    [Fact]
+    public void A_level_buff_written_next_to_gives_is_ignored_and_reported()
+    {
+        var plan = Plan("""{ "talents": [ { "id": 3076, "levels": [ { "buff": 9 } ], "gives": [ { "effect": "game:PreDisaster_AddGold" } ] } ] }""");
+
+        Assert.Equal(new FieldValue.Number(307610), Field(Row(plan, Table.Talent, 30761), "BuffID"));
+        Assert.Contains("ignored", Assert.Single(plan.Problems));
     }
 
     [Fact]

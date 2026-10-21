@@ -47,8 +47,15 @@ public static class Texts
 
     public static readonly Phrase Failed = new("End Run failed, see BepInEx/new-loop-plus.log.", "结束本局失败，详见 BepInEx/new-loop-plus.log。");
 
+    public static readonly Phrase TalentsSaved = new(
+        "Saved. Changes apply the next time you start the game.",
+        "已保存。更改将在下次启动游戏时生效。");
+
+    public static readonly Phrase TalentsNotSaved = new("Not saved:", "未保存：");
+
     public static IReadOnlyList<Phrase> All { get; } = new[]
     {
         Button, ConfirmTitle, Cancel, EndsLikeDeath, PointsLine, PointsUnknown, CasualLine, ModeSettlesLine, CannotEndNow, StillPaused, Failed,
+        TalentsSaved, TalentsNotSaved,
     };
 }

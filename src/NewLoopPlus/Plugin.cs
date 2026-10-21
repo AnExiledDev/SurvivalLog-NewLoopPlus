@@ -13,7 +13,7 @@ namespace NewLoopPlus;
 public sealed class Plugin : BasePlugin
 {
     private const string Guid = "com.dev.survivallog.newloopplus";
-    private const string Version = "0.4.0";
+    private const string Version = "0.5.0";
     private const string TalentsFileName = "NewLoopPlus.Talents.json";
     private const float MaxMultiplier = 100f;
     private const string AppliesAtRestart = "ModManager.Restart";
@@ -25,30 +25,34 @@ public sealed class Plugin : BasePlugin
         var log = new ModLog(Log, Path.Combine(Paths.BepInExRootPath, "new-loop-plus.log"));
         var harmony = new Harmony(Guid);
         var page = new WebPage(log.Write);
+        var talentsPath = Path.Combine(Paths.ConfigPath, TalentsFileName);
+        var tab = new TalentsTab(talentsPath, page, log.Write);
 
         log.Write($"===== New Loop Plus {Version} started");
         PageMessages.Apply(harmony, log.Write);
+        CompanionBuffs.Apply(harmony, log.Write);
         EndRunTicker.Page = page;
+        EndRunTicker.Talents = tab;
         EndRunTicker.Flow = new EndRun(new GameRun(log.Write), page, log.Write);
         EndRunTicker.Log = log.Write;
         AddComponent<EndRunTicker>();
         LoopStartBonus.Apply(harmony, log.Write);
         OptionalLive.Watch(BindStartingBonus(), bonus => LoopStartBonus.Bonus = bonus);
-        StartScaling(BindCosts(log.Write), TalentFileStore.Load(Path.Combine(Paths.ConfigPath, TalentsFileName), log.Write), log.Write);
+        StartScaling(BindCosts(log.Write), TalentFileStore.Load(talentsPath, log.Write), tab, log.Write);
     }
 
     /// <summary>
     /// The points tables are always checked, because a multiplier changed in game may need them put back. The talents
     /// file is written before the costs are scaled, so a cost it sets is scaled like the game's own.
     /// </summary>
-    private void StartScaling(CostMultipliers costs, TalentFile talents, System.Action<string> log)
+    private void StartScaling(CostMultipliers costs, TalentFile talents, TalentsTab tab, System.Action<string> log)
     {
         var points = new PointsTables(log);
         var reinforce = talents.ReinforceGroups();
 
         WatchPoints(points, log);
         ScaleTicker.Checks.Add(points.Tick);
-        ScaleTicker.Checks.Add(new TalentTables(talents, log).Tick);
+        ScaleTicker.Checks.Add(new TalentTables(talents, tab, log).Tick);
 
         if (reinforce.Count > 0) ScaleTicker.Checks.Add(new DoorWindowReinforcement(reinforce, log).Tick);
 

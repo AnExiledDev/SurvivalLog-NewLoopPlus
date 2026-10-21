@@ -45,6 +45,7 @@
 
   <ItemGroup>
     <EmbeddedResource Include="page.js" LogicalName="NewLoopPlus.page.js" />
+    <EmbeddedResource Include="talents-tab.js" LogicalName="NewLoopPlus.talents-tab.js" />
     <EmbeddedResource Include="talents.default.json" LogicalName="NewLoopPlus.talents.default.json" />
   </ItemGroup>
 

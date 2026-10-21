@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -12,7 +13,22 @@ public interface ITableIndex
 
     /// <summary>The levels the game has for a talent, lowest first; empty when the talent does not exist.</summary>
     IReadOnlyList<int> TalentLevels(int talentId);
+
+    /// <summary>
+    /// The rows a give of <paramref name="script"/> copies at that talent level: the level's own effect and buff when they
+    /// run that script, otherwise those of the first talent level in the game that runs it. Null when no talent runs it.
+    /// </summary>
+    GiveTemplate? Template(string script, int talentId, int lv);
+
+    /// <summary>The buff the game's row for that talent level gives; null when the game has no such row.</summary>
+    int? LevelBuff(int talentId, int lv);
 }
+
+/// <summary>The effect row and buff row a give is copied from.</summary>
+public sealed record GiveTemplate(int Effect, int Buff);
+
+/// <summary>Whoever gets <paramref name="LevelBuff"/> also gets every buff in <paramref name="Buffs"/>, and loses them with it.</summary>
+public sealed record Companion(int LevelBuff, IReadOnlyList<int> Buffs);
 
 public enum Table
 {
@@ -28,10 +44,15 @@ public sealed record RowEdit(Table Table, int Id, int? CopyFrom, IReadOnlyList<F
 public sealed record TextEntry(string Key, string En, string Zh);
 
 /// <summary>Everything the talents file changes in the game's tables, in the order it must be applied.</summary>
-public sealed record TalentPlan(IReadOnlyList<RowEdit> Rows, IReadOnlyList<TextEntry> Texts, IReadOnlyList<string> Problems)
+public sealed record TalentPlan(IReadOnlyList<RowEdit> Rows, IReadOnlyList<TextEntry> Texts, IReadOnlyList<string> Problems, IReadOnlyList<Companion> Companions)
 {
     /// <summary>Row IDs are TalentID * 10 + level, so a talent can have at most 9 levels.</summary>
     public const int MaxLevels = 9;
+
+    /// <summary>A give's buff is TalentID * 100 + level * 10 + its place in the list, so a talent can give at most 10 things.</summary>
+    public const int MaxGives = 10;
+
+    public const string GamePrefix = "game:";
 
     /// <summary>
     /// Works out the edits. Effects come first and buffs second, so a buff can point at an effect the file makes, and
@@ -48,7 +69,7 @@ public sealed record TalentPlan(IReadOnlyList<RowEdit> Rows, IReadOnlyList<TextE
 
         foreach (var talent in enabled) builder.AddTalent(talent);
 
-        return new TalentPlan(builder.Rows, builder.Texts, builder.Problems);
+        return new TalentPlan(builder.Rows, builder.Texts, builder.Problems, builder.Companions);
     }
 
     private sealed class Builder
@@ -69,6 +90,8 @@ public sealed record TalentPlan(IReadOnlyList<RowEdit> Rows, IReadOnlyList<TextE
         public List<TextEntry> Texts { get; } = new();
 
         public List<string> Problems { get; } = new();
+
+        public List<Companion> Companions { get; } = new();
 
         public void AddRows(Table table, IEnumerable<RowEntry> entries)
         {
@@ -121,6 +144,8 @@ public sealed record TalentPlan(IReadOnlyList<RowEdit> Rows, IReadOnlyList<TextE
                 return;
             }
 
+            if (talent.Gives.Count > 0 && !AddGives(talent, count)) return;
+
             for (var lv = 1; lv <= count; lv++) AddLevel(talent, existing, source, sourceLevels, lv);
 
             foreach (var extra in existing.Where(lv => lv > count)) Rows.Add(new RowEdit(Table.Talent, RowId(talent.Id, extra), null, new[] { Whole("Available", 0) }));
@@ -149,13 +174,87 @@ public sealed record TalentPlan(IReadOnlyList<RowEdit> Rows, IReadOnlyList<TextE
 
                 if (level.Cost is { } cost) fields.Add(Whole("LvUpCost", cost));
 
-                if (level.Buff is { } buff) AddBuffLink(talent, fields, buff);
+                if (level.Buff is { } buff && talent.Gives.Count == 0) AddBuffLink(talent, fields, buff);
+
+                if (level.Buff is { } ignored && talent.Gives.Count > 0) Problems.Add($"talent {talent.Id} level {lv} names buff {ignored} and also has gives; the buff was ignored");
             }
+
+            if (talent.Gives.Count > 0) fields.Add(Whole("BuffID", GiveBuff(talent.Id, lv, 0)));
 
             AddText(fields, "Name", rowId, talent.Name);
             AddText(fields, "Dec", rowId, level?.Description ?? talent.Description);
             AddText(fields, "LvParaShow", rowId, level?.LevelText ?? talent.LevelText);
             Rows.Add(new RowEdit(Table.Talent, rowId, copyFrom, fields));
+        }
+
+        /// <summary>
+        /// Makes an effect and a buff for every give at every level; the first give's buff is the one the level hands out
+        /// and the rest ride along with it. Either every row of the talent is made or, on any problem, none is.
+        /// </summary>
+        private bool AddGives(TalentEntry talent, int count)
+        {
+            var rows = new List<RowEdit>();
+            var companions = new List<Companion>();
+            var problem = talent.Id is < 1000 or > 9999 ? "gives need a talent id from 1000 to 9999"
+                : talent.Gives.Count > MaxGives ? $"it has {talent.Gives.Count} gives; the most is {MaxGives}"
+                : null;
+
+            for (var lv = 1; problem == null && lv <= count; lv++) problem = AddLevelGives(talent, lv, rows, companions);
+
+            if (problem != null)
+            {
+                Problems.Add($"talent {talent.Id} was skipped: {problem}");
+
+                return false;
+            }
+
+            foreach (var row in rows) Made(row.Table).Add(row.Id);
+
+            Rows.AddRange(rows);
+            Companions.AddRange(companions);
+
+            return true;
+        }
+
+        private string? AddLevelGives(TalentEntry talent, int lv, List<RowEdit> rows, List<Companion> companions)
+        {
+            var riders = new List<int>();
+
+            for (var k = 0; k < talent.Gives.Count; k++)
+            {
+                var give = talent.Gives[k];
+                var buff = GiveBuff(talent.Id, lv, k);
+                var effect = EffectOf(buff);
+
+                if (!give.Effect.StartsWith(GamePrefix, StringComparison.Ordinal)) return $"give {k + 1} is \"{give.Effect}\"; only game effects (\"{GamePrefix}...\") can be given";
+
+                if (_tables.Template(give.Effect.Substring(GamePrefix.Length), talent.Id, lv) is not { } template) return $"no talent in the game runs the effect \"{give.Effect}\" (give {k + 1})";
+
+                if (IsTaken(talent.Id, lv, k, buff, effect)) return $"level {lv} give {k + 1} needs buff {buff} and effect {effect}, and one of them is already in use";
+
+                var effectFields = new List<FieldSet> { Whole("ID", effect) };
+
+                effectFields.AddRange(give.Choice);
+                effectFields.AddRange(give.FieldsAt(lv));
+                rows.Add(new RowEdit(Table.Effect, effect, template.Effect, effectFields));
+                rows.Add(new RowEdit(Table.Buff, buff, template.Buff, new[] { Whole("ID", buff), Whole("EffectConfigId", effect), new FieldSet("IsHide", new FieldValue.Flag(true)) }));
+
+                if (k > 0) riders.Add(buff);
+            }
+
+            if (riders.Count > 0) companions.Add(new Companion(GiveBuff(talent.Id, lv, 0), riders));
+
+            return null;
+        }
+
+        /// <summary>A give may take over the level's own buff and effect, but never a row the file or the game already uses.</summary>
+        private bool IsTaken(int talentId, int lv, int k, int buff, int effect)
+        {
+            if (_madeBuffs.Contains(buff) || _madeEffects.Contains(effect)) return true;
+
+            var isOwnLevelBuff = k == 0 && _tables.LevelBuff(talentId, lv) == buff;
+
+            return !isOwnLevelBuff && (_tables.HasBuff(buff) || _tables.HasEffect(effect));
         }
 
         private void AddBuffLink(TalentEntry talent, List<FieldSet> fields, int buff)
@@ -191,6 +290,11 @@ public sealed record TalentPlan(IReadOnlyList<RowEdit> Rows, IReadOnlyList<TextE
     }
 
     private static int RowId(int talentId, int lv) => talentId * 10 + lv;
+
+    private static int GiveBuff(int talentId, int lv, int k) => talentId * 100 + lv * 10 + k;
+
+    /// <summary>The game numbers a talent buff's effect 200000000 + the buff's ID.</summary>
+    private static int EffectOf(int buff) => 200000000 + buff;
 
     private static FieldSet Whole(string field, int value) => new(field, new FieldValue.Number(value));
 

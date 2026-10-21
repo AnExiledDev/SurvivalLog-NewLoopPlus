@@ -16,6 +16,7 @@ public sealed class EndRunTicker : MonoBehaviour
 
     internal static EndRun? Flow;
     internal static WebPage? Page;
+    internal static TalentsTab? Talents;
     internal static Action<string> Log = _ => { };
     private static readonly HashSet<string> ReportedFailures = new();
 
@@ -58,6 +59,12 @@ public sealed class EndRunTicker : MonoBehaviour
                     break;
                 case PageCommand.NoScript:
                     page.Install();
+                    break;
+                case PageCommand.TalentsLoad:
+                    Talents?.Load();
+                    break;
+                case PageCommand.TalentsSave save:
+                    Talents?.Save(save.Json);
                     break;
                 case PageCommand.Unknown unknown:
                     Log("page: " + unknown.Text);

@@ -14,7 +14,8 @@ namespace NewLoopPlus.Adapters;
 internal sealed class WebPage : IRunPage
 {
     private const float CheckSeconds = 2f;
-    private const string ScriptResource = "NewLoopPlus.page.js";
+    private const string PageResource = "NewLoopPlus.page.js";
+    private const string TalentsTabResource = "NewLoopPlus.talents-tab.js";
     private const string NoScriptReply = "window.vuplex&&window.vuplex.postMessage('" + PageCommand.Prefix + "noscript')";
 
     private readonly Action<string> _log;
@@ -74,13 +75,17 @@ internal sealed class WebPage : IRunPage
         }
     }
 
-    private string Script()
-    {
-        if (_script != null) return _script;
+    /// <summary>Runs a call into the page's scripts, such as a reply to the Talents tab.</summary>
+    public void Call(string javaScript) => Run(javaScript);
 
-        using var stream = typeof(WebPage).Assembly.GetManifestResourceStream(ScriptResource) ?? throw new InvalidOperationException(ScriptResource + " is not embedded");
+    /// <summary>The pause menu script and the Talents tab travel together, so a reloaded page gets both back at once.</summary>
+    private string Script() => _script ??= Resource(PageResource) + "\n;" + Resource(TalentsTabResource);
+
+    private static string Resource(string name)
+    {
+        using var stream = typeof(WebPage).Assembly.GetManifestResourceStream(name) ?? throw new InvalidOperationException(name + " is not embedded");
         using var reader = new StreamReader(stream);
 
-        return _script = reader.ReadToEnd();
+        return reader.ReadToEnd();
     }
 }

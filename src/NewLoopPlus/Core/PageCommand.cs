@@ -26,7 +26,15 @@ public abstract record PageCommand
     /// <summary>The page has no script, usually because the web view reloaded.</summary>
     public sealed record NoScript : PageCommand;
 
+    /// <summary>The Talents tab opened and wants the game's talents and the talents file.</summary>
+    public sealed record TalentsLoad : PageCommand;
+
+    /// <summary>The Talents tab saved: <paramref name="Json"/> is the whole new talents file.</summary>
+    public sealed record TalentsSave(string Json) : PageCommand;
+
     public sealed record Unknown(string Text) : PageCommand;
+
+    private const string SaveVerb = "talents|save|";
 
     public static bool IsOurs(string? message) => message is not null && message.StartsWith(Prefix, StringComparison.Ordinal);
 
@@ -35,12 +43,17 @@ public abstract record PageCommand
     {
         if (!IsOurs(message)) return new Unknown(message);
 
-        return message.Substring(Prefix.Length) switch
+        var verb = message.Substring(Prefix.Length);
+
+        if (verb.StartsWith(SaveVerb, StringComparison.Ordinal)) return new TalentsSave(verb.Substring(SaveVerb.Length));
+
+        return verb switch
         {
             "ask" => new Ask(),
             "end" => new End(),
             "ready" => new Ready(),
             "noscript" => new NoScript(),
+            "talents|load" => new TalentsLoad(),
             _ => new Unknown(message),
         };
     }

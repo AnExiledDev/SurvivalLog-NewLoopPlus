@@ -28,6 +28,33 @@ internal static class RowFields
         }
     }
 
+    /// <summary>Every number, text and yes/no field of a row, by the name the table gives it. Lists are left out.</summary>
+    public static List<FieldSet> ReadAll(object row)
+    {
+        var fields = new List<FieldSet>();
+
+        foreach (var property in row.GetType().GetProperties(Instance))
+        {
+            if (!IsField(property) || !property.CanRead) continue;
+
+            if (Read(property.GetValue(row)) is { } value) fields.Add(new FieldSet(property.Name.Substring(1, property.Name.Length - 1 - Suffix.Length), value));
+        }
+
+        return fields;
+    }
+
+    /// <summary>A float such as 0.1 reads back as 0.100000001; six places is more than any table value uses.</summary>
+    private static FieldValue? Read(object? value) => value switch
+    {
+        int whole => new FieldValue.Number(whole),
+        long big => new FieldValue.Number(big),
+        float single => new FieldValue.Number(Math.Round(single, 6)),
+        double number => new FieldValue.Number(number),
+        bool flag => new FieldValue.Flag(flag),
+        string text => new FieldValue.Text(text),
+        _ => null,
+    };
+
     /// <summary>Sets one field, or returns why it could not be set.</summary>
     public static string? Set(object row, string field, FieldValue value)
     {

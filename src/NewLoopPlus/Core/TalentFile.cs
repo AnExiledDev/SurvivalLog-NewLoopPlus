@@ -36,6 +36,16 @@ public sealed record LevelEntry(int? Cost, int? Buff, LocalText? Description, Lo
 public sealed record ReinforceRule(int TalentBuff, int DoorWindowBuff);
 
 /// <summary>
+/// One thing a talent gives: a game effect script, run with <paramref name="Choice"/> at every level and with the fields of
+/// <paramref name="Levels"/> at each level. A level past the end of <paramref name="Levels"/> uses the last one.
+/// </summary>
+public sealed record GiveEntry(string Effect, IReadOnlyList<FieldSet> Choice, IReadOnlyList<IReadOnlyList<FieldSet>> Levels)
+{
+    public IReadOnlyList<FieldSet> FieldsAt(int lv) =>
+        Levels.Count == 0 ? Array.Empty<FieldSet>() : Levels[Math.Min(lv, Levels.Count) - 1];
+}
+
+/// <summary>
 /// One talent in the file. Its buffs, effects and reinforce rules belong to it and apply only while it is enabled.
 /// <paramref name="Levels"/> is null when the file leaves the game's levels as they are.
 /// </summary>
@@ -50,7 +60,8 @@ public sealed record TalentEntry(
     IReadOnlyList<LevelEntry>? Levels,
     IReadOnlyList<RowEntry> Buffs,
     IReadOnlyList<RowEntry> Effects,
-    IReadOnlyList<ReinforceRule> Reinforce);
+    IReadOnlyList<ReinforceRule> Reinforce,
+    IReadOnlyList<GiveEntry> Gives);
 
 /// <summary>The talents file as read, with every entry that could not be read.</summary>
 public sealed record TalentFile(IReadOnlyList<TalentEntry> Talents, IReadOnlyList<RowEntry> Buffs, IReadOnlyList<RowEntry> Effects, IReadOnlyList<string> Problems)
@@ -118,7 +129,26 @@ public sealed record TalentFile(IReadOnlyList<TalentEntry> Talents, IReadOnlyLis
             entry.TryGetProperty("levels", out _) ? ReadList(entry, "levels", where + " level", problems, (level, _) => ReadLevel(level)) : null,
             ReadList(entry, "buffs", where + " buff", problems, ReadRow),
             ReadList(entry, "effects", where + " effect", problems, ReadRow),
-            ReadList(entry, "reinforce", where + " reinforce rule", problems, (rule, _) => new ReinforceRule(RequireInt(rule, "talentBuff"), RequireInt(rule, "doorWindowBuff"))));
+            ReadList(entry, "reinforce", where + " reinforce rule", problems, (rule, _) => new ReinforceRule(RequireInt(rule, "talentBuff"), RequireInt(rule, "doorWindowBuff"))),
+            ReadList(entry, "gives", where + " give", problems, (give, _) => ReadGive(give)));
+    }
+
+    private static GiveEntry ReadGive(JsonElement give)
+    {
+        var effect = give.TryGetProperty("effect", out var name) && name.ValueKind == JsonValueKind.String ? name.GetString() ?? "" : "";
+
+        if (effect.Length == 0) throw new FormatException("\"effect\" is missing");
+
+        var levels = new List<IReadOnlyList<FieldSet>>();
+
+        if (give.TryGetProperty("levels", out var list))
+        {
+            if (list.ValueKind != JsonValueKind.Array) throw new FormatException("\"levels\" must be a [ ] list");
+
+            foreach (var level in list.EnumerateArray()) levels.Add(ReadFieldObject("a level", level));
+        }
+
+        return new GiveEntry(effect, ReadFields(give, "choice"), levels);
     }
 
     private static LevelEntry ReadLevel(JsonElement level) =>
@@ -161,13 +191,14 @@ public sealed record TalentFile(IReadOnlyList<TalentEntry> Talents, IReadOnlyLis
         return items;
     }
 
-    private static IReadOnlyList<FieldSet> ReadFields(JsonElement entry)
+    private static IReadOnlyList<FieldSet> ReadFields(JsonElement entry, string name = "fields") =>
+        entry.TryGetProperty(name, out var set) ? ReadFieldObject($"\"{name}\"", set) : Array.Empty<FieldSet>();
+
+    private static IReadOnlyList<FieldSet> ReadFieldObject(string what, JsonElement set)
     {
+        if (set.ValueKind != JsonValueKind.Object) throw new FormatException($"{what} must be a {{ }} object");
+
         var fields = new List<FieldSet>();
-
-        if (!entry.TryGetProperty("fields", out var set)) return fields;
-
-        if (set.ValueKind != JsonValueKind.Object) throw new FormatException("\"fields\" must be a { } object");
 
         foreach (var field in set.EnumerateObject()) fields.Add(new FieldSet(field.Name, ReadValue(field.Name, field.Value)));
 

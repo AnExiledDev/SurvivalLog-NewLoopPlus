@@ -91,6 +91,33 @@ public class TalentFileTests
     }
 
     [Fact]
+    public void A_give_reads_its_effect_its_choice_and_one_set_of_fields_per_level()
+    {
+        var file = TalentFile.Parse("""
+            { "talents": [ { "id": 1002, "gives": [
+              { "effect": "game:PreDisaster_AddRandomItem", "choice": { "IntValue0": 227 }, "levels": [ { "IntValue1": 2 }, { "IntValue1": 4 } ] } ] } ] }
+            """);
+        var give = Assert.Single(Assert.Single(file.Talents).Gives);
+
+        Assert.Empty(file.Problems);
+        Assert.Equal("game:PreDisaster_AddRandomItem", give.Effect);
+        Assert.Equal(new FieldSet("IntValue0", new FieldValue.Number(227)), Assert.Single(give.Choice));
+        Assert.Equal(new FieldValue.Number(2), Assert.Single(give.FieldsAt(1)).Value);
+        Assert.Equal(new FieldValue.Number(4), Assert.Single(give.FieldsAt(5)).Value);
+    }
+
+    [Fact]
+    public void A_give_without_an_effect_is_reported_and_the_talent_keeps_its_other_gives()
+    {
+        var file = TalentFile.Parse("""{ "talents": [ { "id": 1002, "gives": [ { "choice": {} }, { "effect": "game:PreDisaster_AddGold" } ] } ] }""");
+        var talent = Assert.Single(file.Talents);
+
+        Assert.Equal("game:PreDisaster_AddGold", Assert.Single(talent.Gives).Effect);
+        Assert.Empty(talent.Gives[0].FieldsAt(1));
+        Assert.Contains("talent 1002 give #1", Assert.Single(file.Problems));
+    }
+
+    [Fact]
     public void Whole_numbers_are_told_apart_from_fractions()
     {
         Assert.Equal(200, TalentFile.AsWhole(200.0));
@@ -147,5 +174,9 @@ public class TalentFileTests
 
         public System.Collections.Generic.IReadOnlyList<int> TalentLevels(int talentId) =>
             talentId is 2017 or 4004 or 4006 ? new[] { 1 } : talentId == 3076 ? new[] { 1, 2, 3 } : new[] { 1, 2, 3, 4, 5 };
+
+        public GiveTemplate? Template(string script, int talentId, int lv) => null;
+
+        public int? LevelBuff(int talentId, int lv) => null;
     }
 }

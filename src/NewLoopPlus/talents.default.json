@@ -14,6 +14,9 @@
 //   "buffs", "effects"   Config_Buff and Config_Effect rows this talent changes or makes (see below)
 //   "reinforce"   { "talentBuff": A, "doorWindowBuff": B }: while the owner has buff A, every home door
 //                 and window gets buff B
+//   "gives"       list of { "effect": "game:<script>", "choice": {fields}, "levels": [{fields}...] }: what each
+//                 level gives, made from an effect script the game's talents run. A level's "buff" is ignored
+//                 when the talent has gives. The Mod Manager's Talents tab writes these for you.
 //
 // A buff or effect entry: "id", an optional "copyFrom" (needed to make a new row), and "fields",
 // named as the game's tables name them (ConfigName, IntValue0, BuffSatietyDel, EffectConfigId...).

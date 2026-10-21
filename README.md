@@ -14,6 +14,7 @@ End a run whenever you like and go straight to the death screen, so you can star
 - **Change it in game**: with Exiled's Toolkit installed, the points multipliers and the starting bonus can be changed on the Mod Manager's Mods screen and apply at once.
 - **Loop reward costs**: one multiplier for what every loop reward upgrade costs, plus your own multiplier for single talents by ID. The upgrade screen shows, checks and charges the new price, and its reset refunds what you paid.
 - **Talents file**: `BepInEx\config\NewLoopPlus.Talents.json` lets you change loop rewards by hand: costs, buffs, text, extra levels, and new talents copied from existing ones. It ships with ten talents the game has in its data but never offers, all switched off. Five work as the game left them (Driver, No-Till Soil, Trailblazer, Liaison, Radio Station). Five were unfinished and get new effects from the mod (Well-Connected, Last-Minute Preparation, Resourceful, Yoga Master, Shut-In). See [CONFIG.md](CONFIG.md#talents-file).
+- **Talents tab**: with the Mod Manager 0.7.0 or newer, New Loop Plus's page gets a Talents tab that edits the talents file for you. Change what any loop reward costs, how many levels it has, its numbers and its text; switch the file's rewards on or off; or click NEW REWARD to build your own from the effects the game's rewards use, with text that writes itself from the numbers. SAVE writes the file, and the changes apply at the next game start.
 - **Log file**: every confirm, the points preview and how the end went are written to `BepInEx\new-loop-plus.log`.
 
 The button only shows in a loaded run past the tutorial that has not already ended. The button and the dialog follow the game's language, English or Simplified Chinese.
@@ -25,7 +26,9 @@ With every talent in the talents file switched off, New Loop Plus adds no data o
 - If the game is still paused five seconds after the pause menu closes (another window holding the game paused, for example), the run is not ended and a short message says so. Close that window and try again.
 - Points are whole numbers, so scaled values are rounded (halves round up). A small reward times a small multiplier can round to 0.
 - Crisis and event penalties that take Planning Points away are not scaled.
-- The talents file is read once at game start. Changes need a restart.
+- The talents file is read once at game start. Changes need a restart, including changes saved from the Talents tab.
+- Saving from the Talents tab drops the comments in the talents file. The file as it was is kept next to it as `NewLoopPlus.Talents.json.bak`.
+- The Talents tab can change the numbers of the five rewards New Loop Plus finished, but not which effects they give.
 - The talents that were unfinished in the game are the mod's own design, and their text was rewritten to match what they now do.
 - The points preview is worked out the way the game settles a death. If a value it needs cannot be read, the dialog says the death screen will show the points instead.
 
@@ -34,6 +37,7 @@ With every talent in the talents file switched off, New Loop Plus adds no data o
 - Survival Log 1.1.18902. Built and tested on this version; a game update can break it until the mod is updated.
 - The [BepInEx Pack for Survival Log](https://www.nexusmods.com/survivallog/mods/12), the BepInEx 6 (IL2CPP) build for the game.
 - Optional: [Exiled's Toolkit](https://github.com/AnExiledDev/SurvivalLog-ExiledToolkit) 0.4.0 or newer. With it, the points multipliers and the starting bonus changed on the Mod Manager's Mods screen take effect without restarting the game. Without it, they take effect at the next game start. Cost settings always apply at the next game start.
+- Optional: [Mod Manager](https://github.com/AnExiledDev/SurvivalLog-ModManager) 0.7.0 or newer, for the Talents tab. Without it, edit the talents file by hand.
 
 ## Install
 
@@ -47,7 +51,7 @@ Delete `NewLoopPlus.dll` from the `BepInEx\plugins` folder. For a clean slate, a
 
 ## Troubleshooting
 
-Check `BepInEx\LogOutput.log` for `===== New Loop Plus 0.4.0 started`. The same line, plus every confirm, the points preview and how the end went, is in `BepInEx\new-loop-plus.log`, which survives restarts.
+Check `BepInEx\LogOutput.log` for `===== New Loop Plus 0.5.0 started`. The same line, plus every confirm, the points preview and how the end went, is in `BepInEx\new-loop-plus.log`, which survives restarts.
 
 With any multiplier set, the log also says what was scaled, such as `survival points now convert at ...` or `... loop reward levels now cost ...`. A per-talent entry it could not read is named there too. The talents file adds a line such as `talents file: enabled 1006, 2017; 10 table rows written`, plus a line for each entry it skipped and why.
 
