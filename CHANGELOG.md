@@ -6,6 +6,8 @@
 - The talents file takes `gives` on a talent: the effects each level gives, by the name of a game effect script. The tab writes these for you.
 - Saving from the tab drops the comments in the talents file. The file as it was before is kept next to it as `NewLoopPlus.Talents.json.bak`.
 
+- After a game update, a hook that can no longer be placed is logged as an error, so the Mod Manager can mark the mod as maybe needing an update.
+
 ## 0.4.0
 
 - A talents file, `BepInEx\config\NewLoopPlus.Talents.json`, for changing loop rewards by hand: costs, buffs, text, extra levels and new talents. Read once at game start.

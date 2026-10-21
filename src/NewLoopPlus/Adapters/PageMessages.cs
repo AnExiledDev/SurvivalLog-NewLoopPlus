@@ -29,7 +29,7 @@ internal static class PageMessages
         }
         catch (Exception ex)
         {
-            log("could not listen for pause menu messages, the End Run button will do nothing: " + ex.Message);
+            log("could not hook pause menu messages, the End Run button will do nothing: " + ex.Message);
         }
     }
 
