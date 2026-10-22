@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.0
+
+- Eighteen new loop rewards in the talents file, all switched off. Switch them on in the Talents tab or with `"enabled": true` in the file.
+- Ten use effects the game already has: Prepper (more time before the disaster, more shopping weight), Insulated Pack (backpack items keep longer), Quick Rest (faster stamina from resting), Every Crumb Counts (the Ration Press keeps more nutrition), Field Kit (start with random materials, seeds and medicine), Solar Engineer (more solar power), Trapper (traps catch more often), Quick Learner (faster Production skill), Old Friend (start with an HK-1 sorting robot and its blueprints) and Light Footed (exposure builds slower).
+- Eight have effects made by New Loop Plus: Interest (Planning Points on what you kept from the last loop), Safety Net (a run that pays too few Planning Points is topped up), Extra Pick (more rewards to choose from at the end of each day), Crisis Veteran (more Planning Points from crises and events), Second Wind (survive running out of Life once or twice per run), Lucky Finds (a chance to find one more of an item when searching a container), Muscle Memory (keep part of the skill levels the last run gained) and Scout's Notes (start with drone trading posts already found).
+- Muscle Memory keeps the last run's skill levels in `BepInEx\config\NewLoopPlus.MuscleMemory.txt`. Delete it to start over.
+- The Talents tab's NEW REWARD can use all of these effects, plus robots at the start of a run.
+- The icon picker in the Talents tab offers every talent and item image in the game, grouped by kind.
+
 ## 0.5.0
 
 - A Talents tab on New Loop Plus's page in the Mod Manager (0.7.0 or newer). It lists every loop reward, and you can change what each one costs, how many levels it has, its numbers, its text, and switch the file's rewards on or off. NEW REWARD makes a reward of your own from the effects the game's rewards use, with an icon, a name, a column and text that writes itself from the numbers. SAVE writes the talents file; changes apply at the next game start.

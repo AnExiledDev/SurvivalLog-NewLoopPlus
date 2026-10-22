@@ -43,8 +43,14 @@ public sealed record RowEdit(Table Table, int Id, int? CopyFrom, IReadOnlyList<F
 /// <summary>One text the game looks up by key, in both languages.</summary>
 public sealed record TextEntry(string Key, string En, string Zh);
 
+/// <summary>
+/// A New Loop Plus effect a talent gives: whoever owns <paramref name="TalentId"/> at level n gets <paramref name="Effect"/>
+/// with the fields of <paramref name="Levels"/>[n - 1].
+/// </summary>
+public sealed record NlpGrant(string Effect, int TalentId, IReadOnlyList<IReadOnlyList<FieldSet>> Levels);
+
 /// <summary>Everything the talents file changes in the game's tables, in the order it must be applied.</summary>
-public sealed record TalentPlan(IReadOnlyList<RowEdit> Rows, IReadOnlyList<TextEntry> Texts, IReadOnlyList<string> Problems, IReadOnlyList<Companion> Companions)
+public sealed record TalentPlan(IReadOnlyList<RowEdit> Rows, IReadOnlyList<TextEntry> Texts, IReadOnlyList<string> Problems, IReadOnlyList<Companion> Companions, IReadOnlyList<NlpGrant> Grants)
 {
     /// <summary>Row IDs are TalentID * 10 + level, so a talent can have at most 9 levels.</summary>
     public const int MaxLevels = 9;
@@ -53,6 +59,11 @@ public sealed record TalentPlan(IReadOnlyList<RowEdit> Rows, IReadOnlyList<TextE
     public const int MaxGives = 10;
 
     public const string GamePrefix = "game:";
+
+    public const string NlpPrefix = "nlp:";
+
+    /// <summary>The script an nlp give's buff runs: a marker that does nothing, so the game only records the talent as owned.</summary>
+    private const string MarkerScript = "Buff_Empty";
 
     /// <summary>
     /// Works out the edits. Effects come first and buffs second, so a buff can point at an effect the file makes, and
@@ -69,7 +80,7 @@ public sealed record TalentPlan(IReadOnlyList<RowEdit> Rows, IReadOnlyList<TextE
 
         foreach (var talent in enabled) builder.AddTalent(talent);
 
-        return new TalentPlan(builder.Rows, builder.Texts, builder.Problems, builder.Companions);
+        return new TalentPlan(builder.Rows, builder.Texts, builder.Problems, builder.Companions, builder.Grants);
     }
 
     private sealed class Builder
@@ -92,6 +103,8 @@ public sealed record TalentPlan(IReadOnlyList<RowEdit> Rows, IReadOnlyList<TextE
         public List<string> Problems { get; } = new();
 
         public List<Companion> Companions { get; } = new();
+
+        public List<NlpGrant> Grants { get; } = new();
 
         public void AddRows(Table table, IEnumerable<RowEntry> entries)
         {
@@ -212,6 +225,7 @@ public sealed record TalentPlan(IReadOnlyList<RowEdit> Rows, IReadOnlyList<TextE
 
             Rows.AddRange(rows);
             Companions.AddRange(companions);
+            Grants.AddRange(talent.Gives.Where(IsNlp).Select(give => Grant(talent.Id, give, count)));
 
             return true;
         }
@@ -225,17 +239,23 @@ public sealed record TalentPlan(IReadOnlyList<RowEdit> Rows, IReadOnlyList<TextE
                 var give = talent.Gives[k];
                 var buff = GiveBuff(talent.Id, lv, k);
                 var effect = EffectOf(buff);
+                var isNlp = IsNlp(give);
 
-                if (!give.Effect.StartsWith(GamePrefix, StringComparison.Ordinal)) return $"give {k + 1} is \"{give.Effect}\"; only game effects (\"{GamePrefix}...\") can be given";
+                if (!isNlp && !give.Effect.StartsWith(GamePrefix, StringComparison.Ordinal)) return $"give {k + 1} is \"{give.Effect}\"; only game effects (\"{GamePrefix}...\") and New Loop Plus effects (\"{NlpPrefix}...\") can be given";
 
-                if (_tables.Template(give.Effect.Substring(GamePrefix.Length), talent.Id, lv) is not { } template) return $"no talent in the game runs the effect \"{give.Effect}\" (give {k + 1})";
+                if (isNlp && !NlpEffect.All.Contains(give.Effect.Substring(NlpPrefix.Length))) return $"give {k + 1} is \"{give.Effect}\", which New Loop Plus does not have; it has {string.Join(", ", NlpEffect.All.Select(name => NlpPrefix + name))}";
+
+                var script = isNlp ? MarkerScript : give.Effect.Substring(GamePrefix.Length);
+
+                if (_tables.Template(script, talent.Id, lv) is not { } template) return $"no talent in the game runs the effect \"{GamePrefix}{script}\" (give {k + 1})";
 
                 if (IsTaken(talent.Id, lv, k, buff, effect)) return $"level {lv} give {k + 1} needs buff {buff} and effect {effect}, and one of them is already in use";
 
                 var effectFields = new List<FieldSet> { Whole("ID", effect) };
 
-                effectFields.AddRange(give.Choice);
-                effectFields.AddRange(give.FieldsAt(lv));
+                // An nlp give's fields are read by New Loop Plus, not by the marker script, so the game row keeps none of them.
+                if (!isNlp) effectFields.AddRange(give.Choice.Concat(give.FieldsAt(lv)));
+
                 rows.Add(new RowEdit(Table.Effect, effect, template.Effect, effectFields));
                 rows.Add(new RowEdit(Table.Buff, buff, template.Buff, new[] { Whole("ID", buff), Whole("EffectConfigId", effect), new FieldSet("IsHide", new FieldValue.Flag(true)) }));
 
@@ -287,6 +307,15 @@ public sealed record TalentPlan(IReadOnlyList<RowEdit> Rows, IReadOnlyList<TextE
         var below = levels.Where(level => level <= lv).ToList();
 
         return below.Count > 0 ? below.Max() : levels.Min();
+    }
+
+    private static bool IsNlp(GiveEntry give) => give.Effect.StartsWith(NlpPrefix, StringComparison.Ordinal);
+
+    private static NlpGrant Grant(int talentId, GiveEntry give, int count)
+    {
+        var levels = Enumerable.Range(1, count).Select(lv => (IReadOnlyList<FieldSet>)give.Choice.Concat(give.FieldsAt(lv)).ToList()).ToList();
+
+        return new NlpGrant(give.Effect.Substring(NlpPrefix.Length), talentId, levels);
     }
 
     private static int RowId(int talentId, int lv) => talentId * 10 + lv;

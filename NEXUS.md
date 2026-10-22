@@ -1,5 +1,5 @@
 Name: New Loop Plus
-Summary: End a run from the pause menu and start a new loop at once. Tune how many Planning Points runs earn and what loop rewards cost. 可以从暂停菜单结束一局，立即开始新轮回，并调整每局获得的信念点和天赋升级的消耗。
+Summary: End a run from the pause menu and start a new loop at once, tune the Planning Points runs earn and what loop rewards cost, and add new loop rewards. Eighteen new rewards ship switched off, and a Talents tab in the Mod Manager lets you edit any reward's costs, levels, numbers and text, or build your own from the game's effects and the mod's.
 
 Description (BBCode):
 Want a fresh loop without waiting for your character to die? New Loop Plus adds an End Run button to the pause menu. Confirm, and the run ends exactly as a death does: the death screen, the settlement and the save are the game's own. It also lets you tune how many Planning Points a run earns and what loop rewards cost.
@@ -14,7 +14,8 @@ Want a fresh loop without waiting for your character to die? New Loop Plus adds 
 [*][b]Endless starting points[/b]: a multiplier for the 500 Planning Points a new endless game starts with.[/*]
 [*][b]Loop reward costs[/b]: one multiplier for what every loop reward upgrade costs, plus your own multiplier for single talents by ID. Resetting the upgrade screen refunds what you paid.[/*]
 [*][b]Talents file[/b]: [font=Courier New]BepInEx\config\NewLoopPlus.Talents.json[/font] lets you change loop rewards by hand: costs, buffs, text, extra levels and new talents. It ships with ten talents the game has in its data but never offers, all switched off. Driver, No-Till Soil, Trailblazer, Liaison and Radio Station work as the game left them. Well-Connected, Last-Minute Preparation, Resourceful, Yoga Master and Shut-In were unfinished and get new effects from the mod.[/*]
-[*][b]Talents tab[/b]: with the Mod Manager 0.7.0 or newer, New Loop Plus's page gets a Talents tab that edits the talents file for you. Change what any loop reward costs, how many levels it has, its numbers and its text, switch the file's rewards on or off, or click NEW REWARD to build your own from the effects the game's rewards use. SAVE writes the file; the changes apply at the next game start.[/*]
+[*][b]Eighteen new loop rewards[/b], also in the talents file and switched off. Ten use effects the game already has: Prepper, Insulated Pack, Quick Rest, Every Crumb Counts, Field Kit, Solar Engineer, Trapper, Quick Learner, Old Friend (start with an HK-1 robot) and Light Footed. Eight have effects made by the mod: Interest (Planning Points on what you kept), Safety Net (a floor for what a run pays), Extra Pick (more rewards to choose from each day), Crisis Veteran, Second Wind (survive running out of Life), Lucky Finds, Muscle Memory (keep part of the last run's skill levels) and Scout's Notes (start with drone trading posts found).[/*]
+[*][b]Talents tab[/b]: with the Mod Manager 0.7.0 or newer, New Loop Plus's page gets a Talents tab that edits the talents file for you. Change what any loop reward costs, how many levels it has, its numbers and its text, switch the file's rewards on or off, or click NEW REWARD to build your own from the effects the game's rewards use and the mod's own, with any talent or item image. SAVE writes the file; the changes apply at the next game start.[/*]
 [/list]
 With every talent in the talents file switched off, New Loop Plus adds no data of its own to your save. A switched-on talent can leave its levels in the save; switch it off and play a run before removing the mod. Points and costs go back to the game's own at the next start.
 
@@ -75,7 +76,8 @@ Open source under MIT: [url=https://github.com/AnExiledDev/SurvivalLog-NewLoopPl
 [*][b]无尽模式初始信念点[/b]：新开无尽模式时的 500 初始信念点可以乘以一个倍数。[/*]
 [*][b]天赋消耗[/b]：一个倍数调整所有天赋升级消耗的信念点，也可以按天赋 ID 单独设置倍数。在升级界面重置时会退还已花费的信念点。[/*]
 [*][b]天赋文件[/b]：可以在 [font=Courier New]BepInEx\config\NewLoopPlus.Talents.json[/font] 中手动修改天赋：消耗、增益、文字、额外等级，以及新天赋。文件中自带十个游戏数据里有但从未开放的天赋，默认全部关闭。「载具驾驶」、「免翻土」、「开拓者」、「联络员」和「无线电台」保持游戏原样。「人脉网络」、「临阵磨枪」、「资源回收」、「瑜伽大师」和「宅人之心」在游戏中没有做完，由模组赋予了新效果。[/*]
-[*][b]天赋页[/b]：装了 Mod Manager 0.7.0 或更新版本后，New Loop Plus 的页面会多出「天赋」页，替你编辑天赋文件。可以修改任意轮回奖励的消耗、等级数、数值和文字，开关文件中的奖励，也可以点击「新建奖励」，用游戏奖励中已有的效果做出你自己的奖励。点击「保存」写入文件，改动在下次启动游戏时生效。[/*]
+[*][b]十八个新的轮回奖励[/b]，同样在天赋文件中，默认关闭。其中十个使用游戏已有的效果：「未雨绸缪」、「保鲜背包」、「养精蓄锐」、「颗粒归仓」、「应急物资包」、「太阳能工程师」、「捕猎老手」、「学得快」、「老伙计」（开局获得一台 HK-1 机器人）和「轻手轻脚」。另外八个的效果由模组实现：「利息」（按剩下的信念点获得利息）、「保底」（一局所得信念点的下限）、「多一个选择」（每天可选的奖励更多）、「危机老兵」、「绝处逢生」（生命耗尽时挺过来）、「意外收获」、「肌肉记忆」（保留上一局的部分技能等级）和「侦察笔记」（开局时已发现无人机交易点）。[/*]
+[*][b]天赋页[/b]：装了 Mod Manager 0.7.0 或更新版本后，New Loop Plus 的页面会多出「天赋」页，替你编辑天赋文件。可以修改任意轮回奖励的消耗、等级数、数值和文字，开关文件中的奖励，也可以点击「新建奖励」，用游戏奖励中已有的效果和模组自己的效果做出你自己的奖励，并可选用任意天赋或物品的图标。点击「保存」写入文件，改动在下次启动游戏时生效。[/*]
 [/list]
 天赋文件中所有天赋都关闭时，New Loop Plus 不会往存档里添加任何自己的数据。开启的天赋可能会把等级留在存档中；移除模组前请先关闭它并玩一局。信念点和消耗会在下次启动游戏时恢复为游戏原本的数值。
 

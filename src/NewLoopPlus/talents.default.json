@@ -17,6 +17,9 @@
 //   "gives"       list of { "effect": "game:<script>", "choice": {fields}, "levels": [{fields}...] }: what each
 //                 level gives, made from an effect script the game's talents run. A level's "buff" is ignored
 //                 when the talent has gives. The Mod Manager's Talents tab writes these for you.
+//                 "effect" can also be "nlp:<name>", an effect New Loop Plus runs itself: interest, safety-net,
+//                 extra-pick, crisis-veteran, second-wind, lucky-finds, muscle-memory, scouts-notes. The
+//                 entries at the bottom of the list show what each one reads.
 //
 // A buff or effect entry: "id", an optional "copyFrom" (needed to make a new row), and "fields",
 // named as the game's tables name them (ConfigName, IntValue0, BuffSatietyDel, EffectConfigId...).
@@ -137,6 +140,261 @@
         { "id": 200200730, "fields": { "ConfigName": "Buff/Buff_CondOnOtherBuff", "BuffHealthMax": 0, "IntValue0": 20100, "BuffInterval": 10800, "BuffMoraleInterval": 1 } },
         { "id": 200200740, "fields": { "ConfigName": "Buff/Buff_CondOnOtherBuff", "BuffHealthMax": 0, "IntValue0": 20100, "BuffInterval": 7200, "BuffMoraleInterval": 1 } },
         { "id": 200200750, "fields": { "ConfigName": "Buff/Buff_CondOnOtherBuff", "BuffHealthMax": 0, "IntValue0": 20100, "BuffInterval": 3600, "BuffMoraleInterval": 1 } }
+      ]
+    },
+
+    // New loop rewards made from effects the game's own talents run.
+    {
+      "id": 5101,  // Prepper
+      "enabled": false,
+      "copyFrom": 1001,
+      "name": { "en": "Prepper", "zh": "未雨绸缪" },
+      "description": { "en": "More time before the disaster hits, and more weight to carry while shopping.", "zh": "灾难前醒来时间延长，购物负重提高" },
+      "levelText": { "en": "+1h, +0.5kg / +2h, +1kg / +3h, +1.5kg", "zh": "+1小时，+0.5KG / +2小时，+1KG / +3小时，+1.5KG" },
+      "fields": { "ShowType": 1, "WebIcon": "../../Res/Consumable/UI_Item_Icon_Cons_S_1600301001.png", "Icon": "Assets/RuntimeAssets/Texture/Consumable/UI_Item_Icon_Cons_S_1600301001" },
+      "levels": [{ "cost": 5 }, { "cost": 10 }, { "cost": 15 }],
+      "gives": [
+        // IntValue0 is in seconds.
+        { "effect": "game:PreDisaster_AddCountDownTime", "levels": [{ "IntValue0": 3600 }, { "IntValue0": 7200 }, { "IntValue0": 10800 }] },
+        // IntValue0 is in 1/1200 kg, so 600 is 0.5kg.
+        { "effect": "game:PreDisaster_AddWeight", "levels": [{ "IntValue0": 600 }, { "IntValue0": 1200 }, { "IntValue0": 1800 }] }
+      ]
+    },
+    {
+      "id": 5102,  // Insulated Pack
+      "enabled": false,
+      "copyFrom": 2001,
+      "name": { "en": "Insulated Pack", "zh": "保鲜背包" },
+      "description": { "en": "Items in your backpack keep longer.", "zh": "随身背包里的物品保质期延长" },
+      "levelText": { "en": "2x / 3x / 4x as long", "zh": "2倍 / 3倍 / 4倍" },
+      "fields": { "ShowType": 2, "WebIcon": "../../Res/icon/UI_Item_Icon_Buff_baowenbeibao.png", "Icon": "Assets/RuntimeAssets/Texture/UI/icon/UI_Item_Icon_Buff_baowenbeibao" },
+      "levels": [{ "cost": 5 }, { "cost": 10 }, { "cost": 15 }],
+      "gives": [
+        // FloatValue0 1 keeps items 2x as long, 2 keeps them 3x.
+        { "effect": "game:AE_BackpackShelfLife", "levels": [{ "FloatValue0": 1 }, { "FloatValue0": 2 }, { "FloatValue0": 3 }] }
+      ]
+    },
+    {
+      "id": 5103,  // Quick Rest
+      "enabled": false,
+      "copyFrom": 2001,
+      "name": { "en": "Quick Rest", "zh": "养精蓄锐" },
+      "description": { "en": "Stamina restores faster when resting.", "zh": "通过休息恢复精力的速度加快" },
+      "levelText": { "en": "+10% / +20% / +30%", "zh": "+10% / +20% / +30%" },
+      "fields": { "ShowType": 2, "WebIcon": "../../Res/icon/UI_Item_Icon_Buff_kuaisuxiuzheng.png", "Icon": "Assets/RuntimeAssets/Texture/UI/icon/UI_Item_Icon_Buff_kuaisuxiuzheng" },
+      "levels": [{ "cost": 5 }, { "cost": 10 }, { "cost": 15 }],
+      "gives": [
+        { "effect": "game:QuickRest", "levels": [{ "FloatValue0": 0.1 }, { "FloatValue0": 0.2 }, { "FloatValue0": 0.3 }] }
+      ]
+    },
+    {
+      "id": 5104,  // Every Crumb Counts
+      "enabled": false,
+      "copyFrom": 2001,
+      "name": { "en": "Every Crumb Counts", "zh": "颗粒归仓" },
+      "description": { "en": "The Ration Press keeps more of the food's nutrition (60% in the game).", "zh": "使用口粮压制机时，保留更多营养（游戏中为 60%）" },
+      "levelText": { "en": "+5% / +10% / +20%", "zh": "+5% / +10% / +20%" },
+      "fields": { "ShowType": 2, "WebIcon": "../../Res/Furniture/UI_Item_Icon_yazhiji.png", "Icon": "Assets/RuntimeAssets/Texture/Furniture/UI_Item_Icon_yazhiji" },
+      "levels": [{ "cost": 5 }, { "cost": 10 }, { "cost": 15 }],
+      "gives": [
+        { "effect": "game:AE_CompressValueRate", "levels": [{ "FloatValue0": 0.05 }, { "FloatValue0": 0.1 }, { "FloatValue0": 0.2 }] }
+      ]
+    },
+    {
+      "id": 5105,  // Field Kit
+      "enabled": false,
+      "copyFrom": 1001,
+      "name": { "en": "Field Kit", "zh": "应急物资包" },
+      "description": { "en": "Start each run with random crafting materials, seeds and medicine in your backpack.", "zh": "开局时背包里有随机的制造材料、种子和药品" },
+      "levelText": { "en": "6 items / 10 items / 14 items", "zh": "6件 / 10件 / 14件" },
+      "fields": { "ShowType": 1, "WebIcon": "../../Res/icon/UI_Item_Icon_Buff_kongtoucailiao.png", "Icon": "Assets/RuntimeAssets/Texture/UI/icon/UI_Item_Icon_Buff_kongtoucailiao" },
+      "levels": [{ "cost": 8 }, { "cost": 12 }, { "cost": 16 }],
+      "gives": [
+        // IntValue0 is the random item group (222: crafting materials, 223: seeds, 224: medicine), IntValue1 how many items.
+        { "effect": "game:AddItemToBag_307510", "choice": { "IntValue0": 222 }, "levels": [{ "IntValue1": 4 }, { "IntValue1": 6 }, { "IntValue1": 8 }] },
+        { "effect": "game:AddItemToBag_307510", "choice": { "IntValue0": 223 }, "levels": [{ "IntValue1": 1 }, { "IntValue1": 2 }, { "IntValue1": 3 }] },
+        { "effect": "game:AddItemToBag_307510", "choice": { "IntValue0": 224 }, "levels": [{ "IntValue1": 1 }, { "IntValue1": 2 }, { "IntValue1": 3 }] }
+      ]
+    },
+    {
+      "id": 5106,  // Solar Engineer
+      "enabled": false,
+      "copyFrom": 2001,
+      "name": { "en": "Solar Engineer", "zh": "太阳能工程师" },
+      "description": { "en": "Solar panels make more power.", "zh": "太阳能板产电效率提高" },
+      "levelText": { "en": "+15% / +30% / +45%", "zh": "+15% / +30% / +45%" },
+      "fields": { "ShowType": 2, "WebIcon": "../../Res/Furniture/UI_Item_Icon_Furnit_M_900300101.png", "Icon": "Assets/RuntimeAssets/Texture/Furniture/UI_Item_Icon_Furnit_M_900300101" },
+      "levels": [{ "cost": 5 }, { "cost": 10 }, { "cost": 15 }],
+      "gives": [
+        { "effect": "game:AE_PowerSolarEfficiency", "levels": [{ "FloatValue0": 0.15 }, { "FloatValue0": 0.3 }, { "FloatValue0": 0.45 }] }
+      ]
+    },
+    {
+      "id": 5107,  // Trapper
+      "enabled": false,
+      "copyFrom": 2001,
+      "name": { "en": "Trapper", "zh": "捕猎老手" },
+      "description": { "en": "Traps catch prey more often.", "zh": "陷阱捕获猎物的权重提高" },
+      "levelText": { "en": "+10% / +20% / +30%", "zh": "+10% / +20% / +30%" },
+      "fields": { "ShowType": 2, "WebIcon": "../../Res/Furniture/UI_Item_Icon_Trap_tiezhibushoujia.png", "Icon": "Assets/RuntimeAssets/Texture/Furniture/UI_Item_Icon_Trap_tiezhibushoujia" },
+      "levels": [{ "cost": 5 }, { "cost": 10 }, { "cost": 15 }],
+      "gives": [
+        { "effect": "game:AE_TrapCaptureMultiplier", "levels": [{ "FloatValue0": 0.1 }, { "FloatValue0": 0.2 }, { "FloatValue0": 0.3 }] }
+      ]
+    },
+    {
+      "id": 5108,  // Quick Learner
+      "enabled": false,
+      "copyFrom": 2001,
+      "name": { "en": "Quick Learner", "zh": "学得快" },
+      "description": { "en": "Production skill grows faster.", "zh": "生产技能长进更快" },
+      "levelText": { "en": "Production XP +25% / +50% / +75%", "zh": "生产经验 +25% / +50% / +75%" },
+      "fields": { "ShowType": 2, "WebIcon": "../../Res/Literature/UI_Item_Icon_Liter_S_1400250201.png", "Icon": "Assets/RuntimeAssets/Texture/Literature/UI_Item_Icon_Liter_S_1400250201" },
+      "levels": [{ "cost": 5 }, { "cost": 10 }, { "cost": 15 }],
+      "gives": [
+        // Any skill works: AE_CookExpMultiplier, AE_DefenseExpMultiplier, AE_ExploreExpMultiplier, AE_PlantExpMultiplier, AE_TrapExpMultiplier.
+        { "effect": "game:AE_ProductionExpMultiplier", "levels": [{ "FloatValue0": 0.25 }, { "FloatValue0": 0.5 }, { "FloatValue0": 0.75 }] }
+      ]
+    },
+    {
+      "id": 5109,  // Old Friend
+      "enabled": false,
+      "copyFrom": 1001,
+      "name": { "en": "Old Friend", "zh": "老伙计" },
+      "description": { "en": "Start with an HK-1 sorting robot and its full set of blueprints.", "zh": "开局获得一台 HK-1 整理机器人，并掌握其全部制造图纸" },
+      "levelText": { "en": "HK-1 robot", "zh": "HK-1 机器人" },
+      "fields": { "ShowType": 1, "WebIcon": "../../Res/Furniture/UI_Item_Icon_jiqiren_hk1.png", "Icon": "Assets/RuntimeAssets/Texture/Furniture/UI_Item_Icon_jiqiren_hk1" },
+      "levels": [{ "cost": 20 }],
+      "gives": [
+        // The endless robot talents' script; EndlessRobotGrant_TB is the GR-3 planting robot, EndlessRobotGrant_WX the FX-5 repair robot.
+        { "effect": "game:EndlessRobotGrant_HK", "levels": [{}] }
+      ]
+    },
+    {
+      "id": 5110,  // Light Footed
+      "enabled": false,
+      "copyFrom": 2001,
+      "name": { "en": "Light Footed", "zh": "轻手轻脚" },
+      "description": { "en": "Exposure builds slower while exploring.", "zh": "探索时暴露值增长降低" },
+      "levelText": { "en": "-10% / -20% / -30%", "zh": "-10% / -20% / -30%" },
+      "fields": { "ShowType": 2, "WebIcon": "../../Res/icon/UI_Item_Icon_Buff_yiluxiaopao.png", "Icon": "Assets/RuntimeAssets/Texture/UI/icon/UI_Item_Icon_Buff_yiluxiaopao" },
+      "levels": [{ "cost": 5 }, { "cost": 10 }, { "cost": 15 }],
+      "gives": [
+        { "effect": "game:AE_ExposureReduceMultiplier", "levels": [{ "FloatValue0": -0.1 }, { "FloatValue0": -0.2 }, { "FloatValue0": -0.3 }] }
+      ]
+    },
+
+    // New loop rewards with effects of New Loop Plus's own ("nlp:" gives).
+    {
+      "id": 5111,  // Interest
+      "enabled": false,
+      "copyFrom": 1001,
+      "name": { "en": "Interest", "zh": "利息" },
+      "description": { "en": "As each new loop starts, earn interest on the Planning Points you kept from the last one.", "zh": "每次开始新轮回时，按上一轮剩下的信念点获得利息" },
+      "levelText": { "en": "5% / 10% / 15%", "zh": "5% / 10% / 15%" },
+      "fields": { "ShowType": 1, "WebIcon": "../../Res/icon/UI_Item_Icon_Buff_chuxujihua.png", "Icon": "Assets/RuntimeAssets/Texture/UI/icon/UI_Item_Icon_Buff_chuxujihua" },
+      "levels": [{ "cost": 10 }, { "cost": 15 }, { "cost": 20 }],
+      "gives": [
+        // FloatValue0 is the share paid.
+        { "effect": "nlp:interest", "levels": [{ "FloatValue0": 0.05 }, { "FloatValue0": 0.1 }, { "FloatValue0": 0.15 }] }
+      ]
+    },
+    {
+      "id": 5112,  // Safety Net
+      "enabled": false,
+      "copyFrom": 1001,
+      "name": { "en": "Safety Net", "zh": "保底" },
+      "description": { "en": "A run that pays fewer Planning Points than this is topped up to it as the next loop starts.", "zh": "一局结算所得的信念点不足该数时，在开始新轮回时补足" },
+      "levelText": { "en": "100 / 200 / 300", "zh": "100 / 200 / 300" },
+      "fields": { "ShowType": 1, "WebIcon": "../../Res/icon/UI_Item_Icon_Buff_biaoqianbaodi_zhong.png", "Icon": "Assets/RuntimeAssets/Texture/UI/icon/UI_Item_Icon_Buff_biaoqianbaodi_zhong.png" },
+      "levels": [{ "cost": 8 }, { "cost": 12 }, { "cost": 16 }],
+      "gives": [
+        // IntValue0 is the fewest Planning Points a run pays.
+        { "effect": "nlp:safety-net", "levels": [{ "IntValue0": 100 }, { "IntValue0": 200 }, { "IntValue0": 300 }] }
+      ]
+    },
+    {
+      "id": 5113,  // Extra Pick
+      "enabled": false,
+      "copyFrom": 2001,
+      "name": { "en": "Extra Pick", "zh": "多一个选择" },
+      "description": { "en": "More rewards to choose from at the end of each day.", "zh": "每天结算时可选的奖励选项增加" },
+      "levelText": { "en": "+1 / +2", "zh": "+1 / +2" },
+      "fields": { "ShowType": 2, "WebIcon": "../../Res/Literature/UI_Item_Icon_Liter_M_1491200101.png", "Icon": "Assets/RuntimeAssets/Texture/Literature/UI_Item_Icon_Liter_M_1491200101" },
+      "levels": [{ "cost": 15 }, { "cost": 25 }],
+      "gives": [
+        // IntValue0 is how many more rewards are offered.
+        { "effect": "nlp:extra-pick", "levels": [{ "IntValue0": 1 }, { "IntValue0": 2 }] }
+      ]
+    },
+    {
+      "id": 5114,  // Crisis Veteran
+      "enabled": false,
+      "copyFrom": 2001,
+      "name": { "en": "Crisis Veteran", "zh": "危机老兵" },
+      "description": { "en": "Crises and events reward more Planning Points.", "zh": "危机与事件奖励的信念点增加" },
+      "levelText": { "en": "+10% / +20% / +30%", "zh": "+10% / +20% / +30%" },
+      "fields": { "ShowType": 2, "WebIcon": "../../Res/icon/UI_Item_Icon_Buff_weijihongli.png", "Icon": "Assets/RuntimeAssets/Texture/UI/icon/UI_Item_Icon_Buff_weijihongli" },
+      "levels": [{ "cost": 8 }, { "cost": 12 }, { "cost": 16 }],
+      "gives": [
+        // FloatValue0 is the share more.
+        { "effect": "nlp:crisis-veteran", "levels": [{ "FloatValue0": 0.1 }, { "FloatValue0": 0.2 }, { "FloatValue0": 0.3 }] }
+      ]
+    },
+    {
+      "id": 5115,  // Second Wind
+      "enabled": false,
+      "copyFrom": 2001,
+      "name": { "en": "Second Wind", "zh": "绝处逢生" },
+      "description": { "en": "When your Life runs out, you pull through with 30 Life instead.", "zh": "生命耗尽时，以30点生命挺过来" },
+      "levelText": { "en": "Once per run / Twice per run", "zh": "每局1次 / 每局2次" },
+      "fields": { "ShowType": 2, "WebIcon": "../../Res/Material/UI_Item_Icon_Mat_S_1503001501.png", "Icon": "Assets/RuntimeAssets/Texture/Material/UI_Item_Icon_Mat_S_1503001501" },
+      "levels": [{ "cost": 25 }, { "cost": 40 }],
+      "gives": [
+        // FloatValue0 is the Life left (at least 1), IntValue0 how many times per run.
+        { "effect": "nlp:second-wind", "choice": { "FloatValue0": 30 }, "levels": [{ "IntValue0": 1 }, { "IntValue0": 2 }] }
+      ]
+    },
+    {
+      "id": 5116,  // Lucky Finds
+      "enabled": false,
+      "copyFrom": 2001,
+      "name": { "en": "Lucky Finds", "zh": "意外收获" },
+      "description": { "en": "Searching a container has a chance to turn up one more of what you find.", "zh": "搜寻容器时，有几率多找到一份物品" },
+      "levelText": { "en": "10% / 20% / 30%", "zh": "10% / 20% / 30%" },
+      "fields": { "ShowType": 2, "WebIcon": "../../Res/icon/UI_Item_Icon_Buff_wuzisousuo.png", "Icon": "Assets/RuntimeAssets/Texture/UI/icon/UI_Item_Icon_Buff_wuzisousuo" },
+      "levels": [{ "cost": 10 }, { "cost": 15 }, { "cost": 20 }],
+      "gives": [
+        // FloatValue0 is the chance.
+        { "effect": "nlp:lucky-finds", "levels": [{ "FloatValue0": 0.1 }, { "FloatValue0": 0.2 }, { "FloatValue0": 0.3 }] }
+      ]
+    },
+    {
+      "id": 5117,  // Muscle Memory
+      "enabled": false,
+      "copyFrom": 1001,
+      "name": { "en": "Muscle Memory", "zh": "肌肉记忆" },
+      "description": { "en": "Each run starts with part of the skill levels the last run gained.", "zh": "每局开始时，保留上一局提升的部分技能等级" },
+      "levelText": { "en": "25% / 50%", "zh": "25% / 50%" },
+      "fields": { "ShowType": 1, "WebIcon": "../../Res/icon/UI_Item_Icon_Buff_shunengshengqiao.png", "Icon": "Assets/RuntimeAssets/Texture/UI/icon/UI_Item_Icon_Buff_shunengshengqiao.png" },
+      "levels": [{ "cost": 15 }, { "cost": 25 }],
+      "gives": [
+        // FloatValue0 is the share kept, rounded down.
+        { "effect": "nlp:muscle-memory", "levels": [{ "FloatValue0": 0.25 }, { "FloatValue0": 0.5 }] }
+      ]
+    },
+    {
+      "id": 5118,  // Scout's Notes
+      "enabled": false,
+      "copyFrom": 1001,
+      "name": { "en": "Scout's Notes", "zh": "侦察笔记" },
+      "description": { "en": "Start each run with drone trading posts already found.", "zh": "开局时已发现若干个无人机交易点" },
+      "levelText": { "en": "1 / 2 / 3 trading posts", "zh": "1个 / 2个 / 3个交易点" },
+      "fields": { "ShowType": 1, "WebIcon": "../../Res/Literature/UI_Item_Icon_chengshixitongshuji.png", "Icon": "Assets/RuntimeAssets/Texture/Literature/UI_Item_Icon_chengshixitongshuji" },
+      "levels": [{ "cost": 5 }, { "cost": 10 }, { "cost": 15 }],
+      "gives": [
+        // IntValue0 is how many trading posts.
+        { "effect": "nlp:scouts-notes", "levels": [{ "IntValue0": 1 }, { "IntValue0": 2 }, { "IntValue0": 3 }] }
       ]
     }
   ],

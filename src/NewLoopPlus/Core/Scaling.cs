@@ -36,6 +36,9 @@ public sealed record PointsMultipliers(double Overall, double Survival, double C
     /// <summary>The Planning Points a new endless game starts with.</summary>
     public int EndlessGrant(int original) => Scaling.Round(original * EndlessStartFactor);
 
+    /// <summary>These multipliers with crisis and event rewards raised by a share more (Crisis Veteran); a share of 0 or less changes nothing.</summary>
+    public PointsMultipliers WithCrisisBonus(double share) => share <= 0 ? this : this with { Crisis = Crisis * (1 + share) };
+
     private double Factor(double part) => Math.Max(0, part) * Math.Max(0, Overall);
 }
 

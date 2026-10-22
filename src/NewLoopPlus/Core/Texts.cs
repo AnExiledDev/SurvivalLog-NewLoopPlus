@@ -53,9 +53,21 @@ public static class Texts
 
     public static readonly Phrase TalentsNotSaved = new("Not saved:", "未保存：");
 
+    public static readonly Phrase InterestPaid = new("Interest: +{0} Planning Points", "利息：+{0}信念点");
+
+    public static readonly Phrase SafetyNetPaid = new("Safety Net: +{0} Planning Points", "保底：+{0}信念点");
+
+    public static readonly Phrase SecondWindUsed = new(
+        "Second Wind: you pulled through. Uses left this run: {0}",
+        "绝处逢生：你挺了过来。本局剩余次数：{0}");
+
+    public static readonly Phrase MuscleMemoryUsed = new("Muscle Memory: some of your skill levels came back.", "肌肉记忆：部分技能等级恢复了。");
+
+    public static readonly Phrase ScoutsNotesUsed = new("Scout's Notes: {0} trading posts are marked on the map.", "侦察笔记：地图上标出了{0}个交易点。");
+
     public static IReadOnlyList<Phrase> All { get; } = new[]
     {
         Button, ConfirmTitle, Cancel, EndsLikeDeath, PointsLine, PointsUnknown, CasualLine, ModeSettlesLine, CannotEndNow, StillPaused, Failed,
-        TalentsSaved, TalentsNotSaved,
+        TalentsSaved, TalentsNotSaved, InterestPaid, SafetyNetPaid, SecondWindUsed, MuscleMemoryUsed, ScoutsNotesUsed,
     };
 }

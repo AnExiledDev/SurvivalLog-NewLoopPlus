@@ -11,6 +11,7 @@ public class TalentFileTests
 {
     private static readonly int[] CutTalentsThatWork = { 1006, 2017, 3076, 4004, 4006 };
     private static readonly int[] CutTalentsFinishedByTheMod = { 1008, 1010, 2004, 2006, 2007 };
+    private static readonly int[] NewRewards = Enumerable.Range(5101, 18).ToArray();
 
     private static TalentFile DefaultFile() => TalentFile.Parse(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "talents.default.json")));
 
@@ -126,12 +127,12 @@ public class TalentFileTests
     }
 
     [Fact]
-    public void The_default_file_reads_cleanly_and_lists_the_cut_talents_all_switched_off()
+    public void The_default_file_reads_cleanly_and_lists_the_cut_talents_and_new_rewards_all_switched_off()
     {
         var file = DefaultFile();
 
         Assert.Empty(file.Problems);
-        Assert.Equal(CutTalentsThatWork.Concat(CutTalentsFinishedByTheMod).OrderBy(id => id), file.Talents.Select(talent => talent.Id).OrderBy(id => id));
+        Assert.Equal(CutTalentsThatWork.Concat(CutTalentsFinishedByTheMod).Concat(NewRewards).OrderBy(id => id), file.Talents.Select(talent => talent.Id).OrderBy(id => id));
         Assert.All(file.Talents, talent => Assert.False(talent.Enabled));
         Assert.Empty(file.ReinforceGroups());
     }
@@ -155,6 +156,24 @@ public class TalentFileTests
     }
 
     [Fact]
+    public void Every_new_reward_has_a_name_text_and_level_line_in_both_languages_and_gives_something()
+    {
+        var file = DefaultFile();
+
+        foreach (var id in NewRewards)
+        {
+            var talent = file.Talents.Single(entry => entry.Id == id);
+            var texts = new[] { talent.Name, talent.Description, talent.LevelText };
+
+            // A level line can be numbers only, so only the name and description must read as Chinese.
+            Assert.All(texts, text => Assert.NotNull(text));
+            Assert.All(new[] { talent.Name, talent.Description }.OfType<LocalText>(), text => Assert.Contains(text.Zh, ch => ch is >= '一' and <= '鿿'));
+            Assert.All(texts.OfType<LocalText>(), text => Assert.True(text.Zh.Length > 0 && text.En.Length > 0 && text.En.All(ch => ch is >= ' ' and <= '~'), text.En));
+            Assert.NotEmpty(talent.Gives);
+        }
+    }
+
+    [Fact]
     public void Enabling_every_default_talent_builds_without_a_problem()
     {
         var file = DefaultFile();
@@ -172,10 +191,17 @@ public class TalentFileTests
 
         public bool HasBuff(int id) => id == 9;
 
-        public System.Collections.Generic.IReadOnlyList<int> TalentLevels(int talentId) =>
-            talentId is 2017 or 4004 or 4006 ? new[] { 1 } : talentId == 3076 ? new[] { 1, 2, 3 } : new[] { 1, 2, 3, 4, 5 };
+        // Every script the default file's gives use, and the empty one New Loop Plus's own effects ride on.
+        private static readonly string[] GameScripts =
+        {
+            "AE_BackpackShelfLife", "AE_CompressValueRate", "AE_ExposureReduceMultiplier", "AE_PowerSolarEfficiency", "AE_ProductionExpMultiplier",
+            "AE_TrapCaptureMultiplier", "AddItemToBag_307510", "EndlessRobotGrant_HK", "PreDisaster_AddCountDownTime", "PreDisaster_AddWeight", "QuickRest", "Buff_Empty",
+        };
 
-        public GiveTemplate? Template(string script, int talentId, int lv) => null;
+        public System.Collections.Generic.IReadOnlyList<int> TalentLevels(int talentId) =>
+            talentId >= 5000 ? Array.Empty<int>() : talentId is 2017 or 4004 or 4006 ? new[] { 1 } : talentId == 3076 ? new[] { 1, 2, 3 } : new[] { 1, 2, 3, 4, 5 };
+
+        public GiveTemplate? Template(string script, int talentId, int lv) => GameScripts.Contains(script) ? new GiveTemplate(200000009, 9) : null;
 
         public int? LevelBuff(int talentId, int lv) => null;
     }

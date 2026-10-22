@@ -24,11 +24,18 @@ public class TalentsPageTests
             }),
         });
 
-    private static readonly GameTalent EndlessSolar = Awakening with { Id = 31271 };
+    private static readonly GameTalent EndlessSolar = Awakening with { Id = 31271, WebIcon = "../../Res/icon/UI_Talent_Solar.png", Icon = "Assets/Solar" };
+
+    private static readonly GameIcon[] Items =
+    {
+        new("../../Res/Food/UI_Item_Icon_Food_tang.png", "Assets/Food/tang"),
+        new("../../Res/Material/UI_Item_Icon_Equip_S_1.png", "Assets/Gather/other"),
+        new("", "Assets/NoWebIcon"),
+    };
 
     private static JsonElement Data(string? fileText, params string[] startProblems)
     {
-        var call = TalentsPage.DataCall(new[] { Awakening, EndlessSolar }, new[] { "PreDisaster_AddCountDownTime", "AE_PowerSolarEfficiency", "Buff/AE_PowerSolarEfficiency" }, fileText, startProblems);
+        var call = TalentsPage.DataCall(new[] { Awakening, EndlessSolar }, new[] { "PreDisaster_AddCountDownTime", "AE_PowerSolarEfficiency", "Buff/AE_PowerSolarEfficiency" }, Items, fileText, startProblems);
 
         Assert.StartsWith(CallStart, call);
         Assert.EndsWith(")", call);
@@ -60,6 +67,20 @@ public class TalentsPageTests
         var scripts = Data("{}").GetProperty("scripts").EnumerateArray().Select(script => script.GetString()).ToList();
 
         Assert.Equal(new[] { "AE_PowerSolarEfficiency", "PreDisaster_AddCountDownTime" }, scripts);
+    }
+
+    [Fact]
+    public void A_reward_can_show_the_image_of_any_talent_or_item_each_offered_once_under_its_group()
+    {
+        var icons = Data("{}").GetProperty("icons").EnumerateArray()
+            .Select(icon => (icon.GetProperty("group").GetString(), icon.GetProperty("icon").GetString(), icon.GetProperty("unityIcon").GetString())).ToList();
+
+        Assert.Equal(new (string?, string?, string?)[]
+        {
+            ("rewards", "Res/Material/UI_Item_Icon_Equip_S_1.png", "Assets/RuntimeAssets/Texture/Gather/UI_Item_Icon_Equip_S_1"),
+            ("rewards", "Res/icon/UI_Talent_Solar.png", "Assets/Solar"),
+            ("Food", "Res/Food/UI_Item_Icon_Food_tang.png", "Assets/Food/tang"),
+        }, icons);
     }
 
     [Fact]

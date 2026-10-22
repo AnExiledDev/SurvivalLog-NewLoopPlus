@@ -13,10 +13,13 @@ public static class StartingBonus
 
     public const int Max = 100000;
 
+    /// <summary>True when the screen opens to start a new loop, the one time per run anything is paid there.</summary>
+    public static bool IsLoopStart(int openMode, bool isAlreadyWaiting) => openMode == AfterRunMode && !isAlreadyWaiting;
+
     /// <summary>The points to pay as the screen opens, or null when none are due.</summary>
     public static int? Due(int openMode, bool isAlreadyWaiting, int bonus)
     {
-        if (openMode != AfterRunMode || isAlreadyWaiting || bonus <= 0) return null;
+        if (!IsLoopStart(openMode, isAlreadyWaiting) || bonus <= 0) return null;
 
         return System.Math.Min(bonus, Max);
     }

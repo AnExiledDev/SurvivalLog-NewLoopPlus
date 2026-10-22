@@ -18,8 +18,6 @@ internal sealed class TalentTables
 {
     private const float CheckSeconds = 1f;
     private const string ScriptPrefix = "Buff/";
-    private const int FirstTalent = 1000;
-    private const int LastTalent = 9999;
 
     private readonly TalentFile _file;
     private readonly TalentsTab _tab;
@@ -81,8 +79,25 @@ internal sealed class TalentTables
         }
 
         CompanionBuffs.Use(plan.Companions);
-        _tab.Started(game, index.Scripts, problems);
+        Perks.Grants = plan.Grants;
+        _tab.Started(game, index.Scripts, ItemIcons(config), problems);
         Report(plan, problems);
+    }
+
+    /// <summary>The images of the game's items, which a reward can show as well as any talent's.</summary>
+    private static List<GameIcon> ItemIcons(ConfigManager config)
+    {
+        var icons = new List<GameIcon>();
+        var items = config._Config_Item_Dict;
+
+        if (items == null) return icons;
+
+        foreach (var item in items.Values)
+        {
+            if (item != null && !string.IsNullOrEmpty(item.WebIcon)) icons.Add(new GameIcon(item.WebIcon, item.Icon ?? ""));
+        }
+
+        return icons;
     }
 
     private static string? Apply<T>(Il2CppSystem.Collections.Generic.Dictionary<int, T> table, RowEdit edit, Func<T> make) where T : Il2CppObjectBase
@@ -174,9 +189,9 @@ internal sealed class TalentTables
 
         public int? LevelBuff(int talentId, int lv) => Level(talentId, lv)?._BuffID_k__BackingField;
 
-        /// <summary>The loop rewards as the game made them, for the Talents tab.</summary>
+        /// <summary>Every talent as the game made them, for the Talents tab, which lists the loop rewards and offers every talent's image.</summary>
         public List<GameTalent> Snapshot(LanguageMap english, LanguageMap chinese) =>
-            _levels.Where(pair => pair.Key >= FirstTalent && pair.Key <= LastTalent).Select(pair => Describe(pair.Value, english, chinese)).ToList();
+            _levels.Values.Select(levels => Describe(levels, english, chinese)).ToList();
 
         private GameTalent Describe(List<Config_Talent> levels, LanguageMap english, LanguageMap chinese)
         {

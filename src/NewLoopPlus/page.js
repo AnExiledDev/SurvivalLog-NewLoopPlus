@@ -1,6 +1,7 @@
 // New Loop Plus's web half. Runs in Root.html, the document every game page iframe sits in. Puts "End Run" in the
 // pause menu (OutSetting) above Save & Exit, shows the plugin's confirm dialog there in the game's own dialog style, and
-// shows a short toast when the plugin has something to say after the menu closed. Talks to the plugin through
+// shows a short toast when the plugin has something to say after the menu closed, and lays out the end-of-day rewards
+// when Extra Pick offers more than three. Talks to the plugin through
 // vuplex.postMessage("slmod|newloopplus|<verb>") and is driven by window.__slnlp.
 (function () {
   if (window.__slnlp) return;
@@ -199,9 +200,80 @@
     menuDoc = found;
   }
 
+  // Extra Pick can put more than the game's three cards on the end-of-day rewards page (RogueSelect.html). They go in
+  // even rows of at most five, smaller once there is more than one row, and scroll when they still do not fit, as More
+  // Rewards lays them out. With More Rewards installed its own layout does this, so this one stands aside.
+  var GAME_CARDS = 3;
+  var MOST_PER_ROW = 5;
+  var GRID_STYLE_ID = 'slnlp-grid-style';
+  var MANY = 'slnlp-many';
+  var COMPACT = 'slnlp-compact';
+  var GRID_CSS = [
+    'html.slnlp-many .content{min-height:0}',
+    'html.slnlp-many .card-grid{flex:0 1 auto;min-height:0;overflow-x:hidden;overflow-y:auto;' +
+      'grid-template-columns:repeat(var(--slnlp-columns),minmax(0,320px));justify-content:center;gap:16px;padding:42px 36px 36px}',
+    'html.slnlp-many .card-grid::-webkit-scrollbar{width:8px}',
+    'html.slnlp-many .card-grid::-webkit-scrollbar-track{background:rgba(0,0,0,.25);border-radius:4px}',
+    'html.slnlp-many .card-grid::-webkit-scrollbar-thumb{background:rgba(255,200,80,.35);border-radius:4px}',
+    'html.slnlp-compact .card-slot{display:flex}',
+    'html.slnlp-compact .card{flex:1;min-height:0;padding:16px 16px 16px}',
+    'html.slnlp-compact .icon-frame{width:64px;height:64px;margin-bottom:10px}',
+    'html.slnlp-compact .card-name{font-size:16px;letter-spacing:0;overflow-wrap:anywhere;margin-bottom:8px;padding-bottom:8px}',
+    'html.slnlp-compact .card-desc{font-size:13px;line-height:1.5;overflow-wrap:anywhere;margin-bottom:10px}',
+    'html.slnlp-compact .card-cost{overflow-wrap:anywhere;margin-bottom:8px}',
+    'html.slnlp-compact .card-btn{font-size:14px;letter-spacing:2px;white-space:normal;overflow-wrap:anywhere;padding:9px 6px 10px}'
+  ].join('\n');
+
+  function arrangeCards(doc, isMoreRewardsHere) {
+    var root = doc.documentElement;
+    var grid = doc.querySelector('.card-grid');
+    var cardCount = grid ? grid.querySelectorAll('.card-slot').length : 0;
+
+    if (isMoreRewardsHere || cardCount <= GAME_CARDS) {
+      root.classList.remove(MANY);
+      root.classList.remove(COMPACT);
+
+      return;
+    }
+
+    var rows = Math.ceil(cardCount / MOST_PER_ROW);
+
+    if (!doc.getElementById(GRID_STYLE_ID)) {
+      var style = doc.createElement('style');
+
+      style.id = GRID_STYLE_ID;
+      style.textContent = GRID_CSS;
+      doc.head.appendChild(style);
+    }
+
+    root.classList.add(MANY);
+    root.classList.toggle(COMPACT, rows > 1);
+    root.style.setProperty('--slnlp-columns', String(Math.ceil(cardCount / rows)));
+  }
+
+  function patchRewardsPage() {
+    var frames = document.querySelectorAll('iframe');
+
+    for (var i = 0; i < frames.length; i++) {
+      if (!/RogueSelect\.html/.test(frames[i].src || '')) continue;
+
+      var doc = null;
+
+      try {
+        doc = frames[i].contentDocument;
+      } catch (e) {}
+
+      if (doc && doc.documentElement && doc.head) arrangeCards(doc, !!window.__slmorerewards);
+    }
+  }
+
   setInterval(function () {
     try {
       patchPauseMenu();
+    } catch (e) {}
+
+    try {
+      patchRewardsPage();
     } catch (e) {}
   }, POLL_MS);
 

@@ -11,7 +11,8 @@ namespace NewLoopPlus.Adapters;
 /// and every crisis and event reward pays its Config_RewardSet BeliefPoint (both the in-run grants and the crisis
 /// total the death screen adds up). A new endless game starts with GlobalSetting Endless_FaithGrant. The GlobalSetting
 /// values are also cached by GameKey once read, so the caches are kept in step. The multipliers can change while the
-/// game runs; the next check then scales every value again from the game's own.
+/// game runs; the next check then scales every value again from the game's own. Crisis Veteran, when owned, raises the
+/// crisis multiplier on top of the setting, so it is checked each time too.
 /// </summary>
 internal sealed class PointsTables
 {
@@ -22,6 +23,7 @@ internal sealed class PointsTables
     private readonly ScaledValues<string, int> _perDay;
     private readonly ScaledValues<int, int> _rewards;
     private readonly ScaledValues<string, int> _endlessGrant;
+    private PointsMultipliers _settings = PointsMultipliers.None;
     private PointsMultipliers _multipliers = PointsMultipliers.None;
     private float _nextCheckAt;
 
@@ -34,16 +36,10 @@ internal sealed class PointsTables
         _endlessGrant = new ScaledValues<string, int>((_, belief) => _multipliers.EndlessGrant(belief));
     }
 
-    /// <summary>Takes new multipliers; the next check writes them, and checks again at once.</summary>
+    /// <summary>Takes the settings' multipliers; the next check writes them, and checks again at once.</summary>
     public void Use(PointsMultipliers multipliers)
     {
-        if (multipliers == _multipliers) return;
-
-        _multipliers = multipliers;
-        _rates.Rescale();
-        _perDay.Rescale();
-        _rewards.Rescale();
-        _endlessGrant.Rescale();
+        _settings = multipliers;
         _nextCheckAt = 0;
     }
 
@@ -53,6 +49,10 @@ internal sealed class PointsTables
 
         _nextCheckAt = now + CheckSeconds;
 
+        var multipliers = _settings.WithCrisisBonus(Perks.Share(NlpEffect.CrisisVeteran));
+
+        if (multipliers != _multipliers) Rescale(multipliers);
+
         var config = GameSingleton.Existing<ConfigManager>();
 
         if (config == null) return;
@@ -61,6 +61,16 @@ internal sealed class PointsTables
         ScaleRecordReward(config);
         ScaleEventRewards(config);
         ScaleEndlessGrant(config);
+    }
+
+    /// <summary>Every value is scaled again from the game's own on this check.</summary>
+    private void Rescale(PointsMultipliers multipliers)
+    {
+        _multipliers = multipliers;
+        _rates.Rescale();
+        _perDay.Rescale();
+        _rewards.Rescale();
+        _endlessGrant.Rescale();
     }
 
     private void ScaleSurvivalRate(ConfigManager config)

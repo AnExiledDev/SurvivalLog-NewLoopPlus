@@ -17,6 +17,7 @@ internal sealed class TalentsTab
     private readonly Action<string> _log;
     private IReadOnlyList<GameTalent> _game = Array.Empty<GameTalent>();
     private IReadOnlyList<string> _scripts = Array.Empty<string>();
+    private IReadOnlyList<GameIcon> _items = Array.Empty<GameIcon>();
     private IReadOnlyList<string> _startProblems = Array.Empty<string>();
 
     public TalentsTab(string path, WebPage page, Action<string> log)
@@ -26,11 +27,12 @@ internal sealed class TalentsTab
         _log = log;
     }
 
-    /// <summary>What the game had, the effect scripts its talents run, and what went wrong writing the file into it, all as of this start.</summary>
-    public void Started(IReadOnlyList<GameTalent> game, IReadOnlyList<string> scripts, IReadOnlyList<string> problems)
+    /// <summary>What the game had, the effect scripts its talents run, its item images, and what went wrong writing the file into it, all as of this start.</summary>
+    public void Started(IReadOnlyList<GameTalent> game, IReadOnlyList<string> scripts, IReadOnlyList<GameIcon> items, IReadOnlyList<string> problems)
     {
         _game = game;
         _scripts = scripts;
+        _items = items;
         _startProblems = problems;
     }
 
@@ -47,7 +49,7 @@ internal sealed class TalentsTab
             _log("Talents tab: could not read the talents file: " + ex.Message);
         }
 
-        _page.Call(TalentsPage.DataCall(_game, _scripts, text, _startProblems));
+        _page.Call(TalentsPage.DataCall(_game, _scripts, _items, text, _startProblems));
     }
 
     public void Save(string json)

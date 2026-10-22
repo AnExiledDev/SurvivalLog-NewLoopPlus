@@ -17,6 +17,25 @@
   const MAX_LEVELS = 9;
   const MAX_GIVES = 10;
   const GAME_PREFIX = 'game:';
+  const NLP_PREFIX = 'nlp:';
+  const REWARD_ICONS = 'rewards';
+
+  // The icon picker's groups are the folders the game keeps its images in; these are the ones worth a friendlier name.
+  const ICON_GROUPS = {
+    rewards: ['Rewards', '奖励'],
+    Food: ['Food', '食物'],
+    Material: ['Materials', '材料'],
+    Consumable: ['Consumables', '消耗品'],
+    Furniture: ['Furniture', '家具'],
+    Electrical: ['Electrical', '电器'],
+    Structure: ['Structures', '建筑'],
+    Vehicle: ['Vehicles', '载具'],
+    RobotModule: ['Robot modules', '机器人模块'],
+    Literature: ['Books', '书籍'],
+    Renovation: ['Renovation', '装修'],
+    Camp: ['Camp', '营地'],
+    icon: ['Other', '其他']
+  };
   const TOAST_MS = 2600;
   const INT_FIELD = /^(IntValue\d|Buff(Satiety|Morale|Stamina|Health|Vitality)Max|ItemEndBuff0\d|BuffEndBuff0\d|PonitEnd|ExposureValue|BuffAction)$/;
   const STAT_MAX = /^Buff(Stamina|Satiety|Morale|Health|Vitality)Max$/;
@@ -225,7 +244,11 @@
     'P .fxd .fn{margin-top:6px;font-size:.84rem;color:var(--td);line-height:1.5}',
     'P .fxd .gbtn{display:inline-block;margin-top:18px}',
     'P .fxp-ft{display:flex;align-items:center;gap:14px;padding:12px 20px;border-top:1px solid var(--bl);color:var(--tmeta);font-size:.84rem}',
-    'I &{' + VARS + 'position:absolute;z-index:60;width:560px;max-height:420px;overflow-y:auto;display:grid;grid-template-columns:repeat(8,1fr);gap:4px;padding:10px;background:#1a1611;border:1px solid rgba(255,200,58,0.4);box-shadow:0 20px 60px rgba(0,0,0,0.85)}',
+    'I &{' + VARS + 'position:absolute;z-index:60;width:720px;padding:10px;background:#1a1611;border:1px solid rgba(255,200,58,0.4);box-shadow:0 20px 60px rgba(0,0,0,0.85)}',
+    'I .icg{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px}',
+    'I .icg span{padding:3px 10px;font-size:.8rem;color:var(--td);border:1px solid var(--bl);cursor:pointer;white-space:nowrap}',
+    'I .icg span.is-on{background:rgba(255,200,58,0.14);color:var(--hl);border-color:var(--hl)}',
+    'I .icl{display:grid;grid-template-columns:repeat(10,1fr);gap:4px;max-height:400px;overflow-y:auto}',
     'I img{width:58px;height:58px;object-fit:contain;padding:4px;border:1px solid transparent;cursor:pointer}',
     'I img:hover{border-color:var(--hl);background:rgba(255,200,58,0.1)}',
     'T &{position:absolute;left:50%;bottom:74px;transform:translateX(-50%);background:#0d1716;border:1px solid var(--teal);color:#cfe;padding:10px 18px;font-size:.95rem;z-index:40;box-shadow:0 10px 30px rgba(0,0,0,0.7);animation:slmm-pin .25s both}',
@@ -279,6 +302,8 @@
     picker: null,
     pickerEl: null,
     iconsEl: null,
+    icons: [],
+    iconGroup: REWARD_ICONS,
     toastEl: null,
     toastTimer: 0,
     pending: null,
@@ -344,6 +369,7 @@
     ['items', 'Items and supplies', '物资'],
     ['skills', 'Skills', '熟练度'],
     ['speed', 'Speed', '速度'],
+    ['explore', 'Exploring', '探索'],
     ['home', 'Home and power', '居所与电力'],
     ['farm', 'Farming', '种植'],
     ['defense', 'Traps and defense', '陷阱与防御'],
@@ -358,9 +384,21 @@
   const XP_SKILLS = [['Production', 'Production'], ['Cook', 'Cooking'], ['Plant', 'Plant'], ['Trap', 'Trap'], ['Explore', 'Explore'], ['Defense', 'Defense']];
   const WORK = [['Production', 'Crafting', '制造'], ['Cook', 'Cooking', '烹饪'], ['Interact', 'Searching and using things', '搜索与交互'], ['Chore', 'Chores', '杂务']];
   const STATS = [['Stamina', 'Stamina', '精力'], ['Satiety', 'Satiety', '饱腹'], ['Morale', 'Morale', '心态'], ['Health', 'Health', '健康'], ['Vitality', 'Life', '生命']].map(s => ({ v: s[0], en: s[1], zh: s[2] }));
+  const ROBOTS = [['HK', 'HK-1 sorting robot', 'HK-1 整理机器人'], ['TB', 'GR-3 farming robot', 'GR-3 种植机器人'], ['WX', 'FX-5 repair robot', 'FX-5 维修机器人']];
+  const robotScript = v => 'EndlessRobotGrant_' + v;
+
+  // "an HK-1 sorting robot" but "a GR-3 farming robot": the article follows how the letter is said.
+  function robotName(v, zh, withArticle) {
+    const r = ROBOTS.find(x => x[0] === v) || [v, v, v];
+    const name = zh ? r[2] : r[1];
+
+    if (!withArticle) return name;
+
+    return (/^[AEFHILMNORSX]/.test(name) ? 'an ' : 'a ') + name;
+  }
 
   // Filled from the game's own reward names once the data arrives.
-  const named = { groups: [], skills: [], xp: [], work: [] };
+  const named = { groups: [], skills: [], xp: [], work: [], robots: [] };
 
   function nameOptions() {
     named.groups = Object.keys(GROUP_TALENTS).map(Number).filter(g => st.byId[GROUP_TALENTS[g]]).map(g => {
@@ -382,6 +420,7 @@
       return Object.assign({ v: s[0], script: 'AE_' + s[0] + 'ExpMultiplier' }, skillLabel(s[1], from ? from[1] : 0));
     });
     named.work = WORK.map(w => ({ v: w[0], en: w[1], zh: w[2], script: 'AE_' + w[0] + 'SpeedMultiplier' }));
+    named.robots = ROBOTS.map(r => ({ v: r[0], en: r[1], zh: r[2], script: robotScript(r[0]) }));
   }
 
   // A number that can change per level. scale and add turn the file's raw value into what the player reads (0.1 -> 10%).
@@ -651,6 +690,39 @@
     line: v => '+' + fmt(v.FloatValue0) + '%',
     desc: (v, zh) => zh ? '每天获得的生存点增加' + fmt(v.FloatValue0) + '%' : 'Daily Survival Points +' + fmt(v.FloatValue0) + '%.' });
 
+  // ---- Game scripts only the game's in-run talents use. ----
+
+  fx({ id: 'game:backpack-life', src: 'game', cat: 'items', script: 'AE_BackpackShelfLife',
+    en: 'Backpack keeps food longer', zh: '背包保鲜', what: ['Items in your backpack spoil slower.', '随身背包里的物品保质期延长。'],
+    params: [num('FloatValue0', 'Shelf life', '保质期', ['x', '倍'], [2, 3, 4], { add: 1, min: 1, step: 0.5 })],
+    line: (v, zh) => fmt(v.FloatValue0) + (zh ? '倍' : 'x'),
+    desc: (v, zh) => zh ? '随身背包里的物品保质期延长至' + fmt(v.FloatValue0) + '倍' : 'Items in your backpack keep ' + fmt(v.FloatValue0) + 'x as long.' });
+
+  fx({ id: 'game:quick-rest', src: 'game', cat: 'body', script: 'QuickRest',
+    en: 'Rest restores Stamina faster', zh: '休息恢复加快', what: ['Resting brings Stamina back faster.', '通过休息恢复精力更快。'],
+    params: [pct('FloatValue0', 'Faster by', '加快', [10, 20, 30])],
+    line: v => '+' + fmt(v.FloatValue0) + '%',
+    desc: (v, zh) => zh ? '通过休息恢复精力的速度加快' + fmt(v.FloatValue0) + '%' : 'Resting restores Stamina ' + fmt(v.FloatValue0) + '% faster.' });
+
+  fx({ id: 'game:press-nutrition', src: 'game', cat: 'body', script: 'AE_CompressValueRate',
+    en: 'Ration Press keeps more nutrition', zh: '压制保留更多营养', what: ['The Ration Press keeps more of the food\'s nutrition (60% in the game).', '使用口粮压制机时保留更多营养（游戏中为 60%）。'],
+    params: [pct('FloatValue0', 'More kept', '多保留', [5, 10, 20])],
+    line: v => '+' + fmt(v.FloatValue0) + '%',
+    desc: (v, zh) => zh ? '使用口粮压制机时，营养保留从 60% 提高到 ' + fmt(60 + v.FloatValue0) + '%' : 'The Ration Press keeps ' + fmt(60 + v.FloatValue0) + '% of the food\'s nutrition, up from 60%.' });
+
+  fx({ id: 'game:exposure', src: 'game', cat: 'explore', script: 'AE_ExposureReduceMultiplier',
+    en: 'Exposure builds slower', zh: '暴露值增长降低', what: ['Exposure builds up slower while exploring.', '探索时暴露值增长更慢。'],
+    params: [pct('FloatValue0', 'Slower by', '降低', [10, 20, 30], { scale: -100 })],
+    line: v => '-' + fmt(v.FloatValue0) + '%',
+    desc: (v, zh) => zh ? '探索时暴露值增长-' + fmt(v.FloatValue0) + '%' : 'Exposure builds up ' + fmt(v.FloatValue0) + '% slower while exploring.' });
+
+  fx({ id: 'game:robot', src: 'game', cat: 'home', script: robotScript('HK'), scripts: ROBOTS.map(r => robotScript(r[0])),
+    en: 'Start with a robot', zh: '开局机器人', what: ['A robot and all its crafting blueprints from the start of the run. No numbers.', '开局获得一台机器人及其全部制造图纸。没有数值。'],
+    params: [pick('robot', 'Robot', '机器人', () => named.robots, 'HK', { virtual: true, from: (v, script) => { const m = /^EndlessRobotGrant_(.*)$/.exec(script); return m ? m[1] : 'HK'; } })],
+    scriptOf: g => robotScript(g.pick.robot),
+    line: (v, zh) => robotName(v.robot, zh).split(' ')[0] + (zh ? ' 机器人' : ' robot'),
+    desc: (v, zh) => zh ? '开局获得一台' + robotName(v.robot, true) + '，并掌握其全部制造图纸' : 'Start the run with ' + robotName(v.robot, false, true) + ' and all its crafting blueprints.' });
+
   // ---- New Loop Plus: the effects it gives the rewards the game left unfinished. ----
 
   fx({ id: 'nlp:supplier', src: 'nlp', cat: 'items', script: 'PreDisaster_AddRandomItem', finishes: [1008],
@@ -683,6 +755,56 @@
     line: (v, zh) => fmt(v.BuffInterval) + (zh ? '小时' : 'h'),
     desc: (v, zh) => zh ? '处于「孤独」状态时，每' + fmt(v.BuffInterval) + '小时恢复1点心态' : 'While Lonely, recover 1 Morale every ' + fmt(v.BuffInterval) + ' hours.' });
 
+  // ---- New Loop Plus: effects it runs itself, written to the file as "nlp:<name>". ----
+
+  fx({ id: 'nlp:interest', src: 'nlp', nlp: 'interest', cat: 'loop', scripts: [],
+    en: 'Interest on kept points', zh: '信念点利息', what: ['A new loop pays a share of the Planning Points you kept.', '新轮回开始时，按保留的信念点支付利息。'],
+    params: [pct('FloatValue0', 'Interest', '利息', [5, 10, 15])],
+    line: v => '+' + fmt(v.FloatValue0) + '%',
+    desc: (v, zh) => zh ? '新轮回开始时，获得保留信念点的' + fmt(v.FloatValue0) + '%' : 'Each new loop pays ' + fmt(v.FloatValue0) + '% interest on the Planning Points you kept.' });
+
+  fx({ id: 'nlp:safety-net', src: 'nlp', nlp: 'safety-net', cat: 'loop', scripts: [],
+    en: 'Fewest points a run pays', zh: '信念点保底', what: ['A run that settles for less pays at least this many Planning Points.', '结算的信念点不足时补足到保底值。'],
+    params: [num('IntValue0', 'At least', '至少', ['points', '点'], [100, 200, 300], { step: 50 })],
+    line: (v, zh) => fmt(v.IntValue0) + (zh ? '点' : ' points'),
+    desc: (v, zh) => zh ? '一局结算所得的信念点不足' + fmt(v.IntValue0) + '点时，在开始新轮回时补足' : 'A run that pays fewer than ' + fmt(v.IntValue0) + ' Planning Points is topped up to ' + fmt(v.IntValue0) + ' as the next loop starts.' });
+
+  fx({ id: 'nlp:extra-pick', src: 'nlp', nlp: 'extra-pick', cat: 'loop', scripts: [],
+    en: 'More reward choices', zh: '更多奖励选项', what: ['More rewards to choose from at the end of each day.', '每日结算时可选的奖励更多。'],
+    params: [num('IntValue0', 'More choices', '额外选项', ['', '个'], [1, 2], { min: 1 })],
+    line: v => '+' + fmt(v.IntValue0),
+    desc: (v, zh) => zh ? '每日结算时多' + fmt(v.IntValue0) + '个奖励选项' : plural(v.IntValue0, 'more reward choice') + ' at the end of each day.' });
+
+  fx({ id: 'nlp:crisis-veteran', src: 'nlp', nlp: 'crisis-veteran', cat: 'loop', scripts: [],
+    en: 'More points from crises', zh: '危机信念点加成', what: ['Crises and events pay more Planning Points.', '危机与事件获得更多信念点。'],
+    params: [pct('FloatValue0', 'More points', '加成', [10, 20, 30])],
+    line: v => '+' + fmt(v.FloatValue0) + '%',
+    desc: (v, zh) => zh ? '危机与事件获得的信念点+' + fmt(v.FloatValue0) + '%' : 'Crises and events pay ' + fmt(v.FloatValue0) + '% more Planning Points.' });
+
+  fx({ id: 'nlp:second-wind', src: 'nlp', nlp: 'second-wind', cat: 'body', scripts: [],
+    en: 'Survive a death', zh: '死里逃生', what: ['When your Life runs out, you live on instead, a set number of times per run.', '生命耗尽时免于死亡，每局有次数限制。'],
+    params: [num('IntValue0', 'Times per run', '每局次数', ['', '次'], [1, 2], { min: 1 }), num('FloatValue0', 'Life left', '剩余生命', ['Life', '生命'], [30, 30], { min: 1 })],
+    line: (v, zh) => fmt(v.IntValue0) + (zh ? '次' : 'x'),
+    desc: (v, zh) => zh ? '生命耗尽时免于死亡，保留' + fmt(v.FloatValue0) + '点生命，每局' + fmt(v.IntValue0) + '次' : 'When your Life runs out, live on with ' + fmt(v.FloatValue0) + ' Life, ' + plural(v.IntValue0, 'time') + ' per run.' });
+
+  fx({ id: 'nlp:lucky-finds', src: 'nlp', nlp: 'lucky-finds', cat: 'explore', scripts: [],
+    en: 'Lucky finds when searching', zh: '搜索幸运', what: ['A chance of one more of an item when you search a container.', '搜索容器时有几率多获得一件物品。'],
+    params: [pct('FloatValue0', 'Chance', '几率', [10, 20, 30])],
+    line: v => fmt(v.FloatValue0) + '%',
+    desc: (v, zh) => zh ? '搜索容器时，' + fmt(v.FloatValue0) + '%几率多获得一件物品' : fmt(v.FloatValue0) + '% chance of one more of an item when you search a container.' });
+
+  fx({ id: 'nlp:muscle-memory', src: 'nlp', nlp: 'muscle-memory', cat: 'skills', scripts: [],
+    en: 'Keep skill levels between runs', zh: '保留熟练度', what: ['A run starts with a share of the skill levels the last run gained.', '开局保留上一局熟练度提升的一部分。'],
+    params: [pct('FloatValue0', 'Share kept', '保留', [25, 50])],
+    line: v => fmt(v.FloatValue0) + '%',
+    desc: (v, zh) => zh ? '开局保留上一局熟练度提升的' + fmt(v.FloatValue0) + '%' : 'Start each run with ' + fmt(v.FloatValue0) + '% of the skill levels the last run gained.' });
+
+  fx({ id: 'nlp:scouts-notes', src: 'nlp', nlp: 'scouts-notes', cat: 'explore', scripts: [],
+    en: 'Trading posts known from the start', zh: '开局已知交易点', what: ['Drone trading posts are on your map from the start.', '开局时地图上已显示无人机交易点。'],
+    params: [num('IntValue0', 'Trading posts', '交易点', ['', '个'], [1, 2, 3], { min: 1 })],
+    line: v => '+' + fmt(v.IntValue0),
+    desc: (v, zh) => zh ? '开局时地图上已显示' + fmt(v.IntValue0) + '个无人机交易点' : 'Start with ' + plural(v.IntValue0, 'drone trading post') + ' on your map.' });
+
   const FX_BY_ID = {};
 
   FX.forEach(f => { FX_BY_ID[f.id] = f; });
@@ -711,7 +833,7 @@
     return Math.max(p.min, round2(v));
   }
 
-  const isAvailable = f => f.scripts.some(s => st.scripts.has(s));
+  const isAvailable = f => !!f.nlp || f.scripts.some(s => st.scripts.has(s));
 
   // ---- Which effect a script and its numbers are. ----
 
@@ -776,20 +898,27 @@
 
   const cat = { list: [], icons: [], defaultIcon: { icon: '', unityIcon: '' } };
 
+  // The talents' own images, for a plugin that sends no icon list of its own.
+  function talentIcons() {
+    const seen = new Set();
+    const icons = [];
+
+    st.game.forEach(t => {
+      if (!t.icon || seen.has(t.icon)) return;
+
+      seen.add(t.icon);
+      icons.push({ icon: t.icon, unityIcon: t.unityIcon, group: REWARD_ICONS });
+    });
+
+    return icons;
+  }
+
   function buildCatalogue() {
     Object.keys(rawCache).forEach(k => { delete rawCache[k]; });
     FX.forEach(f => { f.usedBy = []; });
     nameOptions();
 
-    const seenIcons = new Set();
-
-    cat.icons = [];
-    st.game.forEach(t => {
-      if (t.icon && !seenIcons.has(t.icon)) {
-        seenIcons.add(t.icon);
-        cat.icons.push({ icon: t.icon, unityIcon: t.unityIcon });
-      }
-    });
+    cat.icons = st.icons.length ? st.icons : talentIcons();
     cat.defaultIcon = cat.icons.find(i => i.icon.indexOf('xinzhongyoushu') >= 0) || cat.icons[0] || { icon: '', unityIcon: '' };
 
     st.game.forEach(t => {
@@ -822,10 +951,13 @@
   // ===== Gives: one effect of a reward, with its picks and a number per level =====
 
   const fromRoot = path => String(path || '').replace(/^(\.\.\/)+/, '');
-  const scriptOfGive = give => give.effect.slice(GAME_PREFIX.length);
+  // A New Loop Plus effect runs no game script, so it has no game row to start from: ''.
+  const scriptOfGive = give => give.effect.indexOf(GAME_PREFIX) === 0 ? give.effect.slice(GAME_PREFIX.length) : '';
 
   // The first game reward level that runs this script, which the plugin copies for a level with no effect of its own.
   function firstTpl(script) {
+    if (!script) return {};
+
     for (const t of st.game) {
       const l = t.levels.find(x => x.script === script);
 
@@ -837,6 +969,8 @@
 
   // What the plugin starts a give's effect row from: the reward's own level when it runs the same script.
   function tplValues(script, tid, lv) {
+    if (!script) return {};
+
     const t = st.byId[tid];
     const own = t ? t.levels[lv - 1] : null;
 
@@ -856,7 +990,7 @@
       else g.pick[p.key] = options.some(o => o.v === p.def) || !options.length ? p.def : options[0].v;
     });
 
-    g.script = f.scriptOf ? f.scriptOf(g) : (script || f.scripts[0]);
+    g.script = f.nlp ? '' : f.scriptOf ? f.scriptOf(g) : (script || f.scripts[0]);
 
     if (f.init) f.init(g, tplValues(g.script, tid, 1));
 
@@ -896,7 +1030,7 @@
     const f = g.fx;
     const choice = clone(g.fixed) || {};
     const nums = numsOf(f);
-    const out = { effect: GAME_PREFIX + g.script };
+    const out = { effect: f.nlp ? NLP_PREFIX + f.nlp : GAME_PREFIX + g.script };
 
     hidesOf(f).forEach(p => { choice[p.key] = p.def; });
     picksOf(f).filter(p => !p.virtual).forEach(p => { choice[p.key] = g.pick[p.key]; });
@@ -947,7 +1081,11 @@
   }
 
   function giveFor(fileGive, tid, count) {
-    if (!isObj(fileGive) || typeof fileGive.effect !== 'string' || fileGive.effect.indexOf(GAME_PREFIX) !== 0) return null;
+    if (!isObj(fileGive) || typeof fileGive.effect !== 'string') return null;
+
+    if (fileGive.effect.indexOf(NLP_PREFIX) === 0) return nlpGiveFor(fileGive, tid, count);
+
+    if (fileGive.effect.indexOf(GAME_PREFIX) !== 0) return null;
 
     const script = scriptOfGive(fileGive);
 
@@ -962,6 +1100,18 @@
     }
 
     return null;
+  }
+
+  function nlpGiveFor(fileGive, tid, count) {
+    const name = fileGive.effect.slice(NLP_PREFIX.length);
+    const f = FX.find(x => x.nlp === name);
+
+    if (!f) return null;
+
+    const vals = range(count).map(i => effectValues(fileGive, tid, i));
+    const g = makeGive(f, '', tid, vals, count);
+
+    return roundTrips(g, vals, count) ? g : null;
   }
 
   // What a game reward gives as it stands. Shown locked when the tab could not write it back the same way.
@@ -2024,7 +2174,8 @@
 
     if (f.modes === 'endless') notes.push(L('The game only applies this in Endless mode.', '游戏只在无尽模式中生效。'));
 
-    if (f.src === 'nlp') notes.push(L('Written by New Loop Plus to finish a reward the game left empty.', '由新轮回+编写，用于补完游戏留空的奖励。'));
+    if (f.nlp) notes.push(L('Run by New Loop Plus itself, not by a game script.', '由新轮回+自身实现，而非游戏脚本。'));
+    else if (f.src === 'nlp') notes.push(L('Written by New Loop Plus to finish a reward the game left empty.', '由新轮回+编写，用于补完游戏留空的奖励。'));
 
     if (f.raw) notes.push(L('A game script with no friendly names yet. Its numbers are the raw fields from the game\'s tables.', '尚未命名的游戏脚本。数值为游戏表中的原始字段。'));
 
@@ -2032,7 +2183,7 @@
 
     let html = '<div class="fxd"><div class="fxd-top"><img src="' + esc(fxIcon(f)) + '" alt=""><div>' +
       '<div class="fxd-n">' + esc(fxName(f, st.lang === 'zh')) + '</div>' +
-      '<div class="fxd-s">' + srcTag(f) + f.scripts.map(s => '<code>' + esc(s) + '</code>').join('') + '</div></div></div>' +
+      '<div class="fxd-s">' + srcTag(f) + (f.nlp ? [NLP_PREFIX + f.nlp] : f.scripts).map(s => '<code>' + esc(s) + '</code>').join('') + '</div></div></div>' +
       '<div class="fxd-w">' + esc(L(f.what[0], f.what[1])) + '</div>';
 
     if (shownParams.length) html += '<h4>' + L('NUMBERS IT TAKES', '数值') + '</h4><table>' + shownParams.map(p => paramRow(p, count)).join('') + '</table>';
@@ -2084,18 +2235,46 @@
     if (!win || !cat.icons.length) return;
 
     closeIcons();
-    st.iconsEl = h('<div class="nlp-icons" data-own="">' + cat.icons.map((ic, i) => '<img data-a="ic" data-v="' + i + '" src="' + esc(ic.icon) + '" alt="">').join('') + '</div>');
+    st.iconsEl = h('<div class="nlp-icons" data-own="">' + iconsHtml() + '</div>');
     st.iconsEl.addEventListener('click', onClick);
     win.appendChild(st.iconsEl);
 
     const w = win.getBoundingClientRect();
     const a = anchor.getBoundingClientRect();
     const scale = win.offsetWidth ? w.width / win.offsetWidth : 1;
-    const top = Math.max(10, Math.min((a.top - w.top) / scale, win.offsetHeight - 440));
+    const top = Math.max(10, Math.min((a.top - w.top) / scale, win.offsetHeight - st.iconsEl.offsetHeight - 10));
+    const left = Math.max(10, Math.min((a.right - w.left) / scale + 10, win.offsetWidth - st.iconsEl.offsetWidth - 10));
 
-    st.iconsEl.style.left = ((a.right - w.left) / scale + 10) + 'px';
+    st.iconsEl.style.left = left + 'px';
     st.iconsEl.style.top = top + 'px';
     document.addEventListener('mousedown', onDocDown, true);
+  }
+
+  // One group at a time: the game has some 1800 item images, too many to load at once.
+  function iconsHtml() {
+    const groups = [];
+
+    cat.icons.forEach(ic => { if (groups.indexOf(ic.group) < 0) groups.push(ic.group); });
+
+    if (groups.indexOf(st.iconGroup) < 0) st.iconGroup = groups[0] || REWARD_ICONS;
+
+    const chips = groups.length > 1 ? '<div class="icg">' + groups.map(g => '<span data-a="icg" data-v="' + esc(g) + '"' + (g === st.iconGroup ? ' class="is-on"' : '') + '>' + esc(iconGroupName(g)) + '</span>').join('') + '</div>' : '';
+    const imgs = cat.icons.map((ic, i) => ic.group === st.iconGroup ? '<img data-a="ic" data-v="' + i + '" src="' + esc(ic.icon) + '" loading="lazy" alt="" onerror="this.style.display=\'none\'">' : '').join('');
+
+    return chips + '<div class="icl">' + imgs + '</div>';
+  }
+
+  function iconGroupName(group) {
+    const known = ICON_GROUPS[group];
+
+    return known ? L(known[0], known[1]) : group;
+  }
+
+  function showIconGroup(group) {
+    if (!st.iconsEl) return;
+
+    st.iconGroup = group;
+    st.iconsEl.innerHTML = iconsHtml();
   }
 
   function closeIcons() {
@@ -2276,6 +2455,7 @@
       case 'pvl': st.pvLang = v === 'zh' ? 'zh' : 'en'; st.pvChosen = true; break;
       case 'fold': st.textOpen = !st.textOpen; break;
       case 'icon': if (st.iconsEl) closeIcons(); else openIcons(t); return;
+      case 'icg': showIconGroup(v || REWARD_ICONS); return;
       case 'ic': {
         const ic = cat.icons[Number(v)];
 
@@ -2419,7 +2599,12 @@
     st.byId = {};
     st.game.forEach(t => { st.byId[t.id] = t; });
     st.scripts = new Set(isArr(d.scripts) ? d.scripts : []);
-    st.file = isObj(d.file) ? d.file : null;
+    st.icons = isArr(d.icons) ? d.icons.filter(i => isObj(i) && typeof i.icon === 'string' && i.icon).map(i => ({
+      icon: i.icon,
+      unityIcon: typeof i.unityIcon === 'string' ? i.unityIcon : '',
+      group: typeof i.group === 'string' && i.group ? i.group : REWARD_ICONS
+    })) : [];
+    st.file =isObj(d.file) ? d.file : null;
     st.problems = isArr(d.problems) ? d.problems.map(String) : [];
     st.pending = null;
     closeOverlays();

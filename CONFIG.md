@@ -54,6 +54,24 @@ Every talent in the default file starts switched off. Set `"enabled": true` on o
 | Resourceful | 2004 | Before the disaster, 3 / 5 / 7 / 9 / 12 raw materials salvaged from junk are left in your home's cabinets. |
 | Yoga Master | 2006 | While you have Vim and Vigor, Satiety drops 10 / 15 / 20 / 25 / 30% slower. |
 | Shut-In | 2007 | While you are Lonely, you recover 1 Morale every 5 / 4 / 3 / 2 / 1 hours. |
+| Prepper | 5101 | +1 / +2 / +3 hours before the disaster, +0.5 / +1 / +1.5 kg shopping weight. |
+| Insulated Pack | 5102 | Backpack items keep 2 / 3 / 4 times as long. |
+| Quick Rest | 5103 | Resting restores stamina 10 / 20 / 30% faster. |
+| Every Crumb Counts | 5104 | The Ration Press keeps 5 / 10 / 20% more nutrition (60% in the game). |
+| Field Kit | 5105 | Start each run with 6 / 10 / 14 random crafting materials, seeds and medicine. |
+| Solar Engineer | 5106 | Solar panels make 15 / 30 / 45% more power. |
+| Trapper | 5107 | Traps catch prey 10 / 20 / 30% more often. |
+| Quick Learner | 5108 | Production XP +25 / +50 / +75%. |
+| Old Friend | 5109 | Start with an HK-1 sorting robot and its full set of blueprints. |
+| Light Footed | 5110 | Exposure builds 10 / 20 / 30% slower while exploring. |
+| Interest | 5111 | As each new loop starts, 5 / 10 / 15% interest on the Planning Points kept from the last one. |
+| Safety Net | 5112 | A run that pays fewer than 100 / 200 / 300 Planning Points is topped up to it as the next loop starts. |
+| Extra Pick | 5113 | +1 / +2 rewards to choose from at the end of each day. |
+| Crisis Veteran | 5114 | Crises and events reward 10 / 20 / 30% more Planning Points. |
+| Second Wind | 5115 | Once / twice per run, running out of Life leaves you at 30 Life instead. |
+| Lucky Finds | 5116 | Searching a container has a 10 / 20 / 30% chance to turn up one more of what you find. |
+| Muscle Memory | 5117 | Each run starts with 25 / 50% of the skill levels the last run gained, kept in `BepInEx\config\NewLoopPlus.MuscleMemory.txt` (delete it to start over). |
+| Scout's Notes | 5118 | Start each run with 1 / 2 / 3 drone trading posts already found. |
 
 A talent entry takes:
 
@@ -67,6 +85,6 @@ A talent entry takes:
 | `levels` | One `{ }` per level, each with optional `cost`, `buff`, `description`, `levelText` and `fields`. More levels than the game has adds levels copied from the highest one; fewer hides the rest. |
 | `buffs`, `effects` | Buff and effect table rows this talent changes, or makes when given a `copyFrom`. Each has an `id`, an optional `copyFrom` and `fields`. |
 | `reinforce` | `[{ "talentBuff": A, "doorWindowBuff": B }]`: while you have buff A, every door and window of your home gets buff B. |
-| `gives` | What each level gives: a list of `{ "effect": "game:<script>", "choice": { }, "levels": [{ }, ...] }`. `effect` names an effect script one of the game's talents runs; `choice` holds fields that stay the same at every level, and `levels` one `{ }` of fields per level (a level past the end uses the last). Each give gets its own buff and effect rows, so the talent ID must be 1000 to 9999 and a talent can have at most 10 gives. A level's `buff` is ignored when the talent has gives. |
+| `gives` | What each level gives: a list of `{ "effect": "game:<script>", "choice": { }, "levels": [{ }, ...] }`. `effect` names an effect script one of the game's talents runs, or one of New Loop Plus's own effects as `nlp:<name>` (`interest`, `safety-net`, `extra-pick`, `crisis-veteran`, `second-wind`, `lucky-finds`, `muscle-memory`, `scouts-notes`; the default file shows the fields each one reads); `choice` holds fields that stay the same at every level, and `levels` one `{ }` of fields per level (a level past the end uses the last). Each give gets its own buff and effect rows, so the talent ID must be 1000 to 9999 and a talent can have at most 10 gives. A level's `buff` is ignored when the talent has gives. |
 
 The `buffs` and `effects` lists at the bottom of the file always apply. Field names are the game's own table names (`ConfigName`, `IntValue0`, `BuffSatietyDel`, `EffectConfigId` and so on). A cost set here is still scaled by `CostMultiplier` and `TalentCostOverrides`.

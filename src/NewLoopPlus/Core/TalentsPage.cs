@@ -14,6 +14,9 @@ public sealed record GameLevel(int Lv, int Cost, int Buff, LocalText Description
 /// <summary>A game talent as the Talents tab shows it, read before the talents file changed anything.</summary>
 public sealed record GameTalent(int Id, int Type, int Endless, int Available, int Show, string WebIcon, string Icon, LocalText Name, LocalText LevelText, IReadOnlyList<GameLevel> Levels);
 
+/// <summary>An image a reward can show: its path for web pages and its path for the game's own screens.</summary>
+public sealed record GameIcon(string WebIcon, string Icon);
+
 /// <summary>What a save from the Talents tab comes to: the text to write, or why nothing is written.</summary>
 public abstract record SaveCheck
 {
@@ -39,14 +42,15 @@ public static class TalentsPage
     /// <summary>
     /// The script that hands the tab its data. The talents file goes as plain JSON, comments dropped, or as null when it is
     /// not JSON at all, which the tab takes as "do not save over it". Every non-ASCII character is escaped, so the data can
-    /// never end the script early. <paramref name="scripts"/> are the effect scripts any game talent runs, loop reward or
-    /// not, since a give can use any of them.
+    /// never end the script early. <paramref name="game"/> holds every game talent and <paramref name="scripts"/> the
+    /// effect scripts they run, loop reward or not, since a give can use any of them and a reward can show any of their
+    /// images. <paramref name="items"/> are the item images a reward can show too.
     /// </summary>
-    public static string DataCall(IReadOnlyList<GameTalent> game, IEnumerable<string> scripts, string? fileText, IReadOnlyList<string> startProblems)
+    public static string DataCall(IReadOnlyList<GameTalent> game, IEnumerable<string> scripts, IEnumerable<GameIcon> items, string? fileText, IReadOnlyList<string> startProblems)
     {
         var problems = (fileText == null ? new[] { "the talents file could not be read" } : TalentFile.Parse(fileText).Problems).Concat(startProblems).Distinct().ToList();
 
-        return "window.__slnlpTalents&&window.__slnlpTalents.data(" + Json(writer => WriteData(writer, game, scripts, fileText, problems)) + ")";
+        return "window.__slnlpTalents&&window.__slnlpTalents.data(" + Json(writer => WriteData(writer, game, scripts, items, fileText, problems)) + ")";
     }
 
     /// <summary>A reply to a save, shown in the tab's status line.</summary>
@@ -81,7 +85,7 @@ public static class TalentsPage
         return path;
     }
 
-    private static void WriteData(Utf8JsonWriter writer, IReadOnlyList<GameTalent> game, IEnumerable<string> scripts, string? fileText, IReadOnlyList<string> problems)
+    private static void WriteData(Utf8JsonWriter writer, IReadOnlyList<GameTalent> game, IEnumerable<string> scripts, IEnumerable<GameIcon> items, string? fileText, IReadOnlyList<string> problems)
     {
         writer.WriteStartObject();
         writer.WriteStartArray("game");
@@ -94,6 +98,11 @@ public static class TalentsPage
         foreach (var script in scripts.Select(Unprefixed).Distinct().OrderBy(script => script, StringComparer.Ordinal)) writer.WriteStringValue(script);
 
         writer.WriteEndArray();
+        writer.WriteStartArray("icons");
+
+        foreach (var (group, icon) in IconChoices(game, items)) WriteIcon(writer, group, icon);
+
+        writer.WriteEndArray();
         writer.WritePropertyName("file");
         WriteFile(writer, fileText);
         writer.WriteStartArray("problems");
@@ -101,6 +110,40 @@ public static class TalentsPage
         foreach (var problem in problems) writer.WriteStringValue(problem);
 
         writer.WriteEndArray();
+        writer.WriteEndObject();
+    }
+
+    /// <summary>The talents' images first, as "rewards", then the items', grouped by the folder they sit in. Each image comes once.</summary>
+    private static IEnumerable<(string Group, GameIcon Icon)> IconChoices(IReadOnlyList<GameTalent> game, IEnumerable<GameIcon> items)
+    {
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+        var rewards = game.OrderBy(talent => talent.Id).Select(talent => (Group: RewardIcons, Icon: new GameIcon(FromRoot(talent.WebIcon), talent.Icon)));
+        var itemIcons = items.Select(item => new GameIcon(FromRoot(item.WebIcon), item.Icon)).Select(icon => (Group: Folder(icon.WebIcon), Icon: icon)).OrderBy(choice => choice.Group, StringComparer.Ordinal);
+
+        foreach (var choice in rewards.Concat(itemIcons))
+        {
+            if (choice.Icon.WebIcon.Length == 0 || !seen.Add(choice.Icon.WebIcon)) continue;
+
+            yield return choice;
+        }
+    }
+
+    private const string RewardIcons = "rewards";
+
+    /// <summary>"Res/Food/a.png" sits in Food.</summary>
+    private static string Folder(string fromRoot)
+    {
+        var parts = fromRoot.Split('/');
+
+        return parts.Length >= 3 ? parts[parts.Length - 2] : "";
+    }
+
+    private static void WriteIcon(Utf8JsonWriter writer, string group, GameIcon icon)
+    {
+        writer.WriteStartObject();
+        writer.WriteString("icon", icon.WebIcon);
+        writer.WriteString("unityIcon", icon.Icon);
+        writer.WriteString("group", group);
         writer.WriteEndObject();
     }
 

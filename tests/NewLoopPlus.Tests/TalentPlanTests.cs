@@ -23,11 +23,12 @@ public class TalentPlanTests
 
         public IReadOnlyList<int> TalentLevels(int talentId) => Talents.TryGetValue(talentId, out var levels) ? levels : new int[0];
 
-        /// <summary>Talent 1006 runs VehicleTimeReduce; PreDisaster_AddGold is run only by talent 1002's first level.</summary>
+        /// <summary>Talent 1006 runs VehicleTimeReduce; PreDisaster_AddGold is run only by talent 1002's first level; talent 1009 runs the do-nothing Buff_Empty.</summary>
         public GiveTemplate? Template(string script, int talentId, int lv) => script switch
         {
             "VehicleTimeReduce" => new GiveTemplate(200100610, 100610),
             "PreDisaster_AddGold" => new GiveTemplate(200100210, 100210),
+            "Buff_Empty" => new GiveTemplate(200100910, 100910),
             _ => null,
         };
 
@@ -280,6 +281,59 @@ public class TalentPlanTests
 
         Assert.Empty(plan.Rows);
         Assert.Contains(named, Assert.Single(plan.Problems));
+    }
+
+    [Fact]
+    public void A_New_Loop_Plus_give_runs_the_do_nothing_script_and_keeps_its_numbers_for_the_mod()
+    {
+        var plan = Plan("""
+            { "talents": [ { "id": 3076, "gives": [ { "effect": "nlp:interest", "levels": [ { "FloatValue0": 0.05 }, { "FloatValue0": 0.1 } ] } ] } ] }
+            """);
+        var effect = Row(plan, Table.Effect, 200307610);
+        var grant = Assert.Single(plan.Grants);
+
+        Assert.Empty(plan.Problems);
+        Assert.Equal(200100910, effect.CopyFrom);
+        Assert.Equal(100910, Row(plan, Table.Buff, 307610).CopyFrom);
+        Assert.Null(Field(effect, "FloatValue0"));
+        Assert.Equal(NlpEffect.Interest, grant.Effect);
+        Assert.Equal(3076, grant.TalentId);
+        Assert.Equal(3, grant.Levels.Count);
+        Assert.Equal(0.05, NlpPerks.Value(plan.Grants, _ => 1, NlpEffect.Interest, NlpPerks.Share), 6);
+        Assert.Equal(0.1, NlpPerks.Value(plan.Grants, _ => 3, NlpEffect.Interest, NlpPerks.Share), 6);
+    }
+
+    [Fact]
+    public void A_New_Loop_Plus_effect_the_mod_does_not_have_skips_the_talent_and_lists_the_ones_it_has()
+    {
+        var plan = Plan("""{ "talents": [ { "id": 3076, "gives": [ { "effect": "nlp:no-such-perk" } ] } ] }""");
+        var problem = Assert.Single(plan.Problems);
+
+        Assert.Empty(plan.Rows);
+        Assert.Empty(plan.Grants);
+        Assert.Contains("nlp:no-such-perk", problem);
+        Assert.Contains("nlp:second-wind", problem);
+    }
+
+    [Fact]
+    public void Game_and_New_Loop_Plus_gives_mix_on_one_talent()
+    {
+        var plan = Plan("""
+            { "talents": [ { "id": 3076, "gives": [ { "effect": "game:PreDisaster_AddGold", "levels": [ { "IntValue0": 100 } ] }, { "effect": "nlp:safety-net", "levels": [ { "IntValue0": 200 } ] } ] } ] }
+            """);
+
+        Assert.Empty(plan.Problems);
+        Assert.Equal(new FieldValue.Number(100), Field(Row(plan, Table.Effect, 200307610), "IntValue0"));
+        Assert.Equal(200100910, Row(plan, Table.Effect, 200307611).CopyFrom);
+        Assert.Equal(NlpEffect.SafetyNet, Assert.Single(plan.Grants).Effect);
+    }
+
+    [Fact]
+    public void A_disabled_talent_grants_no_New_Loop_Plus_effect()
+    {
+        var plan = Plan("""{ "talents": [ { "id": 3076, "enabled": false, "gives": [ { "effect": "nlp:extra-pick", "levels": [ { "IntValue0": 1 } ] } ] } ] }""");
+
+        Assert.Empty(plan.Grants);
     }
 
     [Fact]
