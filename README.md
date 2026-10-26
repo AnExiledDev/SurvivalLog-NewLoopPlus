@@ -52,7 +52,7 @@ Delete `NewLoopPlus.dll` from the `BepInEx\plugins` folder. For a clean slate, a
 
 ## Troubleshooting
 
-Check `BepInEx\LogOutput.log` for `===== New Loop Plus 0.6.0 started`. The same line, plus every confirm, the points preview and how the end went, is in `BepInEx\new-loop-plus.log`, which survives restarts.
+Check `BepInEx\LogOutput.log` for `===== New Loop Plus 0.6.1 started`. The same line, plus every confirm, the points preview and how the end went, is in `BepInEx\new-loop-plus.log`, which survives restarts.
 
 With any multiplier set, the log also says what was scaled, such as `survival points now convert at ...` or `... loop reward levels now cost ...`. A per-talent entry it could not read is named there too. The talents file adds a line such as `talents file: enabled 1006, 2017; 10 table rows written`, plus a line for each entry it skipped and why.
 

@@ -191,6 +191,7 @@
       }
 
       found = doc;
+      watchPauseMenu(doc);
       addStyle(doc);
       placeButton(doc);
     }
@@ -266,6 +267,46 @@
       if (doc && doc.documentElement && doc.head) arrangeCards(doc, !!window.__slmorerewards);
     }
   }
+
+  function patchPauseMenuSafely() {
+    try {
+      patchPauseMenu();
+    } catch (e) {}
+  }
+
+  // Vue redraws the menu list as the menu opens, which drops End Run; putting it back the moment that happens, rather
+  // than at the next poll, keeps it from popping in after the game's own buttons. An observer runs before the next paint.
+  function watchPauseMenu(doc) {
+    var win = doc.defaultView;
+
+    if (doc.slnlpWatched || !win || typeof win.MutationObserver === 'undefined') return;
+
+    doc.slnlpWatched = true;
+    new win.MutationObserver(patchPauseMenuSafely).observe(doc, { childList: true, subtree: true });
+  }
+
+  // A pause menu page loaded into a new iframe is watched as soon as it loads, not at the next poll.
+  function watchForFrames() {
+    if (typeof MutationObserver === 'undefined') return;
+
+    new MutationObserver(function (records) {
+      for (var i = 0; i < records.length; i++) {
+        var added = records[i].addedNodes;
+
+        for (var j = 0; j < added.length; j++) {
+          var node = added[j];
+
+          if (node.nodeType !== 1) continue;
+
+          var frames = node.tagName === 'IFRAME' ? [node] : node.getElementsByTagName('iframe');
+
+          for (var k = 0; k < frames.length; k++) frames[k].addEventListener('load', patchPauseMenuSafely);
+        }
+      }
+    }).observe(document.documentElement, { childList: true, subtree: true });
+  }
+
+  watchForFrames();
 
   setInterval(function () {
     try {

@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.1
+
+- End Run shows the moment the Esc menu opens, instead of popping in a moment later.
+
 ## 0.6.0
 
 - Eighteen new loop rewards in the talents file, all switched off. Switch them on in the Talents tab or with `"enabled": true` in the file.
