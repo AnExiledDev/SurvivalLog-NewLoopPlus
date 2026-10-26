@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using GameCore.HotUpdate;
 using NewLoopPlus.Core;
 
@@ -22,6 +23,7 @@ internal sealed class PointsTables
     private readonly ScaledValues<string, float> _rates;
     private readonly ScaledValues<string, int> _perDay;
     private readonly ScaledValues<int, int> _rewards;
+    private readonly SweepGate<int, int> _rewardsGate = new();
     private readonly ScaledValues<string, int> _endlessGrant;
     private PointsMultipliers _settings = PointsMultipliers.None;
     private PointsMultipliers _multipliers = PointsMultipliers.None;
@@ -70,6 +72,7 @@ internal sealed class PointsTables
         _rates.Rescale();
         _perDay.Rescale();
         _rewards.Rescale();
+        _rewardsGate.Forget();
         _endlessGrant.Rescale();
     }
 
@@ -109,17 +112,27 @@ internal sealed class PointsTables
     {
         var rows = config._Config_RewardSet_Dict;
 
-        if (rows == null || rows.Count == 0) return;
+        if (rows == null || rows.Count == 0 || !_rewardsGate.IsDue(rows.Pointer.ToInt64(), rows.Count, id => rows.ContainsKey(id) && rows[id] is { } row ? row._BeliefPoint_k__BackingField : null)) return;
 
         var scaled = 0;
+        var changed = new List<(int, int)>();
 
         foreach (var row in rows.Values)
         {
-            if (row == null || _rewards.Next(row._ID_k__BackingField, row._BeliefPoint_k__BackingField) is not { } belief) continue;
+            if (row == null) continue;
 
-            row._BeliefPoint_k__BackingField = belief;
-            scaled++;
+            var id = row._ID_k__BackingField;
+
+            if (_rewards.Next(id, row._BeliefPoint_k__BackingField) is { } belief)
+            {
+                row._BeliefPoint_k__BackingField = belief;
+                scaled++;
+            }
+
+            if (_rewards.Scaled(id) is { } written && written != _rewards.Original(id)) changed.Add((id, written));
         }
+
+        _rewardsGate.Swept(rows.Pointer.ToInt64(), rows.Count, changed);
 
         if (scaled > 0) _log($"{scaled} crisis and event rewards now pay {Math.Max(0, _multipliers.Crisis) * Math.Max(0, _multipliers.Overall):0.##}x the game's Planning Points");
     }

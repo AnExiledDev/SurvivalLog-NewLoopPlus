@@ -17,24 +17,26 @@ public sealed class ScaleTicker : MonoBehaviour
     internal static Action<string> Log = _ => { };
     private static readonly HashSet<string> ReportedFailures = new();
 
+    private int _nextCheck;
+
     public ScaleTicker(IntPtr pointer) : base(pointer)
     {
     }
 
     private void Update()
     {
-        var now = Time.realtimeSinceStartup;
+        if (Checks.Count == 0) return;
 
-        foreach (var check in Checks)
+        // One check per frame: each check keeps its own interval, so spreading them keeps any one frame short.
+        _nextCheck %= Checks.Count;
+
+        try
         {
-            try
-            {
-                check(now);
-            }
-            catch (Exception ex)
-            {
-                ReportFailure(ex);
-            }
+            Checks[_nextCheck++](Time.realtimeSinceStartup);
+        }
+        catch (Exception ex)
+        {
+            ReportFailure(ex);
         }
     }
 

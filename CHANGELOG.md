@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.6.2
+
+- Less stutter: the talent and reward tables are only rewritten when the game reloads them, and the background checks take turns instead of all running in the same frame.
+
 ## 0.6.1
 
 - End Run shows the moment the Esc menu opens, instead of popping in a moment later.
