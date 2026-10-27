@@ -127,13 +127,25 @@ public class TalentPlanTests
     }
 
     [Fact]
-    public void More_than_nine_levels_is_refused_because_row_ids_would_run_into_the_next_talent()
+    public void More_than_ten_levels_is_refused_because_row_ids_would_run_into_the_next_talent()
     {
-        var levels = string.Join(",", Enumerable.Repeat("{}", 10));
+        var levels = string.Join(",", Enumerable.Repeat("{}", 11));
         var plan = Plan($$"""{ "talents": [ { "id": 1006, "levels": [ {{levels}} ] } ] }""");
 
         Assert.Empty(plan.Rows);
         Assert.Contains("1006", Assert.Single(plan.Problems));
+    }
+
+    [Fact]
+    public void A_tenth_level_takes_the_next_talents_unused_level_zero_row_and_names_its_own_talent_and_level()
+    {
+        var levels = string.Join(",", Enumerable.Repeat("{}", 10));
+        var plan = Plan($$"""{ "talents": [ { "id": 1006, "levels": [ {{levels}} ] } ] }""");
+        var tenth = Row(plan, Table.Talent, 10070);
+
+        Assert.Empty(plan.Problems);
+        Assert.Equal(new FieldValue.Number(1006), Field(tenth, "TalentID"));
+        Assert.Equal(new FieldValue.Number(10), Field(tenth, "Lv"));
     }
 
     [Fact]

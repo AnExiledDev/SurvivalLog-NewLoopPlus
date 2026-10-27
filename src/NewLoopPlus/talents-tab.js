@@ -14,7 +14,7 @@
   const CUT = [1006, 2017, 3076, 4004, 4006];
   const FIRST_NEW = 5001;
   const LAST_ID = 9999;
-  const MAX_LEVELS = 9;
+  const MAX_LEVELS = 10;
   const MAX_GIVES = 10;
   const GAME_PREFIX = 'game:';
   const NLP_PREFIX = 'nlp:';

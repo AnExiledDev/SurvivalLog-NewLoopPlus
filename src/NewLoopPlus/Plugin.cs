@@ -13,7 +13,7 @@ namespace NewLoopPlus;
 public sealed class Plugin : BasePlugin
 {
     private const string Guid = "com.dev.survivallog.newloopplus";
-    private const string Version = "0.7.0";
+    private const string Version = "0.8.0";
     private const string TalentsFileName = "NewLoopPlus.Talents.json";
     private const string MuscleMemoryFileName = "NewLoopPlus.MuscleMemory.txt";
     private const float MaxMultiplier = 100f;
@@ -42,6 +42,9 @@ public sealed class Plugin : BasePlugin
         SecondWind.Apply(harmony, log.Write);
         LuckyFinds.Apply(harmony, log.Write);
         Tinkerer.Apply(harmony, log.Write);
+        MentalToughnessUses.Apply(harmony, log.Write);
+        EndlessRewardsSetting.On = BindEndlessEverywhere().Value;
+        if (EndlessRewardsSetting.On) EndlessRewardHooks.Apply(harmony, log.Write);
         OptionalLive.Watch(BindStartingBonus(), bonus => LoopStartBonus.Bonus = bonus);
         StartScaling(BindCosts(log.Write), TalentFileStore.Load(talentsPath, log.Write), tab, log.Write);
     }
@@ -57,7 +60,7 @@ public sealed class Plugin : BasePlugin
 
         WatchPoints(points, log);
         ScaleTicker.Checks.Add(points.Tick);
-        ScaleTicker.Checks.Add(new TalentTables(talents, tab, log).Tick);
+        ScaleTicker.Checks.Add(new TalentTables(talents, tab, log, EndlessRewardsSetting.On).Tick);
         ScaleTicker.Checks.Add(new RunStartPerks(Path.Combine(Paths.ConfigPath, MuscleMemoryFileName), log).Tick);
         ScaleTicker.Checks.Add(new PerkTables(log).Tick);
 
@@ -102,6 +105,12 @@ public sealed class Plugin : BasePlugin
             "Extra Planning Points paid at the start of each new loop, as the loop reward screen opens after a run, so they can be spent there. 0 pays none.\n" +
             "每次开始新轮回时额外获得的信念点，在一局结束后打开轮回奖励界面时发放，可以当场使用。0 为不发放。",
             new AcceptableValueRange<int>(0, StartingBonus.Max)));
+
+    private ConfigEntry<bool> BindEndlessEverywhere() =>
+        Config.Bind("Loop", "EndlessRewardsEverywhere", false, new ConfigDescription(
+            "Offers the endless mode loop rewards in every mode, so they can be bought and work outside endless too. The camp rewards and Cartographer stay endless only. Applies at the next start.\n" +
+            "在所有模式中提供无尽模式的天赋，在无尽模式之外也能购买并生效。营地类天赋和「地图学家」仍只限无尽模式。下次启动时生效。",
+            null, AppliesAtRestart));
 
     private CostMultipliers BindCosts(System.Action<string> log)
     {

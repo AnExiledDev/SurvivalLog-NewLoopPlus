@@ -1,6 +1,6 @@
 # New Loop Plus settings
 
-Settings live in `BepInEx\config\com.dev.survivallog.newloopplus.cfg`, created the first time the game starts with the mod. Change it in game on the Mod Manager's Mods screen, or edit the file while the game is closed. Points, Endless and Loop settings apply at once; Costs settings apply at the next game start. Delete the file to get the defaults back. Every multiplier goes from 0 to 100, and 1 is the game's own amount.
+Settings live in `BepInEx\config\com.dev.survivallog.newloopplus.cfg`, created the first time the game starts with the mod. Change it in game on the Mod Manager's Mods screen, or edit the file while the game is closed. Points, Endless and Loop settings apply at once, except `EndlessRewardsEverywhere`; Costs settings apply at the next game start. Delete the file to get the defaults back. Every multiplier goes from 0 to 100, and 1 is the game's own amount.
 
 ## Points
 
@@ -24,6 +24,7 @@ Each part uses its own setting times `OverallMultiplier`, so `OverallMultiplier 
 | Setting | Default | What it does |
 | --- | --- | --- |
 | `StartingBonus` | `0` | Extra Planning Points paid at the start of each new loop, as the loop reward screen opens after a run, so they can be spent there. Goes from 0 to 100000. 0 pays none. |
+| `EndlessRewardsEverywhere` | `false` | Offers the endless mode loop rewards in every mode, and makes them work there as they do in endless. The camp rewards (Camp Rescuer, Liaison, Radio Station and the rest of the camp list) and Cartographer stay endless only. Applies at the next game start. |
 
 ## Costs
 
@@ -54,6 +55,23 @@ Every talent in the default file starts switched off. Set `"enabled": true` on o
 | Resourceful | 2004 | Before the disaster, 3 / 5 / 7 / 9 / 12 raw materials salvaged from junk are left in your home's cabinets. |
 | Yoga Master | 2006 | While you have Vim and Vigor, Satiety drops 10 / 15 / 20 / 25 / 30% slower. |
 | Shut-In | 2007 | While you are Lonely, you recover 1 Morale every 5 / 4 / 3 / 2 / 1 hours. |
+| Early Riser | 1001 | Five more levels: 8 / 9 / 10 / 12 / 14 more hours before the disaster. |
+| Savings Account | 1002 | Five more levels: $700 / $800 / $900 / $1000 / $1200 more money before the disaster. |
+| Encumbrance | 1003 | Five more levels: 3.5 / 4 / 4.5 / 5 / 6 kg more shopping weight. |
+| Clearance | 1004 | Five more levels: 35 / 40 / 45 / 50 / 55% off supplies that keep less than 5 days. |
+| Bulk Bargains | 1005 | Five more levels: 30 / 35 / 40 / 45 / 50% off when buying 6 or more. |
+| Hoarding Habit | 1007 | Five more levels: 9 / 10 / 11 / 12 / 15 random food items left in your home's cabinets. |
+| Resourceful Management | 1011 | Five more levels: a loan limit of 2400 / 3000 / 3800 / 4600 / 5500. |
+| Interior Decorator | 1012 | Five more levels: 20 / 25 / 30 / 35 / 40% off furniture. |
+| Quick Fortification | 2005 | Five more levels, each as much stronger as the game's levels are. |
+| Gratitude | 2008 | Five more levels: a fulfilled wish's status lasts 15 / 18 / 21 / 24 / 30 hours longer. |
+| Mental Toughness | 2010 | Five more levels, with more than one use: +80 Morale twice, +90 twice, +90 three times, +100 three times, +100 four times. Each use also gives Tranquility. |
+| Energy Saver | 2011 | Five more levels: power use 25 / 30 / 35 / 40 / 50% lower. |
+| Bargaining | 2013 | Five more levels: strangers value your goods 40 / 50 / 60 / 80 / 100% higher. |
+| Deep Freeze | 2014 | Five more levels: food spoils 55 / 65 / 75 / 85 / 90% slower in the Refrigerator. |
+| Mold Master | 2015 | Eight levels in all: 15 / 30 / 45 / 60 / 70 / 80 / 90 / 100% less quality penalty from spoiled ingredients. The game's level 3 already takes off all of it, so levels 2 and 3 are weaker than the game's. |
+| Long Harvest | 2016 | Five more levels: the harvest window lasts 130 / 160 / 200 / 250 / 300% longer. |
+| Cold-Resistant Constitution | 2018 | Five more levels: cold waves take 55 / 60 / 65 / 70 / 75% less Satiety, Morale and Vitality. |
 | Prepper | 5101 | +1 / +2 / +3 hours before the disaster, +0.5 / +1 / +1.5 kg shopping weight. |
 | Insulated Pack | 5102 | Backpack items keep 2 / 3 / 4 times as long. |
 | Quick Rest | 5103 | Resting restores stamina 10 / 20 / 30% faster. |
@@ -82,7 +100,7 @@ A talent entry takes:
 
 | Key | What it does |
 | --- | --- |
-| `id` | The talent ID. Its level rows are `id * 10 + level`, so a talent has at most 9 levels. |
+| `id` | The talent ID. Its level rows are `id * 10 + level`, so a talent has at most 10 levels (level 10 takes the next talent's unused level 0 row). |
 | `enabled` | `true` (the default when left out) or `false`. A switched-off entry changes nothing, its buffs and effects included. |
 | `copyFrom` | For a talent ID the game does not have: the talent whose rows the new one starts from. |
 | `name`, `description`, `levelText` | Text, either `"plain"` or `{ "en": "...", "zh": "..." }`. A missing language shows the other one. |

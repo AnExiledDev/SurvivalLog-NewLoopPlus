@@ -12,6 +12,8 @@ public class TalentFileTests
     private static readonly int[] CutTalentsThatWork = { 1006, 2017, 3076, 4004, 4006 };
     private static readonly int[] CutTalentsFinishedByTheMod = { 1008, 1010, 2004, 2006, 2007 };
     private static readonly int[] NewRewards = Enumerable.Range(5101, 23).ToArray();
+    private static readonly int[] FiveLevelTalentsMadeTen = { 1001, 1002, 1003, 1004, 1005, 1007, 2005, 2008, 2010 };
+    private static readonly int[] ThreeLevelTalentsMadeEight = { 1011, 1012, 2011, 2013, 2014, 2015, 2016, 2018 };
 
     private static TalentFile DefaultFile() => TalentFile.Parse(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "talents.default.json")));
 
@@ -132,7 +134,7 @@ public class TalentFileTests
         var file = DefaultFile();
 
         Assert.Empty(file.Problems);
-        Assert.Equal(CutTalentsThatWork.Concat(CutTalentsFinishedByTheMod).Concat(NewRewards).OrderBy(id => id), file.Talents.Select(talent => talent.Id).OrderBy(id => id));
+        Assert.Equal(CutTalentsThatWork.Concat(CutTalentsFinishedByTheMod).Concat(NewRewards).Concat(FiveLevelTalentsMadeTen).Concat(ThreeLevelTalentsMadeEight).OrderBy(id => id), file.Talents.Select(talent => talent.Id).OrderBy(id => id));
         Assert.All(file.Talents, talent => Assert.False(talent.Enabled));
         Assert.Empty(file.ReinforceGroups());
     }
@@ -174,6 +176,26 @@ public class TalentFileTests
     }
 
     [Fact]
+    public void Every_lengthened_talent_gets_five_more_levels_each_with_its_own_buff_and_effect()
+    {
+        var file = DefaultFile();
+
+        foreach (var (id, gameLevels) in FiveLevelTalentsMadeTen.Select(id => (id, 5)).Concat(ThreeLevelTalentsMadeEight.Select(id => (id, 3))))
+        {
+            var talent = file.Talents.Single(entry => entry.Id == id);
+            var added = talent.Levels!.Skip(gameLevels).ToList();
+
+            Assert.Equal(gameLevels + 5, talent.Levels!.Count);
+            Assert.All(added, level => Assert.True(level.Cost > 0 && level.Buff is not null, $"talent {id}"));
+            Assert.All(added, level => Assert.Contains(talent.Buffs, buff => buff.Id == level.Buff && buff.CopyFrom is not null));
+            Assert.Equal(5, talent.Buffs.Select(buff => buff.Id).Distinct().Count());
+            Assert.All(talent.Buffs, buff => Assert.Contains(buff.Fields, set => set.Field == "EffectConfigId" && talent.Effects.Any(effect => set.Value == new FieldValue.Number(effect.Id))));
+            // Quick Fortification's game text names no numbers, so it keeps it.
+            if (id != 2005) Assert.NotNull(talent.LevelText);
+        }
+    }
+
+    [Fact]
     public void Enabling_every_default_talent_builds_without_a_problem()
     {
         var file = DefaultFile();
@@ -189,7 +211,8 @@ public class TalentFileTests
     {
         public bool HasEffect(int id) => id == 200000009 || id / 100000 == 2001 || id / 100000 == 2002;
 
-        public bool HasBuff(int id) => id == 9;
+        // Plus the game's own talent level buffs, TalentID * 100 + level * 10 for levels 1 to 5.
+        public bool HasBuff(int id) => id == 9 || (id is >= 100000 and < 400000 && id % 10 == 0 && id % 100 / 10 is >= 1 and <= 5);
 
         // Every script the default file's gives use, and the empty one New Loop Plus's own effects ride on.
         private static readonly string[] GameScripts =
@@ -200,7 +223,7 @@ public class TalentFileTests
         };
 
         public System.Collections.Generic.IReadOnlyList<int> TalentLevels(int talentId) =>
-            talentId >= 5000 ? Array.Empty<int>() : talentId is 2017 or 4004 or 4006 ? new[] { 1 } : talentId == 3076 ? new[] { 1, 2, 3 } : new[] { 1, 2, 3, 4, 5 };
+            talentId >= 5000 ? Array.Empty<int>() : talentId is 2017 or 4004 or 4006 ? new[] { 1 } : talentId is 3076 or 1011 or 1012 or 2011 or 2013 or 2014 or 2015 or 2016 or 2018 ? new[] { 1, 2, 3 } : new[] { 1, 2, 3, 4, 5 };
 
         public GiveTemplate? Template(string script, int talentId, int lv) => GameScripts.Contains(script) ? new GiveTemplate(200000009, 9) : null;
 

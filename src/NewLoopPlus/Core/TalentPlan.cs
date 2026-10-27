@@ -52,8 +52,8 @@ public sealed record NlpGrant(string Effect, int TalentId, IReadOnlyList<IReadOn
 /// <summary>Everything the talents file changes in the game's tables, in the order it must be applied.</summary>
 public sealed record TalentPlan(IReadOnlyList<RowEdit> Rows, IReadOnlyList<TextEntry> Texts, IReadOnlyList<string> Problems, IReadOnlyList<Companion> Companions, IReadOnlyList<NlpGrant> Grants)
 {
-    /// <summary>Row IDs are TalentID * 10 + level, so a talent can have at most 9 levels.</summary>
-    public const int MaxLevels = 9;
+    /// <summary>Row IDs are TalentID * 10 + level, so a talent can have at most 10 levels: level 10 takes the next talent's level 0 row, which the game never uses.</summary>
+    public const int MaxLevels = 10;
 
     /// <summary>A give's buff is TalentID * 100 + level * 10 + its place in the list, so a talent can give at most 10 things.</summary>
     public const int MaxGives = 10;

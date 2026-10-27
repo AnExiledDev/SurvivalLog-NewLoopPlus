@@ -22,14 +22,16 @@ internal sealed class TalentTables
     private readonly TalentFile _file;
     private readonly TalentsTab _tab;
     private readonly Action<string> _log;
+    private readonly bool _endlessEverywhere;
     private (IntPtr Talents, IntPtr Buffs, IntPtr Effects) _applied;
     private float _nextCheckAt;
 
-    public TalentTables(TalentFile file, TalentsTab tab, Action<string> log)
+    public TalentTables(TalentFile file, TalentsTab tab, Action<string> log, bool endlessEverywhere)
     {
         _file = file;
         _tab = tab;
         _log = log;
+        _endlessEverywhere = endlessEverywhere;
     }
 
     public void Tick(float now)
@@ -78,10 +80,37 @@ internal sealed class TalentTables
             chinese[text.Key] = text.Zh;
         }
 
+        if (_endlessEverywhere) OfferEndlessRewardsEverywhere(talents);
+
+        MentalToughnessUses.Buffs.Clear();
+        foreach (var row in talents.Values)
+        {
+            if (row != null && row._TalentID_k__BackingField == MentalToughnessUses.TalentId) MentalToughnessUses.Buffs.Add(row._BuffID_k__BackingField);
+        }
+
         CompanionBuffs.Use(plan.Companions);
         Perks.Grants = plan.Grants;
         _tab.Started(game, index.Scripts, ItemIcons(config), problems);
         Report(plan, problems);
+    }
+
+    /// <summary>
+    /// Shows the listed endless rewards in every mode: EndlessMode 0 is a row every mode offers. Done after the file is
+    /// written, so levels the file adds are offered too.
+    /// </summary>
+    private void OfferEndlessRewardsEverywhere(Il2CppSystem.Collections.Generic.Dictionary<int, Config_Talent> talents)
+    {
+        var rows = 0;
+
+        foreach (var row in talents.Values)
+        {
+            if (row == null || !EndlessRewards.Unlocks(row._TalentID_k__BackingField) || row._EndlessMode_k__BackingField == 0) continue;
+
+            row._EndlessMode_k__BackingField = 0;
+            rows++;
+        }
+
+        _log($"endless rewards offered in every mode ({rows} levels)");
     }
 
     /// <summary>The images of the game's items, which a reward can show as well as any talent's.</summary>

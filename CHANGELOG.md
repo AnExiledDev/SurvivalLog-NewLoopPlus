@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.8.0
+
+- Five more levels for seventeen loop rewards in the talents file, all switched off. Switch them on in the Talents tab or with `"enabled": true` in the file.
+- Early Riser, Savings Account, Encumbrance, Clearance, Bulk Bargains, Hoarding Habit, Quick Fortification and Gratitude go from five levels to ten.
+- Resourceful Management, Interior Decorator, Energy Saver, Bargaining, Deep Freeze, Long Harvest and Cold-Resistant Constitution go from three levels to eight.
+- Mental Toughness goes to ten levels. Its new levels give 80 to 100 Morale and can be used two to four times.
+- Mold Master goes to eight levels, from 15% to 100%. The game's level 3 already reaches 100%, so levels 2 and 3 are weaker than before.
+- A loop reward can now have up to ten levels, in the talents file and the Talents tab.
+- New setting `EndlessRewardsEverywhere` under Loop, off by default: offers the endless mode loop rewards in every mode, and makes them work there as they do in endless. The camp rewards and Cartographer stay endless only. Applies at the next game start.
+- Made for Survival Log 1.1.19611.
+
 ## 0.7.0
 
 - Five new loop rewards in the talents file, all switched off. Switch them on in the Talents tab or with `"enabled": true` in the file. Each has five levels.
@@ -8,7 +19,7 @@
 - Brewmaster: brewing takes up to 50% less time. From level 3, each bottle needs less Satiety, so a brew gives more bottles.
 - Drone Pilot: trade drone trips take as little as 30 minutes instead of 60. Level 3 gives one more trade a day, level 5 two more.
 - Hardened Defenses: zombies do up to 50% less bite damage to doors, windows and defenses.
-- Brewmaster, Drone Pilot and Hardened Defenses add to the game's own Cellar Craft, Not a Drop Wasted, Endurance Drone and Iron Defense rewards when you own both.
+- Brewmaster, Drone Pilot and Hardened Defenses stack with the game's Cellar Craft, Not a Drop Wasted, Endurance Drone and Iron Defense survival plans.
 - The Talents tab's NEW REWARD can use these effects too.
 - Made for Survival Log 1.1.19611.
 

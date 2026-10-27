@@ -4,7 +4,7 @@
 // Delete this file to get the defaults back.
 //
 // A talent entry:
-//   "id"          the talent ID (row IDs are id * 10 + level, so at most 9 levels)
+//   "id"          the talent ID (row IDs are id * 10 + level, so at most 10 levels)
 //   "enabled"     true or false; a switched-off entry changes nothing, its buffs and effects included
 //   "copyFrom"    for a new talent ID: the talent whose rows it starts from
 //   "name", "description", "levelText"   text, either "plain" or { "en": "...", "zh": "..." }
@@ -141,6 +141,532 @@
         { "id": 200200730, "fields": { "ConfigName": "Buff/Buff_CondOnOtherBuff", "BuffHealthMax": 0, "IntValue0": 20100, "BuffInterval": 10800, "BuffMoraleInterval": 1 } },
         { "id": 200200740, "fields": { "ConfigName": "Buff/Buff_CondOnOtherBuff", "BuffHealthMax": 0, "IntValue0": 20100, "BuffInterval": 7200, "BuffMoraleInterval": 1 } },
         { "id": 200200750, "fields": { "ConfigName": "Buff/Buff_CondOnOtherBuff", "BuffHealthMax": 0, "IntValue0": 20100, "BuffInterval": 3600, "BuffMoraleInterval": 1 } }
+      ]
+    },
+
+    // Game talents with five more levels. The game's levels stay as they are, except Mold Master (see its entry).
+    {
+      "id": 1001,  // Early Riser
+      "enabled": false,
+      "levelText": {"en": "+1 hour / +2 / +3 / +4 / +7 / +8 / +9 / +10 / +12 / +14 hours", "zh": "+1小时 / +2 / +3 / +4 / +7 / +8 / +9 / +10 / +12 / +14小时"},
+      "levels": [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {"cost": 18, "buff": 100160, "description": {"en": "Gives you 8 hours of extra time before the disaster hits.", "zh": "提升灾难前醒来时间8小时"}},
+        {"cost": 20, "buff": 100170, "description": {"en": "Gives you 9 hours of extra time before the disaster hits.", "zh": "提升灾难前醒来时间9小时"}},
+        {"cost": 23, "buff": 100180, "description": {"en": "Gives you 10 hours of extra time before the disaster hits.", "zh": "提升灾难前醒来时间10小时"}},
+        {"cost": 25, "buff": 100190, "description": {"en": "Gives you 12 hours of extra time before the disaster hits.", "zh": "提升灾难前醒来时间12小时"}},
+        {"cost": 30, "buff": 100200, "description": {"en": "Gives you 14 hours of extra time before the disaster hits.", "zh": "提升灾难前醒来时间14小时"}}
+      ],
+      "effects": [
+        // IntValue0 is in seconds.
+        {"id": 200100160, "copyFrom": 200100150, "fields": {"IntValue0": 28800}},
+        {"id": 200100170, "copyFrom": 200100150, "fields": {"IntValue0": 32400}},
+        {"id": 200100180, "copyFrom": 200100150, "fields": {"IntValue0": 36000}},
+        {"id": 200100190, "copyFrom": 200100150, "fields": {"IntValue0": 43200}},
+        {"id": 200100200, "copyFrom": 200100150, "fields": {"IntValue0": 50400}}
+      ],
+      "buffs": [
+        {"id": 100160, "copyFrom": 100150, "fields": {"EffectConfigId": 200100160}},
+        {"id": 100170, "copyFrom": 100150, "fields": {"EffectConfigId": 200100170}},
+        {"id": 100180, "copyFrom": 100150, "fields": {"EffectConfigId": 200100180}},
+        {"id": 100190, "copyFrom": 100150, "fields": {"EffectConfigId": 200100190}},
+        {"id": 100200, "copyFrom": 100150, "fields": {"EffectConfigId": 200100200}}
+      ]
+    },
+    {
+      "id": 1002,  // Savings Account
+      "enabled": false,
+      "levelText": {"en": "+100$ / +200$ / +300$ / +400$ / +600$ / +700$ / +800$ / +900$ / +1000$ / +1200$", "zh": "+100$ / +200$ / +300$ / +400$ / +600$ / +700$ / +800$ / +900$ / +1000$ / +1200$"},
+      "levels": [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {"cost": 18, "buff": 100260, "description": {"en": "Start with an extra $700 before the disaster hits.", "zh": "提升灾难前资金额度700$"}},
+        {"cost": 20, "buff": 100270, "description": {"en": "Start with an extra $800 before the disaster hits.", "zh": "提升灾难前资金额度800$"}},
+        {"cost": 23, "buff": 100280, "description": {"en": "Start with an extra $900 before the disaster hits.", "zh": "提升灾难前资金额度900$"}},
+        {"cost": 25, "buff": 100290, "description": {"en": "Start with an extra $1000 before the disaster hits.", "zh": "提升灾难前资金额度1000$"}},
+        {"cost": 30, "buff": 100300, "description": {"en": "Start with an extra $1200 before the disaster hits.", "zh": "提升灾难前资金额度1200$"}}
+      ],
+      "effects": [
+        {"id": 200100260, "copyFrom": 200100250, "fields": {"IntValue0": 700}},
+        {"id": 200100270, "copyFrom": 200100250, "fields": {"IntValue0": 800}},
+        {"id": 200100280, "copyFrom": 200100250, "fields": {"IntValue0": 900}},
+        {"id": 200100290, "copyFrom": 200100250, "fields": {"IntValue0": 1000}},
+        {"id": 200100300, "copyFrom": 200100250, "fields": {"IntValue0": 1200}}
+      ],
+      "buffs": [
+        {"id": 100260, "copyFrom": 100250, "fields": {"EffectConfigId": 200100260}},
+        {"id": 100270, "copyFrom": 100250, "fields": {"EffectConfigId": 200100270}},
+        {"id": 100280, "copyFrom": 100250, "fields": {"EffectConfigId": 200100280}},
+        {"id": 100290, "copyFrom": 100250, "fields": {"EffectConfigId": 200100290}},
+        {"id": 100300, "copyFrom": 100250, "fields": {"EffectConfigId": 200100300}}
+      ]
+    },
+    {
+      "id": 1003,  // Encumbrance
+      "enabled": false,
+      "levelText": {"en": "+0.5KG / +1KG / +1.5KG / +2KG / +3KG / +3.5KG / +4KG / +4.5KG / +5KG / +6KG", "zh": "+0.5KG / +1KG / +1.5KG / +2KG / +3KG / +3.5KG / +4KG / +4.5KG / +5KG / +6KG"},
+      "levels": [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {"cost": 23, "buff": 100360, "description": {"en": "Carry 3.5kg more weight.", "zh": "提升购物负重3.5KG"}},
+        {"cost": 25, "buff": 100370, "description": {"en": "Carry 4kg more weight.", "zh": "提升购物负重4KG"}},
+        {"cost": 28, "buff": 100380, "description": {"en": "Carry 4.5kg more weight.", "zh": "提升购物负重4.5KG"}},
+        {"cost": 30, "buff": 100390, "description": {"en": "Carry 5kg more weight.", "zh": "提升购物负重5KG"}},
+        {"cost": 35, "buff": 100400, "description": {"en": "Carry 6kg more weight.", "zh": "提升购物负重6KG"}}
+      ],
+      "effects": [
+        // IntValue0 is in 1/1200 kg, as in the game's levels.
+        {"id": 200100360, "copyFrom": 200100350, "fields": {"IntValue0": 4200}},
+        {"id": 200100370, "copyFrom": 200100350, "fields": {"IntValue0": 4800}},
+        {"id": 200100380, "copyFrom": 200100350, "fields": {"IntValue0": 5400}},
+        {"id": 200100390, "copyFrom": 200100350, "fields": {"IntValue0": 6000}},
+        {"id": 200100400, "copyFrom": 200100350, "fields": {"IntValue0": 7200}}
+      ],
+      "buffs": [
+        {"id": 100360, "copyFrom": 100350, "fields": {"EffectConfigId": 200100360}},
+        {"id": 100370, "copyFrom": 100350, "fields": {"EffectConfigId": 200100370}},
+        {"id": 100380, "copyFrom": 100350, "fields": {"EffectConfigId": 200100380}},
+        {"id": 100390, "copyFrom": 100350, "fields": {"EffectConfigId": 200100390}},
+        {"id": 100400, "copyFrom": 100350, "fields": {"EffectConfigId": 200100400}}
+      ]
+    },
+    {
+      "id": 1004,  // Clearance
+      "enabled": false,
+      "levelText": {"en": "90% / 85% / 80% / 75% / 70% / 65% / 60% / 55% / 50% / 45%", "zh": "90% / 85% / 80% / 75% / 70% / 65% / 60% / 55% / 50% / 45%"},
+      "levels": [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {"cost": 23, "buff": 100460, "description": {"en": "Get a 35% discount when purchasing supplies with a shelf life of less than 5 days.", "zh": "购买保质期小于5天的物资时，获得35%的价格折扣"}},
+        {"cost": 25, "buff": 100470, "description": {"en": "Get a 40% discount when purchasing supplies with a shelf life of less than 5 days.", "zh": "购买保质期小于5天的物资时，获得40%的价格折扣"}},
+        {"cost": 28, "buff": 100480, "description": {"en": "Get a 45% discount when purchasing supplies with a shelf life of less than 5 days.", "zh": "购买保质期小于5天的物资时，获得45%的价格折扣"}},
+        {"cost": 30, "buff": 100490, "description": {"en": "Get a 50% discount when purchasing supplies with a shelf life of less than 5 days.", "zh": "购买保质期小于5天的物资时，获得50%的价格折扣"}},
+        {"cost": 35, "buff": 100500, "description": {"en": "Get a 55% discount when purchasing supplies with a shelf life of less than 5 days.", "zh": "购买保质期小于5天的物资时，获得55%的价格折扣"}}
+      ],
+      "effects": [
+        // FloatValue1 is the price paid.
+        {"id": 200100460, "copyFrom": 200100450, "fields": {"FloatValue1": 0.65}},
+        {"id": 200100470, "copyFrom": 200100450, "fields": {"FloatValue1": 0.6}},
+        {"id": 200100480, "copyFrom": 200100450, "fields": {"FloatValue1": 0.55}},
+        {"id": 200100490, "copyFrom": 200100450, "fields": {"FloatValue1": 0.5}},
+        {"id": 200100500, "copyFrom": 200100450, "fields": {"FloatValue1": 0.45}}
+      ],
+      "buffs": [
+        {"id": 100460, "copyFrom": 100450, "fields": {"EffectConfigId": 200100460}},
+        {"id": 100470, "copyFrom": 100450, "fields": {"EffectConfigId": 200100470}},
+        {"id": 100480, "copyFrom": 100450, "fields": {"EffectConfigId": 200100480}},
+        {"id": 100490, "copyFrom": 100450, "fields": {"EffectConfigId": 200100490}},
+        {"id": 100500, "copyFrom": 100450, "fields": {"EffectConfigId": 200100500}}
+      ]
+    },
+    {
+      "id": 1005,  // Bulk Bargains
+      "enabled": false,
+      "levelText": {"en": "5% / 10% / 15% / 20% / 25% / 30% / 35% / 40% / 45% / 50%", "zh": "5% / 10% / 15% / 20% / 25% / 30% / 35% / 40% / 45% / 50%"},
+      "levels": [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {"cost": 23, "buff": 100560, "description": {"en": "Get a 30% discount when purchasing 6 items or more.", "zh": "在购买大于等于6体积物资时，获得30%的价格折扣"}},
+        {"cost": 25, "buff": 100570, "description": {"en": "Get a 35% discount when purchasing 6 items or more.", "zh": "在购买大于等于6体积物资时，获得35%的价格折扣"}},
+        {"cost": 28, "buff": 100580, "description": {"en": "Get a 40% discount when purchasing 6 items or more.", "zh": "在购买大于等于6体积物资时，获得40%的价格折扣"}},
+        {"cost": 30, "buff": 100590, "description": {"en": "Get a 45% discount when purchasing 6 items or more.", "zh": "在购买大于等于6体积物资时，获得45%的价格折扣"}},
+        {"cost": 35, "buff": 100600, "description": {"en": "Get a 50% discount when purchasing 6 items or more.", "zh": "在购买大于等于6体积物资时，获得50%的价格折扣"}}
+      ],
+      "effects": [
+        // FloatValue1 is the price paid.
+        {"id": 200100560, "copyFrom": 200100550, "fields": {"FloatValue1": 0.7}},
+        {"id": 200100570, "copyFrom": 200100550, "fields": {"FloatValue1": 0.65}},
+        {"id": 200100580, "copyFrom": 200100550, "fields": {"FloatValue1": 0.6}},
+        {"id": 200100590, "copyFrom": 200100550, "fields": {"FloatValue1": 0.55}},
+        {"id": 200100600, "copyFrom": 200100550, "fields": {"FloatValue1": 0.5}}
+      ],
+      "buffs": [
+        {"id": 100560, "copyFrom": 100550, "fields": {"EffectConfigId": 200100560}},
+        {"id": 100570, "copyFrom": 100550, "fields": {"EffectConfigId": 200100570}},
+        {"id": 100580, "copyFrom": 100550, "fields": {"EffectConfigId": 200100580}},
+        {"id": 100590, "copyFrom": 100550, "fields": {"EffectConfigId": 200100590}},
+        {"id": 100600, "copyFrom": 100550, "fields": {"EffectConfigId": 200100600}}
+      ]
+    },
+    {
+      "id": 1007,  // Hoarding Habit
+      "enabled": false,
+      "levelText": {"en": "2 items / 3 / 4 / 5 / 8 / 9 / 10 / 11 / 12 / 15 items", "zh": "2件 / 3件 / 4件 / 5件 / 8件 / 9件 / 10件 / 11件 / 12件 / 15件"},
+      "levels": [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {"cost": 23, "buff": 100760, "description": {"en": "9 random food items will be left in the cabinets of your residence.", "zh": "在居所的柜子里，会遗留一些随机食物9件"}},
+        {"cost": 25, "buff": 100770, "description": {"en": "10 random food items will be left in the cabinets of your residence.", "zh": "在居所的柜子里，会遗留一些随机食物10件"}},
+        {"cost": 28, "buff": 100780, "description": {"en": "11 random food items will be left in the cabinets of your residence.", "zh": "在居所的柜子里，会遗留一些随机食物11件"}},
+        {"cost": 30, "buff": 100790, "description": {"en": "12 random food items will be left in the cabinets of your residence.", "zh": "在居所的柜子里，会遗留一些随机食物12件"}},
+        {"cost": 35, "buff": 100800, "description": {"en": "15 random food items will be left in the cabinets of your residence.", "zh": "在居所的柜子里，会遗留一些随机食物15件"}}
+      ],
+      "effects": [
+        // IntValue1 is how many items.
+        {"id": 200100760, "copyFrom": 200100750, "fields": {"IntValue1": 9}},
+        {"id": 200100770, "copyFrom": 200100750, "fields": {"IntValue1": 10}},
+        {"id": 200100780, "copyFrom": 200100750, "fields": {"IntValue1": 11}},
+        {"id": 200100790, "copyFrom": 200100750, "fields": {"IntValue1": 12}},
+        {"id": 200100800, "copyFrom": 200100750, "fields": {"IntValue1": 15}}
+      ],
+      "buffs": [
+        {"id": 100760, "copyFrom": 100750, "fields": {"EffectConfigId": 200100760}},
+        {"id": 100770, "copyFrom": 100750, "fields": {"EffectConfigId": 200100770}},
+        {"id": 100780, "copyFrom": 100750, "fields": {"EffectConfigId": 200100780}},
+        {"id": 100790, "copyFrom": 100750, "fields": {"EffectConfigId": 200100790}},
+        {"id": 100800, "copyFrom": 100750, "fields": {"EffectConfigId": 200100800}}
+      ]
+    },
+    {
+      "id": 1011,  // Resourceful Management
+      "enabled": false,
+      "levelText": {"en": "800 / 1200 / 1800 / 2400 / 3000 / 3800 / 4600 / 5500", "zh": "800 / 1200 / 1800 / 2400 / 3000 / 3800 / 4600 / 5500"},
+      "levels": [
+        {},
+        {},
+        {},
+        {"cost": 25, "buff": 101140, "description": {"en": "Loan limit increased to 2,400 (from 500); the more you borrow, the more likely you are to attract unwanted attention.", "zh": "可借款上限提高至2400（原500）；借得越多，越容易被有心人窥探"}},
+        {"cost": 30, "buff": 101150, "description": {"en": "Loan limit increased to 3,000 (from 500); the more you borrow, the more likely you are to attract unwanted attention.", "zh": "可借款上限提高至3000（原500）；借得越多，越容易被有心人窥探"}},
+        {"cost": 35, "buff": 101160, "description": {"en": "Loan limit increased to 3,800 (from 500); the more you borrow, the more likely you are to attract unwanted attention.", "zh": "可借款上限提高至3800（原500）；借得越多，越容易被有心人窥探"}},
+        {"cost": 40, "buff": 101170, "description": {"en": "Loan limit increased to 4,600 (from 500); the more you borrow, the more likely you are to attract unwanted attention.", "zh": "可借款上限提高至4600（原500）；借得越多，越容易被有心人窥探"}},
+        {"cost": 50, "buff": 101180, "description": {"en": "Loan limit increased to 5,500 (from 500); the more you borrow, the more likely you are to attract unwanted attention.", "zh": "可借款上限提高至5500（原500）；借得越多，越容易被有心人窥探"}}
+      ],
+      "effects": [
+        // IntValue0 is added to the game's 500 limit.
+        {"id": 200101140, "copyFrom": 200101130, "fields": {"IntValue0": 1900}},
+        {"id": 200101150, "copyFrom": 200101130, "fields": {"IntValue0": 2500}},
+        {"id": 200101160, "copyFrom": 200101130, "fields": {"IntValue0": 3300}},
+        {"id": 200101170, "copyFrom": 200101130, "fields": {"IntValue0": 4100}},
+        {"id": 200101180, "copyFrom": 200101130, "fields": {"IntValue0": 5000}}
+      ],
+      "buffs": [
+        {"id": 101140, "copyFrom": 101130, "fields": {"EffectConfigId": 200101140}},
+        {"id": 101150, "copyFrom": 101130, "fields": {"EffectConfigId": 200101150}},
+        {"id": 101160, "copyFrom": 101130, "fields": {"EffectConfigId": 200101160}},
+        {"id": 101170, "copyFrom": 101130, "fields": {"EffectConfigId": 200101170}},
+        {"id": 101180, "copyFrom": 101130, "fields": {"EffectConfigId": 200101180}}
+      ]
+    },
+    {
+      "id": 1012,  // Interior Decorator
+      "enabled": false,
+      "levelText": {"en": "5% / 10% / 15% / 20% / 25% / 30% / 35% / 40%", "zh": "5% / 10% / 15% / 20% / 25% / 30% / 35% / 40%"},
+      "levels": [
+        {},
+        {},
+        {},
+        {"cost": 25, "buff": 101240, "description": {"en": "Enjoy a 20% discount when purchasing Furniture.", "zh": "购买家具时享20%折扣"}},
+        {"cost": 30, "buff": 101250, "description": {"en": "Enjoy a 25% discount when purchasing Furniture.", "zh": "购买家具时享25%折扣"}},
+        {"cost": 35, "buff": 101260, "description": {"en": "Enjoy a 30% discount when purchasing Furniture.", "zh": "购买家具时享30%折扣"}},
+        {"cost": 40, "buff": 101270, "description": {"en": "Enjoy a 35% discount when purchasing Furniture.", "zh": "购买家具时享35%折扣"}},
+        {"cost": 50, "buff": 101280, "description": {"en": "Enjoy a 40% discount when purchasing Furniture.", "zh": "购买家具时享40%折扣"}}
+      ],
+      "effects": [
+        {"id": 200101240, "copyFrom": 200101230, "fields": {"FloatValue0": 0.2}},
+        {"id": 200101250, "copyFrom": 200101230, "fields": {"FloatValue0": 0.25}},
+        {"id": 200101260, "copyFrom": 200101230, "fields": {"FloatValue0": 0.3}},
+        {"id": 200101270, "copyFrom": 200101230, "fields": {"FloatValue0": 0.35}},
+        {"id": 200101280, "copyFrom": 200101230, "fields": {"FloatValue0": 0.4}}
+      ],
+      "buffs": [
+        {"id": 101240, "copyFrom": 101230, "fields": {"EffectConfigId": 200101240}},
+        {"id": 101250, "copyFrom": 101230, "fields": {"EffectConfigId": 200101250}},
+        {"id": 101260, "copyFrom": 101230, "fields": {"EffectConfigId": 200101260}},
+        {"id": 101270, "copyFrom": 101230, "fields": {"EffectConfigId": 200101270}},
+        {"id": 101280, "copyFrom": 101230, "fields": {"EffectConfigId": 200101280}}
+      ]
+    },
+    {
+      "id": 2005,  // Quick Fortification
+      "enabled": false,
+      "levels": [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {"cost": 23, "buff": 200560},
+        {"cost": 25, "buff": 200570},
+        {"cost": 28, "buff": 200580},
+        {"cost": 30, "buff": 200590},
+        {"cost": 35, "buff": 200600}
+      ],
+      "effects": [
+        // FloatValue0 is the repair speed added (0.15 a level in the game).
+        {"id": 200200560, "copyFrom": 200200550, "fields": {"FloatValue0": 0.9}},
+        {"id": 200200570, "copyFrom": 200200550, "fields": {"FloatValue0": 1.05}},
+        {"id": 200200580, "copyFrom": 200200550, "fields": {"FloatValue0": 1.2}},
+        {"id": 200200590, "copyFrom": 200200550, "fields": {"FloatValue0": 1.35}},
+        {"id": 200200600, "copyFrom": 200200550, "fields": {"FloatValue0": 1.5}}
+      ],
+      "buffs": [
+        {"id": 200560, "copyFrom": 200550, "fields": {"EffectConfigId": 200200560}},
+        {"id": 200570, "copyFrom": 200550, "fields": {"EffectConfigId": 200200570}},
+        {"id": 200580, "copyFrom": 200550, "fields": {"EffectConfigId": 200200580}},
+        {"id": 200590, "copyFrom": 200550, "fields": {"EffectConfigId": 200200590}},
+        {"id": 200600, "copyFrom": 200550, "fields": {"EffectConfigId": 200200600}}
+      ]
+    },
+    {
+      "id": 2008,  // Gratitude
+      "enabled": false,
+      "levelText": {"en": "+2 hours / +4 / +6 / +9 / +12 / +15 / +18 / +21 / +24 / +30 hours", "zh": "+2小时 / +4 / +6 / +9 / +12 / +15 / +18 / +21 / +24 / +30小时"},
+      "levels": [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {"cost": 23, "buff": 200860, "description": {"en": "Increases the duration of the status gained after fulfilling a wish by 15 hours.", "zh": "满足愿望后状态持续时间增加15小时"}},
+        {"cost": 25, "buff": 200870, "description": {"en": "Increases the duration of the status gained after fulfilling a wish by 18 hours.", "zh": "满足愿望后状态持续时间增加18小时"}},
+        {"cost": 28, "buff": 200880, "description": {"en": "Increases the duration of the status gained after fulfilling a wish by 21 hours.", "zh": "满足愿望后状态持续时间增加21小时"}},
+        {"cost": 30, "buff": 200890, "description": {"en": "Increases the duration of the status gained after fulfilling a wish by 24 hours.", "zh": "满足愿望后状态持续时间增加24小时"}},
+        {"cost": 35, "buff": 200900, "description": {"en": "Increases the duration of the status gained after fulfilling a wish by 30 hours.", "zh": "满足愿望后状态持续时间增加30小时"}}
+      ],
+      "effects": [
+        // FloatValue0 is in seconds.
+        {"id": 200200860, "copyFrom": 200200850, "fields": {"FloatValue0": 54000}},
+        {"id": 200200870, "copyFrom": 200200850, "fields": {"FloatValue0": 64800}},
+        {"id": 200200880, "copyFrom": 200200850, "fields": {"FloatValue0": 75600}},
+        {"id": 200200890, "copyFrom": 200200850, "fields": {"FloatValue0": 86400}},
+        {"id": 200200900, "copyFrom": 200200850, "fields": {"FloatValue0": 108000}}
+      ],
+      "buffs": [
+        {"id": 200860, "copyFrom": 200850, "fields": {"EffectConfigId": 200200860}},
+        {"id": 200870, "copyFrom": 200850, "fields": {"EffectConfigId": 200200870}},
+        {"id": 200880, "copyFrom": 200850, "fields": {"EffectConfigId": 200200880}},
+        {"id": 200890, "copyFrom": 200850, "fields": {"EffectConfigId": 200200890}},
+        {"id": 200900, "copyFrom": 200850, "fields": {"EffectConfigId": 200200900}}
+      ]
+    },
+    {
+      "id": 2010,  // Mental Toughness
+      "enabled": false,
+      "levelText": {"en": "40 / 50 / 60 / 70 / 80 / 80 x2 / 90 x2 / 90 x3 / 100 x3 / 100 x4", "zh": "40点 / 50点 / 60点 / 70点 / 80点 / 80点x2 / 90点x2 / 90点x3 / 100点x3 / 100点x4"},
+      "levels": [
+        {},
+        {},
+        {},
+        {},
+        {},
+        {"cost": 23, "buff": 201060, "description": {"en": "Increases Morale by 80 and grants Tranquility, reducing Morale decay. 2 uses.", "zh": "可使用2次，每次提高心态80点；并获得 宁静状态，心态下降减少"}},
+        {"cost": 25, "buff": 201070, "description": {"en": "Increases Morale by 90 and grants Tranquility, reducing Morale decay. 2 uses.", "zh": "可使用2次，每次提高心态90点；并获得 宁静状态，心态下降减少"}},
+        {"cost": 28, "buff": 201080, "description": {"en": "Increases Morale by 90 and grants Tranquility, reducing Morale decay. 3 uses.", "zh": "可使用3次，每次提高心态90点；并获得 宁静状态，心态下降减少"}},
+        {"cost": 30, "buff": 201090, "description": {"en": "Increases Morale by 100 and grants Tranquility, reducing Morale decay. 3 uses.", "zh": "可使用3次，每次提高心态100点；并获得 宁静状态，心态下降减少"}},
+        {"cost": 35, "buff": 201100, "description": {"en": "Increases Morale by 100 and grants Tranquility, reducing Morale decay. 4 uses.", "zh": "可使用4次，每次提高心态100点；并获得 宁静状态，心态下降减少"}}
+      ],
+      "effects": [
+        // BuffMoraleEnd is the morale each use gives; the buff's layer count is the number of uses.
+        {"id": 200201060, "copyFrom": 200201050, "fields": {"BuffMoraleEnd": 80}},
+        {"id": 200201070, "copyFrom": 200201050, "fields": {"BuffMoraleEnd": 90}},
+        {"id": 200201080, "copyFrom": 200201050, "fields": {"BuffMoraleEnd": 90}},
+        {"id": 200201090, "copyFrom": 200201050, "fields": {"BuffMoraleEnd": 100}},
+        {"id": 200201100, "copyFrom": 200201050, "fields": {"BuffMoraleEnd": 100}}
+      ],
+      "buffs": [
+        {"id": 201060, "copyFrom": 201050, "fields": {"EffectConfigId": 200201060, "InitLayerCount": 2, "AddLayerCount": 2, "MaxLayerCount": 2, "Des": "NewLoopPlus_Talent_Dec_20106"}},
+        {"id": 201070, "copyFrom": 201050, "fields": {"EffectConfigId": 200201070, "InitLayerCount": 2, "AddLayerCount": 2, "MaxLayerCount": 2, "Des": "NewLoopPlus_Talent_Dec_20107"}},
+        {"id": 201080, "copyFrom": 201050, "fields": {"EffectConfigId": 200201080, "InitLayerCount": 3, "AddLayerCount": 3, "MaxLayerCount": 3, "Des": "NewLoopPlus_Talent_Dec_20108"}},
+        {"id": 201090, "copyFrom": 201050, "fields": {"EffectConfigId": 200201090, "InitLayerCount": 3, "AddLayerCount": 3, "MaxLayerCount": 3, "Des": "NewLoopPlus_Talent_Dec_20109"}},
+        {"id": 201100, "copyFrom": 201050, "fields": {"EffectConfigId": 200201100, "InitLayerCount": 4, "AddLayerCount": 4, "MaxLayerCount": 4, "Des": "NewLoopPlus_Talent_Dec_20110"}}
+      ]
+    },
+    {
+      "id": 2011,  // Energy Saver
+      "enabled": false,
+      "levelText": {"en": "10% / 15% / 20% / 25% / 30% / 35% / 40% / 50%", "zh": "10% / 15% / 20% / 25% / 30% / 35% / 40% / 50%"},
+      "levels": [
+        {},
+        {},
+        {},
+        {"cost": 25, "buff": 201140, "description": {"en": "Total power consumption of electrical devices reduced by 25%.", "zh": "用电设备总耗电降低25%"}},
+        {"cost": 30, "buff": 201150, "description": {"en": "Total power consumption of electrical devices reduced by 30%.", "zh": "用电设备总耗电降低30%"}},
+        {"cost": 35, "buff": 201160, "description": {"en": "Total power consumption of electrical devices reduced by 35%.", "zh": "用电设备总耗电降低35%"}},
+        {"cost": 40, "buff": 201170, "description": {"en": "Total power consumption of electrical devices reduced by 40%.", "zh": "用电设备总耗电降低40%"}},
+        {"cost": 50, "buff": 201180, "description": {"en": "Total power consumption of electrical devices reduced by 50%.", "zh": "用电设备总耗电降低50%"}}
+      ],
+      "effects": [
+        {"id": 200201140, "copyFrom": 200201130, "fields": {"FloatValue0": 0.25}},
+        {"id": 200201150, "copyFrom": 200201130, "fields": {"FloatValue0": 0.3}},
+        {"id": 200201160, "copyFrom": 200201130, "fields": {"FloatValue0": 0.35}},
+        {"id": 200201170, "copyFrom": 200201130, "fields": {"FloatValue0": 0.4}},
+        {"id": 200201180, "copyFrom": 200201130, "fields": {"FloatValue0": 0.5}}
+      ],
+      "buffs": [
+        {"id": 201140, "copyFrom": 201130, "fields": {"EffectConfigId": 200201140}},
+        {"id": 201150, "copyFrom": 201130, "fields": {"EffectConfigId": 200201150}},
+        {"id": 201160, "copyFrom": 201130, "fields": {"EffectConfigId": 200201160}},
+        {"id": 201170, "copyFrom": 201130, "fields": {"EffectConfigId": 200201170}},
+        {"id": 201180, "copyFrom": 201130, "fields": {"EffectConfigId": 200201180}}
+      ]
+    },
+    {
+      "id": 2013,  // Bargaining
+      "enabled": false,
+      "levelText": {"en": "10% / 20% / 30% / 40% / 50% / 60% / 80% / 100%", "zh": "10% / 20% / 30% / 40% / 50% / 60% / 80% / 100%"},
+      "levels": [
+        {},
+        {},
+        {},
+        {"cost": 25, "buff": 201340, "description": {"en": "When trading with strangers, item valuations for your goods increase by 40%, making trades more likely to succeed.", "zh": "与陌生人交易时，给出物品的估值提升40%，更易成交"}},
+        {"cost": 30, "buff": 201350, "description": {"en": "When trading with strangers, item valuations for your goods increase by 50%, making trades more likely to succeed.", "zh": "与陌生人交易时，给出物品的估值提升50%，更易成交"}},
+        {"cost": 35, "buff": 201360, "description": {"en": "When trading with strangers, item valuations for your goods increase by 60%, making trades more likely to succeed.", "zh": "与陌生人交易时，给出物品的估值提升60%，更易成交"}},
+        {"cost": 40, "buff": 201370, "description": {"en": "When trading with strangers, item valuations for your goods increase by 80%, making trades more likely to succeed.", "zh": "与陌生人交易时，给出物品的估值提升80%，更易成交"}},
+        {"cost": 50, "buff": 201380, "description": {"en": "When trading with strangers, item valuations for your goods increase by 100%, making trades more likely to succeed.", "zh": "与陌生人交易时，给出物品的估值提升100%，更易成交"}}
+      ],
+      "effects": [
+        {"id": 200201340, "copyFrom": 200201330, "fields": {"FloatValue0": 0.4}},
+        {"id": 200201350, "copyFrom": 200201330, "fields": {"FloatValue0": 0.5}},
+        {"id": 200201360, "copyFrom": 200201330, "fields": {"FloatValue0": 0.6}},
+        {"id": 200201370, "copyFrom": 200201330, "fields": {"FloatValue0": 0.8}},
+        {"id": 200201380, "copyFrom": 200201330, "fields": {"FloatValue0": 1.0}}
+      ],
+      "buffs": [
+        {"id": 201340, "copyFrom": 201330, "fields": {"EffectConfigId": 200201340}},
+        {"id": 201350, "copyFrom": 201330, "fields": {"EffectConfigId": 200201350}},
+        {"id": 201360, "copyFrom": 201330, "fields": {"EffectConfigId": 200201360}},
+        {"id": 201370, "copyFrom": 201330, "fields": {"EffectConfigId": 200201370}},
+        {"id": 201380, "copyFrom": 201330, "fields": {"EffectConfigId": 200201380}}
+      ]
+    },
+    {
+      "id": 2014,  // Deep Freeze
+      "enabled": false,
+      "levelText": {"en": "15% / 30% / 45% / 55% / 65% / 75% / 85% / 90%", "zh": "15% / 30% / 45% / 55% / 65% / 75% / 85% / 90%"},
+      "levels": [
+        {},
+        {},
+        {},
+        {"cost": 25, "buff": 201440, "description": {"en": "Food spoilage rate in Refrigerator reduced by an additional 55%.", "zh": "冰箱内食物变质速度再降低55%"}},
+        {"cost": 30, "buff": 201450, "description": {"en": "Food spoilage rate in Refrigerator reduced by an additional 65%.", "zh": "冰箱内食物变质速度再降低65%"}},
+        {"cost": 35, "buff": 201460, "description": {"en": "Food spoilage rate in Refrigerator reduced by an additional 75%.", "zh": "冰箱内食物变质速度再降低75%"}},
+        {"cost": 40, "buff": 201470, "description": {"en": "Food spoilage rate in Refrigerator reduced by an additional 85%.", "zh": "冰箱内食物变质速度再降低85%"}},
+        {"cost": 50, "buff": 201480, "description": {"en": "Food spoilage rate in Refrigerator reduced by an additional 90%.", "zh": "冰箱内食物变质速度再降低90%"}}
+      ],
+      "effects": [
+        // The game stops at 90%: food in a fridge never spoils slower than a tenth of its rate.
+        {"id": 200201440, "copyFrom": 200201430, "fields": {"FloatValue0": 0.55}},
+        {"id": 200201450, "copyFrom": 200201430, "fields": {"FloatValue0": 0.65}},
+        {"id": 200201460, "copyFrom": 200201430, "fields": {"FloatValue0": 0.75}},
+        {"id": 200201470, "copyFrom": 200201430, "fields": {"FloatValue0": 0.85}},
+        {"id": 200201480, "copyFrom": 200201430, "fields": {"FloatValue0": 0.9}}
+      ],
+      "buffs": [
+        {"id": 201440, "copyFrom": 201430, "fields": {"EffectConfigId": 200201440}},
+        {"id": 201450, "copyFrom": 201430, "fields": {"EffectConfigId": 200201450}},
+        {"id": 201460, "copyFrom": 201430, "fields": {"EffectConfigId": 200201460}},
+        {"id": 201470, "copyFrom": 201430, "fields": {"EffectConfigId": 200201470}},
+        {"id": 201480, "copyFrom": 201430, "fields": {"EffectConfigId": 200201480}}
+      ]
+    },
+    {
+      "id": 2015,  // Mold Master
+      "enabled": false,
+      "levelText": { "en": "15% / 30% / 45% / 60% / 70% / 80% / 90% / 100%", "zh": "15% / 30% / 45% / 60% / 70% / 80% / 90% / 100%" },
+      "levels": [
+        { "cost": 10, "description": { "en": "Quality penalty when cooking with spoiled ingredients reduced by 15%.", "zh": "用变质食材烹饪时，品质惩罚减免15%" } },
+        { "cost": 15, "description": { "en": "Quality penalty when cooking with spoiled ingredients reduced by 30%.", "zh": "用变质食材烹饪时，品质惩罚减免30%" } },
+        { "cost": 20, "description": { "en": "Quality penalty when cooking with spoiled ingredients reduced by 45%.", "zh": "用变质食材烹饪时，品质惩罚减免45%" } },
+        { "cost": 25, "buff": 201540, "description": { "en": "Quality penalty when cooking with spoiled ingredients reduced by 60%.", "zh": "用变质食材烹饪时，品质惩罚减免60%" } },
+        { "cost": 30, "buff": 201550, "description": { "en": "Quality penalty when cooking with spoiled ingredients reduced by 70%.", "zh": "用变质食材烹饪时，品质惩罚减免70%" } },
+        { "cost": 35, "buff": 201560, "description": { "en": "Quality penalty when cooking with spoiled ingredients reduced by 80%.", "zh": "用变质食材烹饪时，品质惩罚减免80%" } },
+        { "cost": 40, "buff": 201570, "description": { "en": "Quality penalty when cooking with spoiled ingredients reduced by 90%.", "zh": "用变质食材烹饪时，品质惩罚减免90%" } },
+        { "cost": 50, "buff": 201580, "description": { "en": "Quality penalty when cooking with spoiled ingredients reduced by 100%.", "zh": "用变质食材烹饪时，品质惩罚减免100%" } }
+      ],
+      "effects": [
+        // The game's level 3 already takes off the whole penalty, and more than 100% does nothing, so the eight levels climb to it.
+        { "id": 200201510, "fields": { "FloatValue0": 0.15 } },
+        { "id": 200201520, "fields": { "FloatValue0": 0.3 } },
+        { "id": 200201530, "fields": { "FloatValue0": 0.45 } },
+        { "id": 200201540, "copyFrom": 200201530, "fields": { "FloatValue0": 0.6 } },
+        { "id": 200201550, "copyFrom": 200201530, "fields": { "FloatValue0": 0.7 } },
+        { "id": 200201560, "copyFrom": 200201530, "fields": { "FloatValue0": 0.8 } },
+        { "id": 200201570, "copyFrom": 200201530, "fields": { "FloatValue0": 0.9 } },
+        { "id": 200201580, "copyFrom": 200201530, "fields": { "FloatValue0": 1 } }
+      ],
+      "buffs": [
+        { "id": 201540, "copyFrom": 201530, "fields": { "EffectConfigId": 200201540 } },
+        { "id": 201550, "copyFrom": 201530, "fields": { "EffectConfigId": 200201550 } },
+        { "id": 201560, "copyFrom": 201530, "fields": { "EffectConfigId": 200201560 } },
+        { "id": 201570, "copyFrom": 201530, "fields": { "EffectConfigId": 200201570 } },
+        { "id": 201580, "copyFrom": 201530, "fields": { "EffectConfigId": 200201580 } }
+      ]
+    },
+    {
+      "id": 2016,  // Long Harvest
+      "enabled": false,
+      "levelText": {"en": "30% / 60% / 100% / 130% / 160% / 200% / 250% / 300%", "zh": "30% / 60% / 100% / 130% / 160% / 200% / 250% / 300%"},
+      "levels": [
+        {},
+        {},
+        {},
+        {"cost": 25, "buff": 201640, "description": {"en": "Harvest window after crop maturity extended by 130% (late harvests won't rot).", "zh": "作物成熟后的收获窗口延长130%（晚收也不烂在地里）"}},
+        {"cost": 30, "buff": 201650, "description": {"en": "Harvest window after crop maturity extended by 160% (late harvests won't rot).", "zh": "作物成熟后的收获窗口延长160%（晚收也不烂在地里）"}},
+        {"cost": 35, "buff": 201660, "description": {"en": "Harvest window after crop maturity extended by 200% (late harvests won't rot).", "zh": "作物成熟后的收获窗口延长200%（晚收也不烂在地里）"}},
+        {"cost": 40, "buff": 201670, "description": {"en": "Harvest window after crop maturity extended by 250% (late harvests won't rot).", "zh": "作物成熟后的收获窗口延长250%（晚收也不烂在地里）"}},
+        {"cost": 50, "buff": 201680, "description": {"en": "Harvest window after crop maturity extended by 300% (late harvests won't rot).", "zh": "作物成熟后的收获窗口延长300%（晚收也不烂在地里）"}}
+      ],
+      "effects": [
+        {"id": 200201640, "copyFrom": 200201630, "fields": {"FloatValue0": 1.3}},
+        {"id": 200201650, "copyFrom": 200201630, "fields": {"FloatValue0": 1.6}},
+        {"id": 200201660, "copyFrom": 200201630, "fields": {"FloatValue0": 2.0}},
+        {"id": 200201670, "copyFrom": 200201630, "fields": {"FloatValue0": 2.5}},
+        {"id": 200201680, "copyFrom": 200201630, "fields": {"FloatValue0": 3.0}}
+      ],
+      "buffs": [
+        {"id": 201640, "copyFrom": 201630, "fields": {"EffectConfigId": 200201640}},
+        {"id": 201650, "copyFrom": 201630, "fields": {"EffectConfigId": 200201650}},
+        {"id": 201660, "copyFrom": 201630, "fields": {"EffectConfigId": 200201660}},
+        {"id": 201670, "copyFrom": 201630, "fields": {"EffectConfigId": 200201670}},
+        {"id": 201680, "copyFrom": 201630, "fields": {"EffectConfigId": 200201680}}
+      ]
+    },
+    {
+      "id": 2018,  // Cold-Resistant Constitution
+      "enabled": false,
+      "levelText": {"en": "25% / 40% / 50% / 55% / 60% / 65% / 70% / 75%", "zh": "25% / 40% / 50% / 55% / 60% / 65% / 70% / 75%"},
+      "levels": [
+        {},
+        {},
+        {},
+        {"cost": 25, "buff": 201840, "description": {"en": "When affected by cold waves, Satiety/Morale/Vitality loss is reduced by 55%.", "zh": "寒潮受冻时，扣减的饱腹 / 心态 / 活力减免55%"}},
+        {"cost": 30, "buff": 201850, "description": {"en": "When affected by cold waves, Satiety/Morale/Vitality loss is reduced by 60%.", "zh": "寒潮受冻时，扣减的饱腹 / 心态 / 活力减免60%"}},
+        {"cost": 35, "buff": 201860, "description": {"en": "When affected by cold waves, Satiety/Morale/Vitality loss is reduced by 65%.", "zh": "寒潮受冻时，扣减的饱腹 / 心态 / 活力减免65%"}},
+        {"cost": 40, "buff": 201870, "description": {"en": "When affected by cold waves, Satiety/Morale/Vitality loss is reduced by 70%.", "zh": "寒潮受冻时，扣减的饱腹 / 心态 / 活力减免70%"}},
+        {"cost": 50, "buff": 201880, "description": {"en": "When affected by cold waves, Satiety/Morale/Vitality loss is reduced by 75%.", "zh": "寒潮受冻时，扣减的饱腹 / 心态 / 活力减免75%"}}
+      ],
+      "effects": [
+        {"id": 200201840, "copyFrom": 200201830, "fields": {"FloatValue0": 0.55}},
+        {"id": 200201850, "copyFrom": 200201830, "fields": {"FloatValue0": 0.6}},
+        {"id": 200201860, "copyFrom": 200201830, "fields": {"FloatValue0": 0.65}},
+        {"id": 200201870, "copyFrom": 200201830, "fields": {"FloatValue0": 0.7}},
+        {"id": 200201880, "copyFrom": 200201830, "fields": {"FloatValue0": 0.75}}
+      ],
+      "buffs": [
+        {"id": 201840, "copyFrom": 201830, "fields": {"EffectConfigId": 200201840}},
+        {"id": 201850, "copyFrom": 201830, "fields": {"EffectConfigId": 200201850}},
+        {"id": 201860, "copyFrom": 201830, "fields": {"EffectConfigId": 200201860}},
+        {"id": 201870, "copyFrom": 201830, "fields": {"EffectConfigId": 200201870}},
+        {"id": 201880, "copyFrom": 201830, "fields": {"EffectConfigId": 200201880}}
       ]
     },
 
