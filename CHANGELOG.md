@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.3
+
+- The short messages New Loop Plus shows on screen can be drawn bigger or smaller with the UI size setting of Exiled's Toolkit 0.10.0 or newer. A change shows at once.
+- The Talents tab takes the size of the Mod Manager window it sits in (Mod Manager 0.8.3 or newer). End Run and its dialog keep the game's size, like the rest of the pause menu.
+- Made for Survival Log 1.1.19611.
+
 ## 0.6.2
 
 - Less stutter: the talent and reward tables are only rewritten when the game reloads them, and the background checks take turns instead of all running in the same frame.

@@ -140,6 +140,8 @@
     node = document.createElement('div');
     node.id = TOAST_ID;
     document.body.appendChild(node);
+    // A one-line message is never shrunk.
+    uiSize(node, { fit: false });
 
     return node;
   }
@@ -317,6 +319,21 @@
       patchRewardsPage();
     } catch (e) {}
   }, POLL_MS);
+
+  // Hands a panel to Exiled's Toolkit to be drawn at the player's UI size. Before the Toolkit's script has loaded it
+  // waits in a list the Toolkit reads; without the Toolkit nothing happens.
+  function uiSize(node, options) {
+    var toolkit = window.ExiledUi;
+
+    if (toolkit) {
+      toolkit.size(node, options);
+      return;
+    }
+
+    var waiting = window.__exiledUiWait = window.__exiledUiWait || [];
+    waiting.push([node, options]);
+    if (waiting.length > 32) waiting.shift();
+  }
 
   window.__slnlp = { setButton: setButton, confirm: confirm, toast: toast };
   send('ready');

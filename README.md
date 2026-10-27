@@ -37,7 +37,7 @@ With every talent in the talents file switched off, New Loop Plus adds no data o
 
 - Survival Log 1.1.19131. Built and tested on this version; a game update can break it until the mod is updated.
 - The [BepInEx Pack for Survival Log](https://www.nexusmods.com/survivallog/mods/12), the BepInEx 6 (IL2CPP) build for the game.
-- Optional: [Exiled's Toolkit](https://github.com/AnExiledDev/SurvivalLog-ExiledToolkit) 0.4.0 or newer. With it, the points multipliers and the starting bonus changed on the Mod Manager's Mods screen take effect without restarting the game. Without it, they take effect at the next game start. Cost settings always apply at the next game start.
+- Optional: [Exiled's Toolkit](https://github.com/AnExiledDev/SurvivalLog-ExiledToolkit) 0.4.0 or newer. With it, the points multipliers and the starting bonus changed on the Mod Manager's Mods screen take effect without restarting the game. Without it, they take effect at the next game start. With 0.10.0 or newer, its UI size setting also sizes the mod's short messages on screen. Cost settings always apply at the next game start.
 - Optional: [Mod Manager](https://www.nexusmods.com/survivallog/mods/73) 0.7.0 or newer, for the Talents tab. Without it, edit the talents file by hand.
 
 ## Install
@@ -52,7 +52,7 @@ Delete `NewLoopPlus.dll` from the `BepInEx\plugins` folder. For a clean slate, a
 
 ## Troubleshooting
 
-Check `BepInEx\LogOutput.log` for `===== New Loop Plus 0.6.2 started`. The same line, plus every confirm, the points preview and how the end went, is in `BepInEx\new-loop-plus.log`, which survives restarts.
+Check `BepInEx\LogOutput.log` for `===== New Loop Plus 0.6.3 started`. The same line, plus every confirm, the points preview and how the end went, is in `BepInEx\new-loop-plus.log`, which survives restarts.
 
 With any multiplier set, the log also says what was scaled, such as `survival points now convert at ...` or `... loop reward levels now cost ...`. A per-talent entry it could not read is named there too. The talents file adds a line such as `talents file: enabled 1006, 2017; 10 table rows written`, plus a line for each entry it skipped and why.
 
