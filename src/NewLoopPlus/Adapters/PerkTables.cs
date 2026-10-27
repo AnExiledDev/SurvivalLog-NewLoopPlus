@@ -43,7 +43,7 @@ internal sealed class PerkTables
         if (!IsAnyOffered() && _amounts == default) return;
 
         var amounts = new Amounts(Perks.Whole(NlpEffect.DronePilot), Perks.Whole(NlpEffect.FamilyRecipe), (int)Math.Round(Perks.Value(NlpEffect.FamilyRecipe, NlpPerks.SecondWhole)),
-            Perks.Whole(NlpEffect.GoodNeighbor), Math.Round(Perks.Share(NlpEffect.VehicleDiscount), 4), Perks.Whole(NlpEffect.MaxExposure), Math.Round(Perks.Share(NlpEffect.TravelTime), 4));
+            Perks.Whole(NlpEffect.GoodNeighbor), Math.Round(Perks.Share(NlpEffect.VehicleDiscount), 4), Perks.Whole(NlpEffect.MaxExposure), Math.Round(Perks.Share(NlpEffect.TravelTime), 4), Math.Round(Perks.Share(NlpEffect.DroneSpeed), 4));
 
         if (amounts != _amounts)
         {
@@ -59,7 +59,7 @@ internal sealed class PerkTables
 
         if (config == null) return;
 
-        if (Whole(config, GameKey.Key_GlobalSetting_StrangerTradeDroneRoundtripSec, "a trade drone trip now takes {0} seconds (game: {1})") is { } trip && GameCache.Next(GameKey._GlobalSetting_StrangerTradeDroneRoundtripSec, trip) is { } cachedTrip) GameKey._GlobalSetting_StrangerTradeDroneRoundtripSec = cachedTrip;
+        if (Whole(config, GameKey.Key_GlobalSetting_StrangerTradeDroneRoundtripSec, "a drone trip now takes {0} seconds (game: {1})") is { } trip && GameCache.Next(GameKey._GlobalSetting_StrangerTradeDroneRoundtripSec, trip) is { } cachedTrip) GameKey._GlobalSetting_StrangerTradeDroneRoundtripSec = cachedTrip;
 
         if (Whole(config, GameKey.Key_GlobalSetting_CookingQuality_FreshBonus, "fresh ingredients now add {0} cooking quality (game: {1})") is { } fresh && GameCache.Next(GameKey._GlobalSetting_CookingQuality_FreshBonus, fresh) is { } cachedFresh) GameKey._GlobalSetting_CookingQuality_FreshBonus = cachedFresh;
 
@@ -107,11 +107,11 @@ internal sealed class PerkTables
     }
 
     private static bool IsAnyOffered() =>
-        Perks.IsOffered(NlpEffect.FamilyRecipe) || Perks.IsOffered(NlpEffect.DronePilot) || Perks.IsOffered(NlpEffect.GoodNeighbor) || Perks.IsOffered(NlpEffect.VehicleDiscount) || Perks.IsOffered(NlpEffect.MaxExposure) || Perks.IsOffered(NlpEffect.TravelTime);
+        Perks.IsOffered(NlpEffect.FamilyRecipe) || Perks.IsOffered(NlpEffect.DronePilot) || Perks.IsOffered(NlpEffect.GoodNeighbor) || Perks.IsOffered(NlpEffect.VehicleDiscount) || Perks.IsOffered(NlpEffect.MaxExposure) || Perks.IsOffered(NlpEffect.TravelTime) || Perks.IsOffered(NlpEffect.DroneSpeed);
 
     private int ScaleWhole(string key, int value)
     {
-        if (key == GameKey.Key_GlobalSetting_StrangerTradeDroneRoundtripSec) return PerkSettings.TripSeconds(value, _amounts.TripCut);
+        if (key == GameKey.Key_GlobalSetting_StrangerTradeDroneRoundtripSec) return PerkSettings.TripSeconds(value, _amounts.TripCut, _amounts.DroneCut);
 
         if (key == GameKey.Key_GlobalSetting_Neighbor_AffinitySend || key == GameKey.Key_GlobalSetting_Companion_AffinitySend) return PerkSettings.AffinityPerBasket(value, _amounts.Affinity);
 
@@ -136,5 +136,5 @@ internal sealed class PerkTables
         }
     }
 
-    private readonly record struct Amounts(int TripCut, int CookingBonus, int LevelsSooner, int Affinity, double VehicleDiscount, int Exposure, double TravelCut);
+    private readonly record struct Amounts(int TripCut, int CookingBonus, int LevelsSooner, int Affinity, double VehicleDiscount, int Exposure, double TravelCut, double DroneCut);
 }

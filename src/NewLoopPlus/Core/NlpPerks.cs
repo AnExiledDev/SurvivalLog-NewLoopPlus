@@ -52,10 +52,13 @@ public static class NlpEffect
     /// <summary>FloatValue0: the share cut from travel time before the disaster.</summary>
     public const string TravelTime = "travel-time";
 
+    /// <summary>FloatValue0: the share cut from every drone trip.</summary>
+    public const string DroneSpeed = "drone-speed";
+
     public static readonly IReadOnlyList<string> All = new[]
     {
         Interest, SafetyNet, ExtraPick, CrisisVeteran, SecondWind, LuckyFinds, MuscleMemory, ScoutsNotes, Tinkerer, FamilyRecipe, DronePilot,
-        GoodNeighbor, MaxExposure, VehicleDiscount, TravelTime,
+        GoodNeighbor, MaxExposure, VehicleDiscount, TravelTime, DroneSpeed,
     };
 }
 

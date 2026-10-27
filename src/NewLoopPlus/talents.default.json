@@ -1005,7 +1005,7 @@
       "description": { "en": "The drone can go scavenging more times a day (once in the game).", "zh": "无人机每日可外出拾荒的次数增加（游戏中为1次）" },
       "levelText": { "en": "+1 / +2 / +3 / +4 / +5 a day", "zh": "每日 +1 / +2 / +3 / +4 / +5次" },
       "fields": { "ShowType": 2, "WebIcon": "../../Res/icon/UI_Item_Icon_Buff_xuhangwurenji.png", "Icon": "Assets/RuntimeAssets/Texture/UI/icon/UI_Item_Icon_Buff_xuhangwurenji.png" },
-      "levels": [{ "cost": 10 }, { "cost": 13 }, { "cost": 15 }, { "cost": 18 }, { "cost": 20 }],
+      "levels": [{ "cost": 13 }, { "cost": 16 }, { "cost": 19 }, { "cost": 23 }, { "cost": 25 }],
       "gives": [
         // FloatValue0 is the extra scavenging trips a day.
         { "effect": "game:AE_DroneForagingExtraTrip", "levels": [{ "FloatValue0": 1 }, { "FloatValue0": 2 }, { "FloatValue0": 3 }, { "FloatValue0": 4 }, { "FloatValue0": 5 }] }
@@ -1019,7 +1019,7 @@
       "description": { "en": "The trade drone can make more trades a day (once in the game). Adds to Drone Pilot.", "zh": "无人机每日可交易次数增加（游戏中为1次），与「无人机飞手」叠加" },
       "levelText": { "en": "+1 / +2 / +3 / +4 / +5 a day", "zh": "每日 +1 / +2 / +3 / +4 / +5次" },
       "fields": { "ShowType": 2, "WebIcon": "../../Res/icon/UI_Item_Icon_Buff_xuhangwurenji.png", "Icon": "Assets/RuntimeAssets/Texture/UI/icon/UI_Item_Icon_Buff_xuhangwurenji.png" },
-      "levels": [{ "cost": 10 }, { "cost": 13 }, { "cost": 15 }, { "cost": 18 }, { "cost": 20 }],
+      "levels": [{ "cost": 13 }, { "cost": 16 }, { "cost": 19 }, { "cost": 23 }, { "cost": 25 }],
       "gives": [
         // FloatValue0 is the extra trades a day.
         { "effect": "game:AE_StrangerTradeDroneExtraTrip", "levels": [{ "FloatValue0": 1 }, { "FloatValue0": 2 }, { "FloatValue0": 3 }, { "FloatValue0": 4 }, { "FloatValue0": 5 }] }
@@ -1059,12 +1059,12 @@
       "copyFrom": 2001,
       "name": { "en": "Good Neighbor", "zh": "远亲近邻" },
       "description": { "en": "Each basket sent to the neighbor or your companion gives more affinity (1 in the game).", "zh": "每次用吊篮给邻居或同伴送物，增加的好感度提高（游戏中为1）" },
-      "levelText": { "en": "+1 / +2 / +3 / +4 / +5", "zh": "+1 / +2 / +3 / +4 / +5" },
+      "levelText": { "en": "+5 / +10 / +15 / +20 / +25", "zh": "+5 / +10 / +15 / +20 / +25" },
       "fields": { "ShowType": 2, "WebIcon": "../../Res/Furniture/UI_Item_Icon_diaolan.png", "Icon": "Assets/RuntimeAssets/Texture/Furniture/UI_Item_Icon_diaolan" },
-      "levels": [{ "cost": 10 }, { "cost": 13 }, { "cost": 15 }, { "cost": 18 }, { "cost": 20 }],
+      "levels": [{ "cost": 13 }, { "cost": 16 }, { "cost": 19 }, { "cost": 23 }, { "cost": 25 }],
       "gives": [
         // IntValue0 is the affinity added to each basket.
-        { "effect": "nlp:good-neighbor", "levels": [{ "IntValue0": 1 }, { "IntValue0": 2 }, { "IntValue0": 3 }, { "IntValue0": 4 }, { "IntValue0": 5 }] }
+        { "effect": "nlp:good-neighbor", "levels": [{ "IntValue0": 5 }, { "IntValue0": 10 }, { "IntValue0": 15 }, { "IntValue0": 20 }, { "IntValue0": 25 }] }
       ]
     },
     {
@@ -1135,6 +1135,20 @@
       "gives": [
         // FloatValue0 is the share of travel time cut (at most 0.9).
         { "effect": "nlp:travel-time", "levels": [{ "FloatValue0": 0.05 }, { "FloatValue0": 0.1 }, { "FloatValue0": 0.15 }, { "FloatValue0": 0.2 }, { "FloatValue0": 0.25 }, { "FloatValue0": 0.3 }, { "FloatValue0": 0.35 }, { "FloatValue0": 0.4 }, { "FloatValue0": 0.45 }, { "FloatValue0": 0.5 }] }
+      ]
+    },
+    {
+      "id": 5134,  // Fast Rotors
+      "enabled": false,
+      "copyFrom": 2001,
+      "name": { "en": "Fast Rotors", "zh": "高速旋翼" },
+      "description": { "en": "Every drone trip takes less time: trades, scavenging and deliveries. Adds to Drone Pilot, never under a minute.", "zh": "所有无人机行程耗时减少，包括交易、拾荒和送货。与无人机飞手叠加，最短1分钟" },
+      "levelText": { "en": "-15% / -30% / -45% / -60% / -75%", "zh": "-15% / -30% / -45% / -60% / -75%" },
+      "fields": { "ShowType": 2, "WebIcon": "../../Res/icon/UI_Item_Icon_Buff_xuhangwurenji.png", "Icon": "Assets/RuntimeAssets/Texture/UI/icon/UI_Item_Icon_Buff_xuhangwurenji.png" },
+      "levels": [{ "cost": 13 }, { "cost": 16 }, { "cost": 19 }, { "cost": 23 }, { "cost": 25 }],
+      "gives": [
+        // FloatValue0 is the share cut from every drone trip (at most 0.9).
+        { "effect": "nlp:drone-speed", "levels": [{ "FloatValue0": 0.15 }, { "FloatValue0": 0.3 }, { "FloatValue0": 0.45 }, { "FloatValue0": 0.6 }, { "FloatValue0": 0.75 }] }
       ]
     }
   ],

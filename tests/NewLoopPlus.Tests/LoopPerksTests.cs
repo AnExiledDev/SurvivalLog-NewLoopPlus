@@ -240,6 +240,19 @@ public class PerkSettingsTests
     }
 
     [Theory]
+    [InlineData(3600, 0, 0.75, 900)]
+    [InlineData(3600, 1800, 0.75, 450)]
+    [InlineData(3600, 0, 0.15, 3060)]
+    [InlineData(3600, 0, 5, 360)]
+    [InlineData(3600, 0, -1, 3600)]
+    [InlineData(100, 0, 0.75, 60)]
+    [InlineData(45, 0, 0.75, 45)]
+    public void Fast_Rotors_cuts_a_share_of_what_Drone_Pilot_leaves_at_most_90_percent_and_never_under_a_minute(int game, double cut, double share, int seconds)
+    {
+        Assert.Equal(seconds, PerkSettings.TripSeconds(game, cut, share));
+    }
+
+    [Theory]
     [InlineData(10, 3, 13)]
     [InlineData(10, 15, 25)]
     [InlineData(10, 0, 10)]

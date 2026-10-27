@@ -99,12 +99,13 @@ Every talent in the default file starts switched off. Set `"enabled": true` on o
 | Trade Routes | 5125 | The trade drone can make 1 / 2 / 3 / 4 / 5 more trades a day (once in the game). Adds to Drone Pilot. |
 | Packed Fresh | 5126 | Backpack food keeps 1.1 / 1.2 / 1.3 / 1.4 / 1.5 / 1.6 / 1.7 / 1.8 / 1.9 / 2.0 times as long. Adds to Insulated Pack and the Insulated Backpack survival plan. |
 | Quick Hands | 5127 | Crafting at a workbench takes 5 / 10 / 15 / 20 / 25 / 30 / 35 / 40 / 45 / 50% less time. |
-| Good Neighbor | 5128 | Each basket sent to the neighbor or your companion gives 1 / 2 / 3 / 4 / 5 more affinity (1 in the game). |
+| Good Neighbor | 5128 | Each basket sent to the neighbor or your companion gives 5 / 10 / 15 / 20 / 25 more affinity (1 in the game). |
 | Solar Tuning | 5129 | Solar panels make 5 / 10 / 15 / 20 / 25 / 30 / 35 / 40 / 45 / 50% more power. Adds to Solar Engineer. |
 | Generator Tuning | 5130 | Generators make 5 / 10 / 15 / 20 / 25 / 30 / 35 / 40 / 45 / 50% more power. |
 | Seasoned Explorer | 5131 | Max Exposure while exploring is 50 / 100 / 150 / 200 / 250 / 300 / 350 / 400 / 450 / 500 higher, so trips out can last longer. |
 | Dealer Discount | 5132 | Vehicles cost 5 / 10 / 15 / 20 / 25 / 30 / 35 / 40 / 45 / 50% less (bicycle 150, car 500, SUV 900 in the game). Selling one back pays less to match. |
 | Shortcuts | 5133 | Travel before the disaster takes 5 / 10 / 15 / 20 / 25 / 30 / 35 / 40 / 45 / 50% less time, with or without a vehicle. Adds to the vehicle's own cut. |
+| Fast Rotors | 5134 | Every drone trip (trades, scavenging, deliveries) takes 15 / 30 / 45 / 60 / 75% less time, never under a minute. Adds to Drone Pilot. |
 
 A talent entry takes:
 

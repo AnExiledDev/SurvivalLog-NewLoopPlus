@@ -11,14 +11,21 @@ public static class PerkSettings
     /// <summary>The shortest a trade drone trip gets, however much Drone Pilot cuts.</summary>
     public const int ShortestTripSeconds = 60;
 
-    /// <summary>A trade drone trip with <paramref name="cutSeconds"/> taken off, never under a minute (or the game's own, when that is shorter).</summary>
-    public static int TripSeconds(int gameSeconds, double cutSeconds)
+    /// <summary>The most Fast Rotors cuts from a drone trip.</summary>
+    public const double MaxDroneCut = 0.9;
+
+    /// <summary>
+    /// A drone trip with <paramref name="cutSeconds"/> taken off, then <paramref name="share"/> of what is left,
+    /// never under a minute (or the game's own, when that is shorter).
+    /// </summary>
+    public static int TripSeconds(int gameSeconds, double cutSeconds, double share = 0)
     {
-        var cut = (int)Math.Round(cutSeconds);
+        var cut = Math.Max(0, (int)Math.Round(cutSeconds));
+        var part = Math.Min(Math.Max(share, 0), MaxDroneCut);
 
-        if (cut <= 0 || gameSeconds <= ShortestTripSeconds) return gameSeconds;
+        if ((cut <= 0 && part <= 0) || gameSeconds <= ShortestTripSeconds) return gameSeconds;
 
-        return Math.Max(ShortestTripSeconds, gameSeconds - cut);
+        return Math.Max(ShortestTripSeconds, (int)Math.Round((gameSeconds - cut) * (1 - part)));
     }
 
     /// <summary>A cooking quality bonus with <paramref name="added"/> points on top.</summary>

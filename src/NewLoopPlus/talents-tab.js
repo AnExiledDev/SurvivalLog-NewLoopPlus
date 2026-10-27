@@ -857,7 +857,7 @@
 
   fx({ id: 'nlp:good-neighbor', src: 'nlp', nlp: 'good-neighbor', cat: 'body', scripts: [],
     en: 'More affinity per basket', zh: '吊篮好感度', what: ['Each basket sent to the neighbor or your companion gives more affinity.', '每次用吊篮给邻居或同伴送物，增加的好感度提高。'],
-    params: [num('IntValue0', 'More affinity', '额外好感度', ['', ''], [1, 2, 3], { min: 0 })],
+    params: [num('IntValue0', 'More affinity', '额外好感度', ['', ''], [5, 10, 15], { min: 0 })],
     line: v => '+' + fmt(v.IntValue0),
     desc: (v, zh) => zh ? '每次吊篮送物好感度额外+' + fmt(v.IntValue0) : 'Each basket gives ' + fmt(v.IntValue0) + ' more affinity.' });
 
@@ -878,6 +878,12 @@
     params: [pct('FloatValue0', 'Less time', '减少耗时', [10, 20, 30])],
     line: v => '-' + fmt(v.FloatValue0) + '%',
     desc: (v, zh) => zh ? '灾前出行耗时减少' + fmt(v.FloatValue0) + '%' : 'Travel before the disaster takes ' + fmt(v.FloatValue0) + '% less time.' });
+
+  fx({ id: 'nlp:drone-speed', src: 'nlp', nlp: 'drone-speed', cat: 'money', scripts: [],
+    en: 'Faster drone trips', zh: '无人机行程更快', what: ['Every drone trip takes less time, at most 90% less and never under a minute.', '所有无人机行程耗时减少，最多减90%，最短1分钟。'],
+    params: [pct('FloatValue0', 'Less time', '减少耗时', [15, 30, 45])],
+    line: v => '-' + fmt(v.FloatValue0) + '%',
+    desc: (v, zh) => zh ? '无人机行程耗时减少' + fmt(v.FloatValue0) + '%' : 'Drone trips take ' + fmt(v.FloatValue0) + '% less time.' });
 
   const FX_BY_ID = {};
 
