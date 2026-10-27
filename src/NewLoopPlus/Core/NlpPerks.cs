@@ -31,9 +31,18 @@ public static class NlpEffect
     /// <summary>IntValue0: trade points already found when a run starts.</summary>
     public const string ScoutsNotes = "scouts-notes";
 
+    /// <summary>FloatValue0: the chance a finished craft gives one of its materials back.</summary>
+    public const string Tinkerer = "tinkerer";
+
+    /// <summary>IntValue0: points added to the fresh-ingredient and exact-recipe cooking bonuses; IntValue1: Cooking levels sooner that multi-pot cooking unlocks.</summary>
+    public const string FamilyRecipe = "family-recipe";
+
+    /// <summary>IntValue0: seconds cut from each trade drone trip.</summary>
+    public const string DronePilot = "drone-pilot";
+
     public static readonly IReadOnlyList<string> All = new[]
     {
-        Interest, SafetyNet, ExtraPick, CrisisVeteran, SecondWind, LuckyFinds, MuscleMemory, ScoutsNotes,
+        Interest, SafetyNet, ExtraPick, CrisisVeteran, SecondWind, LuckyFinds, MuscleMemory, ScoutsNotes, Tinkerer, FamilyRecipe, DronePilot,
     };
 }
 
@@ -41,6 +50,8 @@ public static class NlpEffect
 public static class NlpPerks
 {
     public const string Whole = "IntValue0";
+
+    public const string SecondWhole = "IntValue1";
 
     public const string Share = "FloatValue0";
 

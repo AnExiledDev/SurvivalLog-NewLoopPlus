@@ -36,6 +36,17 @@ public static class LoopPerks
         !isGroundLoot && copies > 0 && roll < chance ? copies + 1 : copies;
 
     /// <summary>
+    /// The material Tinkerer gives back from a finished craft: when the roll (0 to 1) lands under the chance, the one the
+    /// pick roll (0 to 1) lands on, else none. A craft with no materials gives nothing back.
+    /// </summary>
+    public static int? TinkererPick(int materials, double chance, double roll, double pickRoll)
+    {
+        if (materials <= 0 || roll >= chance) return null;
+
+        return Math.Min(materials - 1, Math.Max(0, (int)(pickRoll * materials)));
+    }
+
+    /// <summary>
     /// The trade points Scout's Notes reveals: the first <paramref name="count"/> in the game's order whose unlock tag is a
     /// trade point's and is not already held. Cross-trade points and story places are never revealed.
     /// </summary>

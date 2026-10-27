@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.7.0
+
+- Five new loop rewards in the talents file, all switched off. Switch them on in the Talents tab or with `"enabled": true` in the file. Each has five levels.
+- Tinkerer: crafting at a workbench has a 5% to 30% chance to give one of the materials back.
+- Family Recipe: fresh ingredients and exact recipes add up to 15 more cooking quality. From level 3, multi-pot cooking unlocks at Cooking Level 1 instead of 3.
+- Brewmaster: brewing takes up to 50% less time. From level 3, each bottle needs less Satiety, so a brew gives more bottles.
+- Drone Pilot: trade drone trips take as little as 30 minutes instead of 60. Level 3 gives one more trade a day, level 5 two more.
+- Hardened Defenses: zombies do up to 50% less bite damage to doors, windows and defenses.
+- Brewmaster, Drone Pilot and Hardened Defenses add to the game's own Cellar Craft, Not a Drop Wasted, Endurance Drone and Iron Defense rewards when you own both.
+- The Talents tab's NEW REWARD can use these effects too.
+- Made for Survival Log 1.1.19611.
+
 ## 0.6.3
 
 - The short messages New Loop Plus shows on screen can be drawn bigger or smaller with the UI size setting of Exiled's Toolkit 0.10.0 or newer. A change shows at once.

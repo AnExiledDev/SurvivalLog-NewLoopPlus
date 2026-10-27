@@ -72,6 +72,11 @@ Every talent in the default file starts switched off. Set `"enabled": true` on o
 | Lucky Finds | 5116 | Searching a container has a 10 / 20 / 30% chance to turn up one more of what you find. |
 | Muscle Memory | 5117 | Each run starts with 25 / 50% of the skill levels the last run gained, kept in `BepInEx\config\NewLoopPlus.MuscleMemory.txt` (delete it to start over). |
 | Scout's Notes | 5118 | Start each run with 1 / 2 / 3 drone trading posts already found. |
+| Tinkerer | 5119 | Crafting at a workbench has a 5 / 10 / 15 / 20 / 30% chance to give one of the materials back. |
+| Family Recipe | 5120 | Fresh ingredients and exact recipes add +3 / +6 / +9 / +12 / +15 more cooking quality (+10 each in the game). From level 3, multi-pot cooking unlocks at Cooking Level 1 instead of 3. |
+| Brewmaster | 5121 | Brewing takes 10 / 20 / 30 / 40 / 50% less time. At levels 3 and 4 each bottle needs 10% less Satiety, at level 5 20% less, so a brew gives more bottles. |
+| Drone Pilot | 5122 | Trade drone trips take 50 / 45 / 40 / 35 / 30 minutes (60 in the game). Level 3 gives one more trade a day, level 5 two more. |
+| Hardened Defenses | 5123 | Zombies do 10 / 20 / 30 / 40 / 50% less bite damage to doors, windows and defenses. |
 
 A talent entry takes:
 
@@ -85,6 +90,6 @@ A talent entry takes:
 | `levels` | One `{ }` per level, each with optional `cost`, `buff`, `description`, `levelText` and `fields`. More levels than the game has adds levels copied from the highest one; fewer hides the rest. |
 | `buffs`, `effects` | Buff and effect table rows this talent changes, or makes when given a `copyFrom`. Each has an `id`, an optional `copyFrom` and `fields`. |
 | `reinforce` | `[{ "talentBuff": A, "doorWindowBuff": B }]`: while you have buff A, every door and window of your home gets buff B. |
-| `gives` | What each level gives: a list of `{ "effect": "game:<script>", "choice": { }, "levels": [{ }, ...] }`. `effect` names an effect script one of the game's talents runs, or one of New Loop Plus's own effects as `nlp:<name>` (`interest`, `safety-net`, `extra-pick`, `crisis-veteran`, `second-wind`, `lucky-finds`, `muscle-memory`, `scouts-notes`; the default file shows the fields each one reads); `choice` holds fields that stay the same at every level, and `levels` one `{ }` of fields per level (a level past the end uses the last). Each give gets its own buff and effect rows, so the talent ID must be 1000 to 9999 and a talent can have at most 10 gives. A level's `buff` is ignored when the talent has gives. |
+| `gives` | What each level gives: a list of `{ "effect": "game:<script>", "choice": { }, "levels": [{ }, ...] }`. `effect` names an effect script one of the game's talents runs, or one of New Loop Plus's own effects as `nlp:<name>` (`interest`, `safety-net`, `extra-pick`, `crisis-veteran`, `second-wind`, `lucky-finds`, `muscle-memory`, `scouts-notes`, `tinkerer`, `family-recipe`, `drone-pilot`; the default file shows the fields each one reads); `choice` holds fields that stay the same at every level, and `levels` one `{ }` of fields per level (a level past the end uses the last). Each give gets its own buff and effect rows, so the talent ID must be 1000 to 9999 and a talent can have at most 10 gives. A level's `buff` is ignored when the talent has gives. |
 
 The `buffs` and `effects` lists at the bottom of the file always apply. Field names are the game's own table names (`ConfigName`, `IntValue0`, `BuffSatietyDel`, `EffectConfigId` and so on). A cost set here is still scaled by `CostMultiplier` and `TalentCostOverrides`.

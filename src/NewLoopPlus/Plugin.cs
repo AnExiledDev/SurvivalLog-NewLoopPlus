@@ -13,7 +13,7 @@ namespace NewLoopPlus;
 public sealed class Plugin : BasePlugin
 {
     private const string Guid = "com.dev.survivallog.newloopplus";
-    private const string Version = "0.6.3";
+    private const string Version = "0.7.0";
     private const string TalentsFileName = "NewLoopPlus.Talents.json";
     private const string MuscleMemoryFileName = "NewLoopPlus.MuscleMemory.txt";
     private const float MaxMultiplier = 100f;
@@ -41,6 +41,7 @@ public sealed class Plugin : BasePlugin
         ExtraPick.Apply(harmony, log.Write);
         SecondWind.Apply(harmony, log.Write);
         LuckyFinds.Apply(harmony, log.Write);
+        Tinkerer.Apply(harmony, log.Write);
         OptionalLive.Watch(BindStartingBonus(), bonus => LoopStartBonus.Bonus = bonus);
         StartScaling(BindCosts(log.Write), TalentFileStore.Load(talentsPath, log.Write), tab, log.Write);
     }
@@ -58,6 +59,7 @@ public sealed class Plugin : BasePlugin
         ScaleTicker.Checks.Add(points.Tick);
         ScaleTicker.Checks.Add(new TalentTables(talents, tab, log).Tick);
         ScaleTicker.Checks.Add(new RunStartPerks(Path.Combine(Paths.ConfigPath, MuscleMemoryFileName), log).Tick);
+        ScaleTicker.Checks.Add(new PerkTables(log).Tick);
 
         if (reinforce.Count > 0) ScaleTicker.Checks.Add(new DoorWindowReinforcement(reinforce, log).Tick);
 

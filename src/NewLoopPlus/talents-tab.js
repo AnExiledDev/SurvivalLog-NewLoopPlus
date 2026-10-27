@@ -678,6 +678,24 @@
     line: v => '+' + fmt(v.FloatValue0) + '%',
     desc: (v, zh) => zh ? '与陌生人交易时，给出物品的估值提升' + fmt(v.FloatValue0) + '%，更易成交' : 'Items you offer strangers are valued ' + fmt(v.FloatValue0) + '% higher.' });
 
+  fx({ id: 'game:drone-trips', src: 'game', cat: 'money', script: 'AE_StrangerTradeDroneExtraTrip',
+    en: 'More drone trades a day', zh: '无人机交易次数', what: ['The trade drone can trade more times each day.', '无人机每日可交易次数增加。'],
+    params: [num('FloatValue0', 'More trades', '额外次数', ['', '次'], [1, 2], { min: 0 })],
+    line: v => '+' + fmt(v.FloatValue0),
+    desc: (v, zh) => zh ? '无人机每日可交易次数+' + fmt(v.FloatValue0) : 'The trade drone can make ' + plural(v.FloatValue0, 'more trade') + ' a day.' });
+
+  fx({ id: 'game:brew-speed', src: 'game', cat: 'body', script: 'AE_BrewSpeedUp',
+    en: 'Faster brewing', zh: '酿酒加速', what: ['Brewing takes less time.', '酿酒所需时间缩短。'],
+    params: [pct('FloatValue0', 'Less time', '时间缩短', [10, 20, 30])],
+    line: v => '-' + fmt(v.FloatValue0) + '%',
+    desc: (v, zh) => zh ? '酿酒所需时间缩短' + fmt(v.FloatValue0) + '%' : 'Brewing takes ' + fmt(v.FloatValue0) + '% less time.' });
+
+  fx({ id: 'game:brew-yield', src: 'game', cat: 'body', script: 'AE_BrewBottleYield',
+    en: 'More bottles per brew', zh: '酿酒出瓶更多', what: ['Each bottle needs less Satiety, so a brew gives more bottles.', '酿酒时每瓶所需的饱腹度降低，能酿出更多酒。'],
+    params: [pct('FloatValue0', 'Less per bottle', '每瓶降低', [10, 20, 30])],
+    line: v => '-' + fmt(v.FloatValue0) + '%',
+    desc: (v, zh) => zh ? '酿酒时每瓶所需的饱腹度降低' + fmt(v.FloatValue0) + '%' : 'Each bottle needs ' + fmt(v.FloatValue0) + '% less Satiety when brewing.' });
+
   fx({ id: 'game:settle-discount', src: 'game', cat: 'money', script: 'SettlementDiscount',
     en: 'Cheaper end-of-day rewards', zh: '结算奖励折扣', what: ['Rewards bought at settlement cost less.', '结算时购买奖励更便宜。'],
     params: [pct('FloatValue0', 'Discount', '折扣', [15, 20, 25])],
@@ -804,6 +822,26 @@
     params: [num('IntValue0', 'Trading posts', '交易点', ['', '个'], [1, 2, 3], { min: 1 })],
     line: v => '+' + fmt(v.IntValue0),
     desc: (v, zh) => zh ? '开局时地图上已显示' + fmt(v.IntValue0) + '个无人机交易点' : 'Start with ' + plural(v.IntValue0, 'drone trading post') + ' on your map.' });
+
+  fx({ id: 'nlp:tinkerer', src: 'nlp', nlp: 'tinkerer', cat: 'items', scripts: [],
+    en: 'Materials back from crafting', zh: '制作返还材料', what: ['A chance that crafting at a workbench gives one of the materials back.', '在工作台制作时有几率返还一份材料。'],
+    params: [pct('FloatValue0', 'Chance', '几率', [5, 10, 15, 20, 30])],
+    line: v => fmt(v.FloatValue0) + '%',
+    desc: (v, zh) => zh ? '在工作台制作时，' + fmt(v.FloatValue0) + '%几率返还一份材料' : fmt(v.FloatValue0) + '% chance that crafting at a workbench gives one of the materials back.' });
+
+  fx({ id: 'nlp:family-recipe', src: 'nlp', nlp: 'family-recipe', cat: 'body', scripts: [],
+    en: 'Better cooking quality', zh: '烹饪品质加成', what: ['Fresh ingredients and exact recipes add more cooking quality, and multi-pot cooking can unlock at a lower Cooking Level.', '新鲜食材和按菜谱烹饪带来的品质加成更高，多锅烹饪可在更低的烹饪熟练度解锁。'],
+    params: [num('IntValue0', 'More quality', '品质加成', ['', ''], [3, 6, 9], { min: 0 }), num('IntValue1', 'Multi-pot levels sooner', '多锅烹饪提前', ['levels', '级'], [0, 0, 2], { min: 0 })],
+    line: v => '+' + fmt(v.IntValue0),
+    desc: (v, zh) => zh
+      ? '新鲜食材和按菜谱烹饪的品质加成各+' + fmt(v.IntValue0) + (v.IntValue1 > 0 ? '，多锅烹饪提前' + fmt(v.IntValue1) + '级解锁' : '')
+      : 'Fresh ingredients and exact recipes each add ' + fmt(v.IntValue0) + ' more cooking quality' + (v.IntValue1 > 0 ? ', and multi-pot cooking unlocks ' + plural(v.IntValue1, 'Cooking Level') + ' sooner.' : '.') });
+
+  fx({ id: 'nlp:drone-pilot', src: 'nlp', nlp: 'drone-pilot', cat: 'money', scripts: [],
+    en: 'Shorter drone trips', zh: '无人机往返更快', what: ['Trade drone trips take less time, never under a minute.', '无人机交易往返时间缩短，最短1分钟。'],
+    params: [num('IntValue0', 'Seconds shorter', '缩短秒数', ['s', '秒'], [600, 900, 1200], { min: 0, step: 60 })],
+    line: (v, zh) => '-' + fmt(v.IntValue0 / 60) + (zh ? '分钟' : ' min'),
+    desc: (v, zh) => zh ? '无人机交易往返时间缩短' + fmt(v.IntValue0 / 60) + '分钟' : 'Trade drone trips take ' + plural(v.IntValue0 / 60, 'minute') + ' less.' });
 
   const FX_BY_ID = {};
 

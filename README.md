@@ -14,7 +14,7 @@ End a run whenever you like and go straight to the death screen, so you can star
 - **Change it in game**: with Exiled's Toolkit installed, the points multipliers and the starting bonus can be changed on the Mod Manager's Mods screen and apply at once.
 - **Loop reward costs**: one multiplier for what every loop reward upgrade costs, plus your own multiplier for single talents by ID. The upgrade screen shows, checks and charges the new price, and its reset refunds what you paid.
 - **Talents file**: `BepInEx\config\NewLoopPlus.Talents.json` lets you change loop rewards by hand: costs, buffs, text, extra levels, and new talents copied from existing ones. It ships with ten talents the game has in its data but never offers, all switched off. Five work as the game left them (Driver, No-Till Soil, Trailblazer, Liaison, Radio Station). Five were unfinished and get new effects from the mod (Well-Connected, Last-Minute Preparation, Resourceful, Yoga Master, Shut-In). See [CONFIG.md](CONFIG.md#talents-file).
-- **Eighteen new loop rewards**, also in the talents file and switched off. Ten use effects the game already has, such as Prepper, Insulated Pack, Field Kit and Old Friend (start with an HK-1 robot). Eight have effects made by the mod: Interest, Safety Net, Extra Pick, Crisis Veteran, Second Wind, Lucky Finds, Muscle Memory and Scout's Notes. The full list is in [CONFIG.md](CONFIG.md#talents-file).
+- **Twenty-three new loop rewards**, also in the talents file and switched off. Twelve use effects the game already has, such as Prepper, Insulated Pack, Field Kit, Old Friend (start with an HK-1 robot), Brewmaster and Hardened Defenses. Eleven have effects made by the mod: Interest, Safety Net, Extra Pick, Crisis Veteran, Second Wind, Lucky Finds, Muscle Memory, Scout's Notes, Tinkerer, Family Recipe and Drone Pilot. The full list is in [CONFIG.md](CONFIG.md#talents-file).
 - **Talents tab**: with the Mod Manager 0.7.0 or newer, New Loop Plus's page gets a Talents tab that edits the talents file for you. Change what any loop reward costs, how many levels it has, its numbers and its text; switch the file's rewards on or off; or click NEW REWARD to build your own from the effects the game's rewards use and New Loop Plus's own, with any talent or item image and text that writes itself from the numbers. SAVE writes the file, and the changes apply at the next game start.
 - **Log file**: every confirm, the points preview and how the end went are written to `BepInEx\new-loop-plus.log`.
 
@@ -52,7 +52,7 @@ Delete `NewLoopPlus.dll` from the `BepInEx\plugins` folder. For a clean slate, a
 
 ## Troubleshooting
 
-Check `BepInEx\LogOutput.log` for `===== New Loop Plus 0.6.3 started`. The same line, plus every confirm, the points preview and how the end went, is in `BepInEx\new-loop-plus.log`, which survives restarts.
+Check `BepInEx\LogOutput.log` for `===== New Loop Plus 0.7.0 started`. The same line, plus every confirm, the points preview and how the end went, is in `BepInEx\new-loop-plus.log`, which survives restarts.
 
 With any multiplier set, the log also says what was scaled, such as `survival points now convert at ...` or `... loop reward levels now cost ...`. A per-talent entry it could not read is named there too. The talents file adds a line such as `talents file: enabled 1006, 2017; 10 table rows written`, plus a line for each entry it skipped and why.
 

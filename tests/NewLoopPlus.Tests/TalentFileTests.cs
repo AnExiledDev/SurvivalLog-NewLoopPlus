@@ -11,7 +11,7 @@ public class TalentFileTests
 {
     private static readonly int[] CutTalentsThatWork = { 1006, 2017, 3076, 4004, 4006 };
     private static readonly int[] CutTalentsFinishedByTheMod = { 1008, 1010, 2004, 2006, 2007 };
-    private static readonly int[] NewRewards = Enumerable.Range(5101, 18).ToArray();
+    private static readonly int[] NewRewards = Enumerable.Range(5101, 23).ToArray();
 
     private static TalentFile DefaultFile() => TalentFile.Parse(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "talents.default.json")));
 
@@ -196,6 +196,7 @@ public class TalentFileTests
         {
             "AE_BackpackShelfLife", "AE_CompressValueRate", "AE_ExposureReduceMultiplier", "AE_PowerSolarEfficiency", "AE_ProductionExpMultiplier",
             "AE_TrapCaptureMultiplier", "AddItemToBag_307510", "EndlessRobotGrant_HK", "PreDisaster_AddCountDownTime", "PreDisaster_AddWeight", "QuickRest", "Buff_Empty",
+            "AE_BrewSpeedUp", "AE_BrewBottleYield", "AE_StrangerTradeDroneExtraTrip", "AE_TowerBiteDamageReduce",
         };
 
         public System.Collections.Generic.IReadOnlyList<int> TalentLevels(int talentId) =>

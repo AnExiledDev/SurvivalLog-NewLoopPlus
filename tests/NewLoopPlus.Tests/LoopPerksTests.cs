@@ -119,6 +119,26 @@ public class LoopPerksTests
         Assert.Equal(result, LoopPerks.LuckyCopies(copies, isGroundLoot, chance, roll));
     }
 
+    [Theory]
+    [InlineData(3, 0.2, 0.1, 0.0, 0)]
+    [InlineData(3, 0.2, 0.1, 0.5, 1)]
+    [InlineData(3, 0.2, 0.1, 0.999, 2)]
+    [InlineData(3, 0.2, 0.1, 1.0, 2)]
+    public void Tinkerer_gives_back_the_material_the_pick_lands_on_when_the_roll_comes_under_the_chance(int materials, double chance, double roll, double pickRoll, int picked)
+    {
+        Assert.Equal(picked, LoopPerks.TinkererPick(materials, chance, roll, pickRoll));
+    }
+
+    [Theory]
+    [InlineData(3, 0.2, 0.2)]
+    [InlineData(3, 0.2, 0.9)]
+    [InlineData(3, 0.0, 0.0)]
+    [InlineData(0, 1.0, 0.0)]
+    public void Tinkerer_gives_nothing_back_when_the_roll_misses_or_there_is_nothing_to_give(int materials, double chance, double roll)
+    {
+        Assert.Null(LoopPerks.TinkererPick(materials, chance, roll, 0.5));
+    }
+
     [Fact]
     public void Scout_s_Notes_reveals_the_first_trade_points_not_yet_found_in_the_game_s_order()
     {
@@ -202,5 +222,41 @@ public class CrisisVeteranTests
         var multipliers = new PointsMultipliers(Overall: 1, Survival: 1, Crisis: 2, Record: 1);
 
         Assert.Same(multipliers, multipliers.WithCrisisBonus(0));
+    }
+}
+
+/// <summary>Family Recipe and Drone Pilot change game settings, and with nothing owned leave the game's own.</summary>
+public class PerkSettingsTests
+{
+    [Theory]
+    [InlineData(3600, 600, 3000)]
+    [InlineData(3600, 1800, 1800)]
+    [InlineData(3600, 0, 3600)]
+    [InlineData(600, 1800, 60)]
+    [InlineData(45, 600, 45)]
+    public void Drone_Pilot_shortens_trips_but_never_under_a_minute(int game, double cut, int seconds)
+    {
+        Assert.Equal(seconds, PerkSettings.TripSeconds(game, cut));
+    }
+
+    [Theory]
+    [InlineData(10, 3, 13)]
+    [InlineData(10, 15, 25)]
+    [InlineData(10, 0, 10)]
+    [InlineData(10, -5, 10)]
+    public void Family_Recipe_adds_its_points_to_a_cooking_bonus(int game, double added, int bonus)
+    {
+        Assert.Equal(bonus, PerkSettings.CookingBonus(game, added));
+    }
+
+    [Theory]
+    [InlineData(3f, 2, 1f)]
+    [InlineData(3f, 0, 3f)]
+    [InlineData(3f, 5, 1f)]
+    [InlineData(5f, 2, 3f)]
+    [InlineData(1f, 2, 1f)]
+    public void Family_Recipe_unlocks_multi_pot_cooking_sooner_but_never_below_level_1(float game, double sooner, float level)
+    {
+        Assert.Equal(level, PerkSettings.MultiPotLevel(game, sooner));
     }
 }
