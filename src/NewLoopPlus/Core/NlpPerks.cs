@@ -40,9 +40,22 @@ public static class NlpEffect
     /// <summary>IntValue0: seconds cut from each trade drone trip.</summary>
     public const string DronePilot = "drone-pilot";
 
+    /// <summary>IntValue0: affinity added to each basket sent to the neighbor or the companion.</summary>
+    public const string GoodNeighbor = "good-neighbor";
+
+    /// <summary>IntValue0: exposure added to the most a trip out can take.</summary>
+    public const string MaxExposure = "max-exposure";
+
+    /// <summary>FloatValue0: the share taken off every vehicle's price.</summary>
+    public const string VehicleDiscount = "vehicle-discount";
+
+    /// <summary>FloatValue0: the share cut from travel time before the disaster.</summary>
+    public const string TravelTime = "travel-time";
+
     public static readonly IReadOnlyList<string> All = new[]
     {
         Interest, SafetyNet, ExtraPick, CrisisVeteran, SecondWind, LuckyFinds, MuscleMemory, ScoutsNotes, Tinkerer, FamilyRecipe, DronePilot,
+        GoodNeighbor, MaxExposure, VehicleDiscount, TravelTime,
     };
 }
 

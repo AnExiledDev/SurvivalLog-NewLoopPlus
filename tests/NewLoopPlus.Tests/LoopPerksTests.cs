@@ -259,4 +259,47 @@ public class PerkSettingsTests
     {
         Assert.Equal(level, PerkSettings.MultiPotLevel(game, sooner));
     }
+
+    [Theory]
+    [InlineData(1, 3, 4)]
+    [InlineData(1, 0, 1)]
+    [InlineData(1, -2, 1)]
+    public void Good_Neighbor_adds_its_affinity_to_each_basket(int game, double added, int affinity)
+    {
+        Assert.Equal(affinity, PerkSettings.AffinityPerBasket(game, added));
+    }
+
+    [Theory]
+    [InlineData(150, 0.5, 75)]
+    [InlineData(500, 0.25, 375)]
+    [InlineData(900, 0.05, 855)]
+    [InlineData(150, 0.05, 143)]
+    [InlineData(900, 0, 900)]
+    [InlineData(900, -0.5, 900)]
+    [InlineData(500, 2.0, 50)]
+    [InlineData(1, 0.5, 1)]
+    public void A_vehicle_discount_lowers_the_price_but_never_takes_more_than_90_percent_off(int game, double discount, int price)
+    {
+        Assert.Equal(price, PerkSettings.VehiclePrice(game, discount));
+    }
+
+    [Theory]
+    [InlineData(1f, 0.5, 0.5f)]
+    [InlineData(0.55f, 0.5, 0.275f)]
+    [InlineData(0.85f, 0, 0.85f)]
+    [InlineData(1f, -1, 1f)]
+    [InlineData(1f, 3, 0.1f)]
+    public void Shortcuts_cut_travel_time_with_or_without_a_vehicle_but_never_more_than_90_percent(float game, double cut, float coeff)
+    {
+        Assert.Equal(coeff, PerkSettings.TravelCoeff(game, cut), 4);
+    }
+
+    [Theory]
+    [InlineData(100, 250, 350)]
+    [InlineData(0, 50, 50)]
+    [InlineData(100, 0, 100)]
+    public void Seasoned_Explorer_adds_to_the_max_exposure_bonus(int game, double added, int bonus)
+    {
+        Assert.Equal(bonus, PerkSettings.ExposureBonus(game, added));
+    }
 }

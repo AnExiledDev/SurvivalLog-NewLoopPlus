@@ -8,7 +8,10 @@ namespace NewLoopPlus.Adapters;
 /// Family Recipe and Drone Pilot change the game's own settings, so cooking, the trade drone and their previews all
 /// show the change with nothing patched. Family Recipe adds to GlobalSetting CookingQuality_FreshBonus and
 /// CookingQuality_ExactMatchBonus and lowers CookingMultiPot_UnlockLevel; Drone Pilot shortens
-/// StrangerTradeDroneRoundtripSec. The GameKey caches of the four are kept in step too. The amounts follow the levels
+/// StrangerTradeDroneRoundtripSec; Good Neighbor adds to Neighbor_AffinitySend and Companion_AffinitySend (the affinity
+/// a basket gives); the vehicle discount lowers each Config_Vehicle Price, which the shop, its refund and the purchase
+/// all read. The GameKey caches of the settings are kept in step too. Max exposure and travel time are hooks
+/// (<see cref="ExploreTravelHooks"/>), told the amounts here. The amounts follow the levels
 /// owned, so each check works them out again and, when they changed, every value is worked out again from the game's own.
 /// </summary>
 internal sealed class PerkTables
@@ -18,13 +21,15 @@ internal sealed class PerkTables
     private readonly Action<string> _log;
     private readonly ScaledValues<string, int> _whole;
     private readonly ScaledValues<string, float> _multiPot;
-    private Amounts _amounts = new(0, 0, 0);
+    private readonly ScaledValues<int, int> _vehiclePrice;
+    private Amounts _amounts = default;
     private float _nextCheckAt;
 
     public PerkTables(Action<string> log)
     {
         _log = log;
-        _whole = new ScaledValues<string, int>((key, value) => key == GameKey.Key_GlobalSetting_StrangerTradeDroneRoundtripSec ? PerkSettings.TripSeconds(value, _amounts.TripCut) : PerkSettings.CookingBonus(value, _amounts.CookingBonus));
+        _whole = new ScaledValues<string, int>(ScaleWhole);
+        _vehiclePrice = new ScaledValues<int, int>((_, price) => PerkSettings.VehiclePrice(price, _amounts.VehicleDiscount));
         _multiPot = new ScaledValues<string, float>((_, level) => PerkSettings.MultiPotLevel(level, _amounts.LevelsSooner));
     }
 
@@ -35,15 +40,19 @@ internal sealed class PerkTables
         _nextCheckAt = now + CheckSeconds;
 
         // With neither effect offered and nothing written, the game's own values stand and there is nothing to check.
-        if (!Perks.IsOffered(NlpEffect.FamilyRecipe) && !Perks.IsOffered(NlpEffect.DronePilot) && _amounts == new Amounts(0, 0, 0)) return;
+        if (!IsAnyOffered() && _amounts == default) return;
 
-        var amounts = new Amounts(Perks.Whole(NlpEffect.DronePilot), Perks.Whole(NlpEffect.FamilyRecipe), (int)Math.Round(Perks.Value(NlpEffect.FamilyRecipe, NlpPerks.SecondWhole)));
+        var amounts = new Amounts(Perks.Whole(NlpEffect.DronePilot), Perks.Whole(NlpEffect.FamilyRecipe), (int)Math.Round(Perks.Value(NlpEffect.FamilyRecipe, NlpPerks.SecondWhole)),
+            Perks.Whole(NlpEffect.GoodNeighbor), Math.Round(Perks.Share(NlpEffect.VehicleDiscount), 4), Perks.Whole(NlpEffect.MaxExposure), Math.Round(Perks.Share(NlpEffect.TravelTime), 4));
 
         if (amounts != _amounts)
         {
             _amounts = amounts;
             _whole.Rescale();
             _multiPot.Rescale();
+            _vehiclePrice.Rescale();
+            ExploreTravelHooks.Use(amounts.Exposure, amounts.TravelCut);
+            _log($"loop reward amounts: {amounts}");
         }
 
         var config = GameSingleton.Existing<ConfigManager>();
@@ -55,6 +64,12 @@ internal sealed class PerkTables
         if (Whole(config, GameKey.Key_GlobalSetting_CookingQuality_FreshBonus, "fresh ingredients now add {0} cooking quality (game: {1})") is { } fresh && GameCache.Next(GameKey._GlobalSetting_CookingQuality_FreshBonus, fresh) is { } cachedFresh) GameKey._GlobalSetting_CookingQuality_FreshBonus = cachedFresh;
 
         if (Whole(config, GameKey.Key_GlobalSetting_CookingQuality_ExactMatchBonus, "an exact recipe now adds {0} cooking quality (game: {1})") is { } exact && GameCache.Next(GameKey._GlobalSetting_CookingQuality_ExactMatchBonus, exact) is { } cachedExact) GameKey._GlobalSetting_CookingQuality_ExactMatchBonus = cachedExact;
+
+        if (Whole(config, GameKey.Key_GlobalSetting_Neighbor_AffinitySend, "a basket now gives the neighbor {0} affinity (game: {1})") is { } neighbor && GameCache.Next(GameKey._GlobalSetting_Neighbor_AffinitySend, neighbor) is { } cachedNeighbor) GameKey._GlobalSetting_Neighbor_AffinitySend = cachedNeighbor;
+
+        if (Whole(config, GameKey.Key_GlobalSetting_Companion_AffinitySend, "a basket now gives the companion {0} affinity (game: {1})") is { } companion && GameCache.Next(GameKey._GlobalSetting_Companion_AffinitySend, companion) is { } cachedCompanion) GameKey._GlobalSetting_Companion_AffinitySend = cachedCompanion;
+
+        VehiclePrices(config);
 
         if (MultiPot(config) is { } level && GameCache.Next(GameKey._GlobalSetting_CookingMultiPot_UnlockLevel, level) is { } cachedLevel) GameKey._GlobalSetting_CookingMultiPot_UnlockLevel = cachedLevel;
     }
@@ -91,5 +106,35 @@ internal sealed class PerkTables
         return _multiPot.Scaled(key);
     }
 
-    private readonly record struct Amounts(int TripCut, int CookingBonus, int LevelsSooner);
+    private static bool IsAnyOffered() =>
+        Perks.IsOffered(NlpEffect.FamilyRecipe) || Perks.IsOffered(NlpEffect.DronePilot) || Perks.IsOffered(NlpEffect.GoodNeighbor) || Perks.IsOffered(NlpEffect.VehicleDiscount) || Perks.IsOffered(NlpEffect.MaxExposure) || Perks.IsOffered(NlpEffect.TravelTime);
+
+    private int ScaleWhole(string key, int value)
+    {
+        if (key == GameKey.Key_GlobalSetting_StrangerTradeDroneRoundtripSec) return PerkSettings.TripSeconds(value, _amounts.TripCut);
+
+        if (key == GameKey.Key_GlobalSetting_Neighbor_AffinitySend || key == GameKey.Key_GlobalSetting_Companion_AffinitySend) return PerkSettings.AffinityPerBasket(value, _amounts.Affinity);
+
+        return PerkSettings.CookingBonus(value, _amounts.CookingBonus);
+    }
+
+    /// <summary>Writes each vehicle's price. Three rows, checked once a second.</summary>
+    private void VehiclePrices(ConfigManager config)
+    {
+        var table = config._Config_Vehicle_Dict;
+
+        if (table == null) return;
+
+        foreach (var pair in table)
+        {
+            var row = pair.Value;
+
+            if (row == null || _vehiclePrice.Next(pair.Key, row._Price_k__BackingField) is not { } price) continue;
+
+            row._Price_k__BackingField = price;
+            _log($"vehicle {pair.Key} now costs {price} (game: {_vehiclePrice.Original(pair.Key)})");
+        }
+    }
+
+    private readonly record struct Amounts(int TripCut, int CookingBonus, int LevelsSooner, int Affinity, double VehicleDiscount, int Exposure, double TravelCut);
 }

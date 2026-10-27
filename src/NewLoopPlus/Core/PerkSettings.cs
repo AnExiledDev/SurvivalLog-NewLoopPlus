@@ -33,4 +33,34 @@ public static class PerkSettings
 
         return Math.Max(1f, gameLevel - sooner);
     }
+
+    /// <summary>The most a discount takes off a vehicle's price.</summary>
+    public const double MaxVehicleDiscount = 0.9;
+
+    /// <summary>The most travel time gets cut.</summary>
+    public const double MaxTravelCut = 0.9;
+
+    /// <summary>The affinity a basket gives, with <paramref name="added"/> on top.</summary>
+    public static int AffinityPerBasket(int gameAffinity, double added) => gameAffinity + Math.Max(0, (int)Math.Round(added));
+
+    /// <summary>A vehicle's price with <paramref name="discount"/> taken off, rounded, never below 1 (or the game's own, when that is lower).</summary>
+    public static int VehiclePrice(int gamePrice, double discount)
+    {
+        var cut = Math.Min(Math.Max(discount, 0), MaxVehicleDiscount);
+
+        if (cut <= 0 || gamePrice <= 1) return gamePrice;
+
+        return Math.Max(1, (int)Math.Round(gamePrice * (1 - cut), MidpointRounding.AwayFromZero));
+    }
+
+    /// <summary>The travel time multiplier with <paramref name="cut"/> taken off.</summary>
+    public static float TravelCoeff(float gameCoeff, double cut)
+    {
+        var share = Math.Min(Math.Max(cut, 0), MaxTravelCut);
+
+        return share <= 0 ? gameCoeff : (float)(gameCoeff * (1 - share));
+    }
+
+    /// <summary>The game's max exposure bonus with <paramref name="added"/> on top.</summary>
+    public static int ExposureBonus(int gameBonus, double added) => gameBonus + Math.Max(0, (int)Math.Round(added));
 }

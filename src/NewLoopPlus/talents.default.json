@@ -19,7 +19,7 @@
 //                 when the talent has gives. The Mod Manager's Talents tab writes these for you.
 //                 "effect" can also be "nlp:<name>", an effect New Loop Plus runs itself: interest, safety-net,
 //                 extra-pick, crisis-veteran, second-wind, lucky-finds, muscle-memory, scouts-notes, tinkerer,
-//                 family-recipe, drone-pilot. The
+//                 family-recipe, drone-pilot, good-neighbor, max-exposure, vehicle-discount, travel-time. The
 //                 entries at the bottom of the list show what each one reads.
 //
 // A buff or effect entry: "id", an optional "copyFrom" (needed to make a new row), and "fields",
@@ -995,6 +995,146 @@
       "levels": [{ "cost": 5 }, { "cost": 8 }, { "cost": 10 }, { "cost": 13 }, { "cost": 15 }],
       "gives": [
         { "effect": "game:AE_TowerBiteDamageReduce", "levels": [{ "FloatValue0": 0.1 }, { "FloatValue0": 0.2 }, { "FloatValue0": 0.3 }, { "FloatValue0": 0.4 }, { "FloatValue0": 0.5 }] }
+      ]
+    },
+    {
+      "id": 5124,  // Long-Range Scavenging
+      "enabled": false,
+      "copyFrom": 2001,
+      "name": { "en": "Long-Range Scavenging", "zh": "远程拾荒" },
+      "description": { "en": "The drone can go scavenging more times a day (once in the game).", "zh": "无人机每日可外出拾荒的次数增加（游戏中为1次）" },
+      "levelText": { "en": "+1 / +2 / +3 / +4 / +5 a day", "zh": "每日 +1 / +2 / +3 / +4 / +5次" },
+      "fields": { "ShowType": 2, "WebIcon": "../../Res/icon/UI_Item_Icon_Buff_xuhangwurenji.png", "Icon": "Assets/RuntimeAssets/Texture/UI/icon/UI_Item_Icon_Buff_xuhangwurenji.png" },
+      "levels": [{ "cost": 10 }, { "cost": 13 }, { "cost": 15 }, { "cost": 18 }, { "cost": 20 }],
+      "gives": [
+        // FloatValue0 is the extra scavenging trips a day.
+        { "effect": "game:AE_DroneForagingExtraTrip", "levels": [{ "FloatValue0": 1 }, { "FloatValue0": 2 }, { "FloatValue0": 3 }, { "FloatValue0": 4 }, { "FloatValue0": 5 }] }
+      ]
+    },
+    {
+      "id": 5125,  // Trade Routes
+      "enabled": false,
+      "copyFrom": 2001,
+      "name": { "en": "Trade Routes", "zh": "交易航线" },
+      "description": { "en": "The trade drone can make more trades a day (once in the game). Adds to Drone Pilot.", "zh": "无人机每日可交易次数增加（游戏中为1次），与「无人机飞手」叠加" },
+      "levelText": { "en": "+1 / +2 / +3 / +4 / +5 a day", "zh": "每日 +1 / +2 / +3 / +4 / +5次" },
+      "fields": { "ShowType": 2, "WebIcon": "../../Res/icon/UI_Item_Icon_Buff_xuhangwurenji.png", "Icon": "Assets/RuntimeAssets/Texture/UI/icon/UI_Item_Icon_Buff_xuhangwurenji.png" },
+      "levels": [{ "cost": 10 }, { "cost": 13 }, { "cost": 15 }, { "cost": 18 }, { "cost": 20 }],
+      "gives": [
+        // FloatValue0 is the extra trades a day.
+        { "effect": "game:AE_StrangerTradeDroneExtraTrip", "levels": [{ "FloatValue0": 1 }, { "FloatValue0": 2 }, { "FloatValue0": 3 }, { "FloatValue0": 4 }, { "FloatValue0": 5 }] }
+      ]
+    },
+    {
+      "id": 5126,  // Packed Fresh
+      "enabled": false,
+      "copyFrom": 2001,
+      "name": { "en": "Packed Fresh", "zh": "持久保鲜" },
+      "description": { "en": "Food in your backpack spoils slower. Adds to Insulated Backpack.", "zh": "背包中的食物腐坏变慢，与「保温背包」叠加" },
+      "levelText": { "en": "1.1x / 1.2x / 1.3x / 1.4x / 1.5x / 1.6x / 1.7x / 1.8x / 1.9x / 2.0x", "zh": "1.1倍 / 1.2倍 / 1.3倍 / 1.4倍 / 1.5倍 / 1.6倍 / 1.7倍 / 1.8倍 / 1.9倍 / 2.0倍" },
+      "fields": { "ShowType": 2, "WebIcon": "../../Res/icon/UI_Item_Icon_Buff_baowenbeibao.png", "Icon": "Assets/RuntimeAssets/Texture/UI/icon/UI_Item_Icon_Buff_baowenbeibao" },
+      "levels": [{ "cost": 5 }, { "cost": 8 }, { "cost": 10 }, { "cost": 13 }, { "cost": 15 }, { "cost": 20 }, { "cost": 25 }, { "cost": 30 }, { "cost": 35 }, { "cost": 40 }],
+      "gives": [
+        // FloatValue0 is added to the backpack shelf life: food lasts 1 + this times as long.
+        { "effect": "game:AE_BackpackShelfLife", "levels": [{ "FloatValue0": 0.05 }, { "FloatValue0": 0.1 }, { "FloatValue0": 0.15 }, { "FloatValue0": 0.2 }, { "FloatValue0": 0.25 }, { "FloatValue0": 0.3 }, { "FloatValue0": 0.35 }, { "FloatValue0": 0.4 }, { "FloatValue0": 0.45 }, { "FloatValue0": 0.5 }] }
+      ]
+    },
+    {
+      "id": 5127,  // Quick Hands
+      "enabled": false,
+      "copyFrom": 2001,
+      "name": { "en": "Quick Hands", "zh": "快手制作" },
+      "description": { "en": "Crafting at a workbench takes less time.", "zh": "在工作台制造的耗时减少" },
+      "levelText": { "en": "-5% / -10% / -15% / -20% / -25% / -30% / -35% / -40% / -45% / -50%", "zh": "-5% / -10% / -15% / -20% / -25% / -30% / -35% / -40% / -45% / -50%" },
+      "fields": { "ShowType": 2, "WebIcon": "../../Res/icon/UI_Item_Icon_Buff_xinlingshouqiao.png", "Icon": "Assets/RuntimeAssets/Texture/UI/icon/UI_Item_Icon_Buff_xinlingshouqiao" },
+      "levels": [{ "cost": 5 }, { "cost": 8 }, { "cost": 10 }, { "cost": 13 }, { "cost": 15 }, { "cost": 20 }, { "cost": 25 }, { "cost": 30 }, { "cost": 35 }, { "cost": 40 }],
+      "gives": [
+        // FloatValue0 is the share of crafting time taken off.
+        { "effect": "game:AE_ProductionSpeedMultiplier", "levels": [{ "FloatValue0": 0.05 }, { "FloatValue0": 0.1 }, { "FloatValue0": 0.15 }, { "FloatValue0": 0.2 }, { "FloatValue0": 0.25 }, { "FloatValue0": 0.3 }, { "FloatValue0": 0.35 }, { "FloatValue0": 0.4 }, { "FloatValue0": 0.45 }, { "FloatValue0": 0.5 }] }
+      ]
+    },
+    {
+      "id": 5128,  // Good Neighbor
+      "enabled": false,
+      "copyFrom": 2001,
+      "name": { "en": "Good Neighbor", "zh": "远亲近邻" },
+      "description": { "en": "Each basket sent to the neighbor or your companion gives more affinity (1 in the game).", "zh": "每次用吊篮给邻居或同伴送物，增加的好感度提高（游戏中为1）" },
+      "levelText": { "en": "+1 / +2 / +3 / +4 / +5", "zh": "+1 / +2 / +3 / +4 / +5" },
+      "fields": { "ShowType": 2, "WebIcon": "../../Res/Furniture/UI_Item_Icon_diaolan.png", "Icon": "Assets/RuntimeAssets/Texture/Furniture/UI_Item_Icon_diaolan" },
+      "levels": [{ "cost": 10 }, { "cost": 13 }, { "cost": 15 }, { "cost": 18 }, { "cost": 20 }],
+      "gives": [
+        // IntValue0 is the affinity added to each basket.
+        { "effect": "nlp:good-neighbor", "levels": [{ "IntValue0": 1 }, { "IntValue0": 2 }, { "IntValue0": 3 }, { "IntValue0": 4 }, { "IntValue0": 5 }] }
+      ]
+    },
+    {
+      "id": 5129,  // Solar Tuning
+      "enabled": false,
+      "copyFrom": 2001,
+      "name": { "en": "Solar Tuning", "zh": "太阳能调校" },
+      "description": { "en": "Solar panels make more power.", "zh": "太阳能板产电效率提高" },
+      "levelText": { "en": "+5% / +10% / +15% / +20% / +25% / +30% / +35% / +40% / +45% / +50%", "zh": "+5% / +10% / +15% / +20% / +25% / +30% / +35% / +40% / +45% / +50%" },
+      "fields": { "ShowType": 2, "WebIcon": "../../Res/Furniture/UI_Item_Icon_Furnit_M_900300101.png", "Icon": "Assets/RuntimeAssets/Texture/Furniture/UI_Item_Icon_Furnit_M_900300101" },
+      "levels": [{ "cost": 5 }, { "cost": 8 }, { "cost": 10 }, { "cost": 13 }, { "cost": 15 }, { "cost": 20 }, { "cost": 25 }, { "cost": 30 }, { "cost": 35 }, { "cost": 40 }],
+      "gives": [
+        // FloatValue0 is the share more power solar panels make.
+        { "effect": "game:AE_PowerSolarEfficiency", "levels": [{ "FloatValue0": 0.05 }, { "FloatValue0": 0.1 }, { "FloatValue0": 0.15 }, { "FloatValue0": 0.2 }, { "FloatValue0": 0.25 }, { "FloatValue0": 0.3 }, { "FloatValue0": 0.35 }, { "FloatValue0": 0.4 }, { "FloatValue0": 0.45 }, { "FloatValue0": 0.5 }] }
+      ]
+    },
+    {
+      "id": 5130,  // Generator Tuning
+      "enabled": false,
+      "copyFrom": 2001,
+      "name": { "en": "Generator Tuning", "zh": "发电机调校" },
+      "description": { "en": "Generators make more power.", "zh": "发电机产电效率提高" },
+      "levelText": { "en": "+5% / +10% / +15% / +20% / +25% / +30% / +35% / +40% / +45% / +50%", "zh": "+5% / +10% / +15% / +20% / +25% / +30% / +35% / +40% / +45% / +50%" },
+      "fields": { "ShowType": 2, "WebIcon": "../../Res/Furniture/UI_Item_Icon_ranyoufadianjizhong.png", "Icon": "Assets/RuntimeAssets/Texture/Furniture/UI_Item_Icon_ranyoufadianjizhong" },
+      "levels": [{ "cost": 5 }, { "cost": 8 }, { "cost": 10 }, { "cost": 13 }, { "cost": 15 }, { "cost": 20 }, { "cost": 25 }, { "cost": 30 }, { "cost": 35 }, { "cost": 40 }],
+      "gives": [
+        // FloatValue0 is the share more power generators make.
+        { "effect": "game:AE_PowerGeneratorEfficiency", "levels": [{ "FloatValue0": 0.05 }, { "FloatValue0": 0.1 }, { "FloatValue0": 0.15 }, { "FloatValue0": 0.2 }, { "FloatValue0": 0.25 }, { "FloatValue0": 0.3 }, { "FloatValue0": 0.35 }, { "FloatValue0": 0.4 }, { "FloatValue0": 0.45 }, { "FloatValue0": 0.5 }] }
+      ]
+    },
+    {
+      "id": 5131,  // Seasoned Explorer
+      "enabled": false,
+      "copyFrom": 2001,
+      "name": { "en": "Seasoned Explorer", "zh": "老练探险家" },
+      "description": { "en": "Max Exposure while exploring is higher, so trips out can last longer.", "zh": "探索时最大暴露上限提高，可以在外探索更久" },
+      "levelText": { "en": "+50 / +100 / +150 / +200 / +250 / +300 / +350 / +400 / +450 / +500", "zh": "+50 / +100 / +150 / +200 / +250 / +300 / +350 / +400 / +450 / +500" },
+      "fields": { "ShowType": 2, "WebIcon": "../../Res/Literature/UI_Item_Icon_chengshixitongshuji.png", "Icon": "Assets/RuntimeAssets/Texture/Literature/UI_Item_Icon_chengshixitongshuji" },
+      "levels": [{ "cost": 5 }, { "cost": 8 }, { "cost": 10 }, { "cost": 13 }, { "cost": 15 }, { "cost": 20 }, { "cost": 25 }, { "cost": 30 }, { "cost": 35 }, { "cost": 40 }],
+      "gives": [
+        // IntValue0 is the exposure added to Max Exposure.
+        { "effect": "nlp:max-exposure", "levels": [{ "IntValue0": 50 }, { "IntValue0": 100 }, { "IntValue0": 150 }, { "IntValue0": 200 }, { "IntValue0": 250 }, { "IntValue0": 300 }, { "IntValue0": 350 }, { "IntValue0": 400 }, { "IntValue0": 450 }, { "IntValue0": 500 }] }
+      ]
+    },
+    {
+      "id": 5132,  // Dealer Discount
+      "enabled": false,
+      "copyFrom": 2001,
+      "name": { "en": "Dealer Discount", "zh": "购车优惠" },
+      "description": { "en": "Vehicles cost fewer coins (bicycle 150, car 500, SUV 900 in the game).", "zh": "购买载具花费的金币减少（游戏中自行车150，汽车500，越野车900）" },
+      "levelText": { "en": "-5% / -10% / -15% / -20% / -25% / -30% / -35% / -40% / -45% / -50%", "zh": "-5% / -10% / -15% / -20% / -25% / -30% / -35% / -40% / -45% / -50%" },
+      "fields": { "ShowType": 2, "WebIcon": "../../Res/Consumable/UI_Item_Icon_Vehicle_M_600100101.png", "Icon": "Assets/RuntimeAssets/Texture/Vehicle/UI_Item_Icon_Vehicle_M_600100101" },
+      "levels": [{ "cost": 5 }, { "cost": 8 }, { "cost": 10 }, { "cost": 13 }, { "cost": 15 }, { "cost": 20 }, { "cost": 25 }, { "cost": 30 }, { "cost": 35 }, { "cost": 40 }],
+      "gives": [
+        // FloatValue0 is the share taken off each vehicle's price (at most 0.9).
+        { "effect": "nlp:vehicle-discount", "levels": [{ "FloatValue0": 0.05 }, { "FloatValue0": 0.1 }, { "FloatValue0": 0.15 }, { "FloatValue0": 0.2 }, { "FloatValue0": 0.25 }, { "FloatValue0": 0.3 }, { "FloatValue0": 0.35 }, { "FloatValue0": 0.4 }, { "FloatValue0": 0.45 }, { "FloatValue0": 0.5 }] }
+      ]
+    },
+    {
+      "id": 5133,  // Shortcuts
+      "enabled": false,
+      "copyFrom": 2001,
+      "name": { "en": "Shortcuts", "zh": "抄近路" },
+      "description": { "en": "Travel takes less time before the disaster, with or without a vehicle. Adds to the vehicle's own cut.", "zh": "灾前出行耗时减少，有无载具均生效，与载具的减时叠加" },
+      "levelText": { "en": "-5% / -10% / -15% / -20% / -25% / -30% / -35% / -40% / -45% / -50%", "zh": "-5% / -10% / -15% / -20% / -25% / -30% / -35% / -40% / -45% / -50%" },
+      "fields": { "ShowType": 2, "WebIcon": "../../Res/icon/UI_Item_Icon_Buff_kaituozhe.png", "Icon": "Assets/RuntimeAssets/Texture/UI/icon/UI_Item_Icon_Buff_kaituozhe" },
+      "levels": [{ "cost": 5 }, { "cost": 8 }, { "cost": 10 }, { "cost": 13 }, { "cost": 15 }, { "cost": 20 }, { "cost": 25 }, { "cost": 30 }, { "cost": 35 }, { "cost": 40 }],
+      "gives": [
+        // FloatValue0 is the share of travel time cut (at most 0.9).
+        { "effect": "nlp:travel-time", "levels": [{ "FloatValue0": 0.05 }, { "FloatValue0": 0.1 }, { "FloatValue0": 0.15 }, { "FloatValue0": 0.2 }, { "FloatValue0": 0.25 }, { "FloatValue0": 0.3 }, { "FloatValue0": 0.35 }, { "FloatValue0": 0.4 }, { "FloatValue0": 0.45 }, { "FloatValue0": 0.5 }] }
       ]
     }
   ],

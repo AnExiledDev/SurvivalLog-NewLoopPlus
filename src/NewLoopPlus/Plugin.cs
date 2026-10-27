@@ -13,7 +13,7 @@ namespace NewLoopPlus;
 public sealed class Plugin : BasePlugin
 {
     private const string Guid = "com.dev.survivallog.newloopplus";
-    private const string Version = "0.8.0";
+    private const string Version = "0.9.0";
     private const string TalentsFileName = "NewLoopPlus.Talents.json";
     private const string MuscleMemoryFileName = "NewLoopPlus.MuscleMemory.txt";
     private const float MaxMultiplier = 100f;
@@ -43,6 +43,7 @@ public sealed class Plugin : BasePlugin
         LuckyFinds.Apply(harmony, log.Write);
         Tinkerer.Apply(harmony, log.Write);
         MentalToughnessUses.Apply(harmony, log.Write);
+        ExploreTravelHooks.Prepare(harmony, log.Write);
         EndlessRewardsSetting.On = BindEndlessEverywhere().Value;
         if (EndlessRewardsSetting.On) EndlessRewardHooks.Apply(harmony, log.Write);
         OptionalLive.Watch(BindStartingBonus(), bonus => LoopStartBonus.Bonus = bonus);

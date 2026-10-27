@@ -843,6 +843,42 @@
     line: (v, zh) => '-' + fmt(v.IntValue0 / 60) + (zh ? '分钟' : ' min'),
     desc: (v, zh) => zh ? '无人机交易往返时间缩短' + fmt(v.IntValue0 / 60) + '分钟' : 'Trade drone trips take ' + plural(v.IntValue0 / 60, 'minute') + ' less.' });
 
+  fx({ id: 'game:drone-scavenge', src: 'game', cat: 'items', script: 'AE_DroneForagingExtraTrip',
+    en: 'More drone scavenging a day', zh: '无人机拾荒次数', what: ['The drone can go scavenging more times each day.', '无人机每日可外出拾荒的次数增加。'],
+    params: [num('FloatValue0', 'More trips', '额外次数', ['', '次'], [1, 2, 3], { min: 0 })],
+    line: v => '+' + fmt(v.FloatValue0),
+    desc: (v, zh) => zh ? '无人机每日可外出拾荒次数+' + fmt(v.FloatValue0) : 'The drone can go scavenging ' + plural(v.FloatValue0, 'more time') + ' a day.' });
+
+  fx({ id: 'game:generator', src: 'game', cat: 'home', script: 'AE_PowerGeneratorEfficiency',
+    en: 'Better generators', zh: '发电机增效', what: ['Generators make more power.', '发电机产电效率提高。'],
+    params: [pct('FloatValue0', 'More power', '产电提高', [10, 20, 30])],
+    line: v => '+' + fmt(v.FloatValue0) + '%',
+    desc: (v, zh) => zh ? '发电机产电效率提高' + fmt(v.FloatValue0) + '%' : 'Generator output increased by ' + fmt(v.FloatValue0) + '%.' });
+
+  fx({ id: 'nlp:good-neighbor', src: 'nlp', nlp: 'good-neighbor', cat: 'body', scripts: [],
+    en: 'More affinity per basket', zh: '吊篮好感度', what: ['Each basket sent to the neighbor or your companion gives more affinity.', '每次用吊篮给邻居或同伴送物，增加的好感度提高。'],
+    params: [num('IntValue0', 'More affinity', '额外好感度', ['', ''], [1, 2, 3], { min: 0 })],
+    line: v => '+' + fmt(v.IntValue0),
+    desc: (v, zh) => zh ? '每次吊篮送物好感度额外+' + fmt(v.IntValue0) : 'Each basket gives ' + fmt(v.IntValue0) + ' more affinity.' });
+
+  fx({ id: 'nlp:max-exposure', src: 'nlp', nlp: 'max-exposure', cat: 'explore', scripts: [],
+    en: 'Higher Max Exposure', zh: '最大暴露上限提高', what: ['Max Exposure while exploring is higher, so trips out can last longer.', '探索时最大暴露上限提高，可以在外探索更久。'],
+    params: [num('IntValue0', 'More exposure', '上限提高', ['', ''], [50, 100, 150], { min: 0, step: 50 })],
+    line: v => '+' + fmt(v.IntValue0),
+    desc: (v, zh) => zh ? '最大暴露上限 +' + fmt(v.IntValue0) : 'Max Exposure +' + fmt(v.IntValue0) + '.' });
+
+  fx({ id: 'nlp:vehicle-discount', src: 'nlp', nlp: 'vehicle-discount', cat: 'money', scripts: [],
+    en: 'Cheaper vehicles', zh: '载具降价', what: ['Vehicles cost fewer coins, at most 90% off.', '购买载具花费的金币减少，最多减90%。'],
+    params: [pct('FloatValue0', 'Off the price', '降价', [10, 20, 30])],
+    line: v => '-' + fmt(v.FloatValue0) + '%',
+    desc: (v, zh) => zh ? '载具价格降低' + fmt(v.FloatValue0) + '%' : 'Vehicles cost ' + fmt(v.FloatValue0) + '% less.' });
+
+  fx({ id: 'nlp:travel-time', src: 'nlp', nlp: 'travel-time', cat: 'explore', scripts: [],
+    en: 'Faster travel before the disaster', zh: '灾前出行更快', what: ['Travel takes less time before the disaster, with or without a vehicle, at most 90% less.', '灾前出行耗时减少，有无载具均生效，最多减90%。'],
+    params: [pct('FloatValue0', 'Less time', '减少耗时', [10, 20, 30])],
+    line: v => '-' + fmt(v.FloatValue0) + '%',
+    desc: (v, zh) => zh ? '灾前出行耗时减少' + fmt(v.FloatValue0) + '%' : 'Travel before the disaster takes ' + fmt(v.FloatValue0) + '% less time.' });
+
   const FX_BY_ID = {};
 
   FX.forEach(f => { FX_BY_ID[f.id] = f; });

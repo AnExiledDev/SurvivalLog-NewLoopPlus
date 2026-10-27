@@ -11,7 +11,7 @@ public class TalentFileTests
 {
     private static readonly int[] CutTalentsThatWork = { 1006, 2017, 3076, 4004, 4006 };
     private static readonly int[] CutTalentsFinishedByTheMod = { 1008, 1010, 2004, 2006, 2007 };
-    private static readonly int[] NewRewards = Enumerable.Range(5101, 23).ToArray();
+    private static readonly int[] NewRewards = Enumerable.Range(5101, 33).ToArray();
     private static readonly int[] FiveLevelTalentsMadeTen = { 1001, 1002, 1003, 1004, 1005, 1007, 2005, 2008, 2010 };
     private static readonly int[] ThreeLevelTalentsMadeEight = { 1011, 1012, 2011, 2013, 2014, 2015, 2016, 2018 };
 
@@ -176,6 +176,26 @@ public class TalentFileTests
     }
 
     [Fact]
+    public void Each_reward_added_in_0_9_0_gives_more_at_every_level_and_costs_more_too()
+    {
+        var file = DefaultFile();
+
+        foreach (var id in Enumerable.Range(5124, 10))
+        {
+            var talent = file.Talents.Single(entry => entry.Id == id);
+            var give = Assert.Single(talent.Gives);
+            var costs = talent.Levels!.Select(level => level.Cost ?? 0).ToList();
+            var values = give.Levels.Select(fields => Assert.IsType<FieldValue.Number>(Assert.Single(fields).Value).Value).ToList();
+
+            Assert.True(talent.Levels!.Count is 5 or 10, $"talent {id}");
+            Assert.Equal(talent.Levels!.Count, give.Levels.Count);
+            Assert.True(values[0] > 0, $"talent {id}");
+            Assert.All(values.Zip(values.Skip(1)), pair => Assert.True(pair.Second > pair.First, $"talent {id}"));
+            Assert.All(costs.Zip(costs.Skip(1)), pair => Assert.True(pair.Second > pair.First, $"talent {id}"));
+        }
+    }
+
+    [Fact]
     public void Every_lengthened_talent_gets_five_more_levels_each_with_its_own_buff_and_effect()
     {
         var file = DefaultFile();
@@ -220,6 +240,7 @@ public class TalentFileTests
             "AE_BackpackShelfLife", "AE_CompressValueRate", "AE_ExposureReduceMultiplier", "AE_PowerSolarEfficiency", "AE_ProductionExpMultiplier",
             "AE_TrapCaptureMultiplier", "AddItemToBag_307510", "EndlessRobotGrant_HK", "PreDisaster_AddCountDownTime", "PreDisaster_AddWeight", "QuickRest", "Buff_Empty",
             "AE_BrewSpeedUp", "AE_BrewBottleYield", "AE_StrangerTradeDroneExtraTrip", "AE_TowerBiteDamageReduce",
+            "AE_DroneForagingExtraTrip", "AE_ProductionSpeedMultiplier", "AE_PowerGeneratorEfficiency",
         };
 
         public System.Collections.Generic.IReadOnlyList<int> TalentLevels(int talentId) =>

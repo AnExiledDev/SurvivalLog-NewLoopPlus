@@ -34,7 +34,7 @@
   <!-- What the Mod Manager's Mods screen shows about this mod. -->
   <ItemGroup>
     <AssemblyMetadata Include="ModManager.Name" Value="New Loop Plus&#10;新轮回+" />
-    <AssemblyMetadata Include="ModManager.Description" Value="Tune how many Planning Points runs earn and what loop rewards cost, get extra points at the start of each loop, end a run early from the pause menu, and edit loop rewards in a talents file, including cut ones the game left out and eighteen new ones.&#10;调整每局获得的信念点和天赋升级的消耗，每次开始新轮回时额外获得信念点，可以从暂停菜单提前结束一局，并可在天赋文件中编辑天赋，包括游戏未开放的天赋和十八个新天赋。" />
+    <AssemblyMetadata Include="ModManager.Description" Value="Tune how many Planning Points runs earn and what loop rewards cost, get extra points at the start of each loop, end a run early from the pause menu, and edit loop rewards in a talents file, including cut ones the game left out and thirty-three new ones.&#10;调整每局获得的信念点和天赋升级的消耗，每次开始新轮回时额外获得信念点，可以从暂停菜单提前结束一局，并可在天赋文件中编辑天赋，包括游戏未开放的天赋和三十三个新天赋。" />
     <AssemblyMetadata Include="ModManager.Author" Value="AnExiledDev" />
     <AssemblyMetadata Include="ModManager.Category" Value="Balance" />
     <AssemblyMetadata Include="ModManager.GameVersion" Value="1.1.19611" />

@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.9.0
+
+- Ten new loop rewards in the talents file, all switched off. Switch them on in the Talents tab or with `"enabled": true` in the file.
+- Long-Range Scavenging and Trade Routes: the drone can scavenge or trade up to five more times a day. Five levels each.
+- Good Neighbor: each basket sent to the neighbor or your companion gives up to 5 more affinity. Five levels.
+- Packed Fresh, Quick Hands, Solar Tuning and Generator Tuning: backpack food keeps up to twice as long, crafting takes up to 50% less time, and solar panels and generators make up to 50% more power. Ten levels each.
+- Seasoned Explorer: up to 500 more Max Exposure while exploring. Ten levels.
+- Dealer Discount: vehicles cost up to 50% less. Ten levels.
+- Shortcuts: travel before the disaster takes up to 50% less time, with or without a vehicle. Ten levels.
+- These stack with the game's survival plans and the mod's other rewards that do the same thing.
+- The Talents tab's NEW REWARD can use these effects too.
+- Made for Survival Log 1.1.19611.
+
 ## 0.8.0
 
 - Five more levels for seventeen loop rewards in the talents file, all switched off. Switch them on in the Talents tab or with `"enabled": true` in the file.
