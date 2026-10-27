@@ -723,7 +723,7 @@
     desc: (v, zh) => zh ? '通过休息恢复精力的速度加快' + fmt(v.FloatValue0) + '%' : 'Resting restores Stamina ' + fmt(v.FloatValue0) + '% faster.' });
 
   fx({ id: 'game:press-nutrition', src: 'game', cat: 'body', script: 'AE_CompressValueRate',
-    en: 'Ration Press keeps more nutrition', zh: '压制保留更多营养', what: ['The Ration Press keeps more of the food\'s nutrition (60% in the game).', '使用口粮压制机时保留更多营养（游戏中为 60%）。'],
+    en: 'Ration Press keeps more nutrition', zh: '压制保留更多营养', what: ['The Ration Press keeps more of the food\'s nutrition (normally 60%).', '使用口粮压制机时保留更多营养（原本为 60%）。'],
     params: [pct('FloatValue0', 'More kept', '多保留', [5, 10, 20])],
     line: v => '+' + fmt(v.FloatValue0) + '%',
     desc: (v, zh) => zh ? '使用口粮压制机时，营养保留从 60% 提高到 ' + fmt(60 + v.FloatValue0) + '%' : 'The Ration Press keeps ' + fmt(60 + v.FloatValue0) + '% of the food\'s nutrition, up from 60%.' });

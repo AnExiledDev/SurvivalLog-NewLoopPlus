@@ -19,8 +19,8 @@
 //                 when the talent has gives. The Mod Manager's Talents tab writes these for you.
 //                 "effect" can also be "nlp:<name>", an effect New Loop Plus runs itself: interest, safety-net,
 //                 extra-pick, crisis-veteran, second-wind, lucky-finds, muscle-memory, scouts-notes, tinkerer,
-//                 family-recipe, drone-pilot, good-neighbor, max-exposure, vehicle-discount, travel-time. The
-//                 entries at the bottom of the list show what each one reads.
+//                 family-recipe, drone-pilot, good-neighbor, max-exposure, vehicle-discount, travel-time,
+//                 drone-speed. The entries at the bottom of the list show what each one reads.
 //
 // A buff or effect entry: "id", an optional "copyFrom" (needed to make a new row), and "fields",
 // named as the game's tables name them (ConfigName, IntValue0, BuffSatietyDel, EffectConfigId...).
@@ -411,7 +411,7 @@
         {"cost": 35, "buff": 200600}
       ],
       "effects": [
-        // FloatValue0 is the repair speed added (0.15 a level in the game).
+        // FloatValue0 is the repair speed added (the game's own levels add 0.15 each).
         {"id": 200200560, "copyFrom": 200200550, "fields": {"FloatValue0": 0.9}},
         {"id": 200200570, "copyFrom": 200200550, "fields": {"FloatValue0": 1.05}},
         {"id": 200200580, "copyFrom": 200200550, "fields": {"FloatValue0": 1.2}},
@@ -719,7 +719,7 @@
       "enabled": false,
       "copyFrom": 2001,
       "name": { "en": "Every Crumb Counts", "zh": "颗粒归仓" },
-      "description": { "en": "The Ration Press keeps more of the food's nutrition (60% in the game).", "zh": "使用口粮压制机时，保留更多营养（游戏中为 60%）" },
+      "description": { "en": "The Ration Press keeps more of the food's nutrition (normally 60%).", "zh": "使用口粮压制机时，保留更多营养（原本为 60%）" },
       "levelText": { "en": "+5% / +10% / +20%", "zh": "+5% / +10% / +20%" },
       "fields": { "ShowType": 2, "WebIcon": "../../Res/Furniture/UI_Item_Icon_yazhiji.png", "Icon": "Assets/RuntimeAssets/Texture/Furniture/UI_Item_Icon_yazhiji" },
       "levels": [{ "cost": 5 }, { "cost": 10 }, { "cost": 15 }],
@@ -943,7 +943,7 @@
       "enabled": false,
       "copyFrom": 2001,
       "name": { "en": "Family Recipe", "zh": "家传秘方" },
-      "description": { "en": "Fresh ingredients and exact recipes add more cooking quality (+10 each in the game). From level 3, multi-pot cooking unlocks at Cooking Level 1.", "zh": "新鲜食材和按菜谱烹饪带来的品质加成更高（游戏中各为+10）。3级起，烹饪熟练度1级即可多锅烹饪" },
+      "description": { "en": "Fresh ingredients and exact recipes add more cooking quality (normally +10 each). From level 3, multi-pot cooking unlocks at Cooking Level 1.", "zh": "新鲜食材和按菜谱烹饪带来的品质加成更高（原本各为+10）。3级起，烹饪熟练度1级即可多锅烹饪" },
       "levelText": { "en": "+3 / +6 / +9 / +12 / +15", "zh": "+3 / +6 / +9 / +12 / +15" },
       "fields": { "ShowType": 2, "WebIcon": "../../Res/icon/UI_Item_Icon_Buff_biaoqiandashi.png", "Icon": "Assets/RuntimeAssets/Texture/UI/icon/UI_Item_Icon_Buff_biaoqiandashi.png" },
       "levels": [{ "cost": 5 }, { "cost": 8 }, { "cost": 10 }, { "cost": 13 }, { "cost": 15 }],
@@ -973,7 +973,7 @@
       "enabled": false,
       "copyFrom": 2001,
       "name": { "en": "Drone Pilot", "zh": "无人机飞手" },
-      "description": { "en": "Trade drone trips are shorter (60 minutes in the game). Level 3 gives one more trade a day, level 5 two more.", "zh": "无人机交易往返时间缩短（游戏中为60分钟）。3级起无人机每日可交易次数+1，5级+2" },
+      "description": { "en": "Trade drone trips are shorter (normally 60 minutes). Level 3 gives one more trade a day, level 5 two more.", "zh": "无人机交易往返时间缩短（原本为60分钟）。3级起无人机每日可交易次数+1，5级+2" },
       "levelText": { "en": "50 / 45 / 40 / 35 / 30 minutes", "zh": "50 / 45 / 40 / 35 / 30分钟" },
       "fields": { "ShowType": 2, "WebIcon": "../../Res/icon/UI_Item_Icon_Buff_xuhangwurenji.png", "Icon": "Assets/RuntimeAssets/Texture/UI/icon/UI_Item_Icon_Buff_xuhangwurenji.png" },
       "levels": [{ "cost": 10 }, { "cost": 13 }, { "cost": 15 }, { "cost": 18 }, { "cost": 20 }],
@@ -1002,7 +1002,7 @@
       "enabled": false,
       "copyFrom": 2001,
       "name": { "en": "Long-Range Scavenging", "zh": "远程拾荒" },
-      "description": { "en": "The drone can go scavenging more times a day (once in the game).", "zh": "无人机每日可外出拾荒的次数增加（游戏中为1次）" },
+      "description": { "en": "The drone can go scavenging more times a day (normally once).", "zh": "无人机每日可外出拾荒的次数增加（原本为1次）" },
       "levelText": { "en": "+1 / +2 / +3 / +4 / +5 a day", "zh": "每日 +1 / +2 / +3 / +4 / +5次" },
       "fields": { "ShowType": 2, "WebIcon": "../../Res/icon/UI_Item_Icon_Buff_xuhangwurenji.png", "Icon": "Assets/RuntimeAssets/Texture/UI/icon/UI_Item_Icon_Buff_xuhangwurenji.png" },
       "levels": [{ "cost": 13 }, { "cost": 16 }, { "cost": 19 }, { "cost": 23 }, { "cost": 25 }],
@@ -1016,7 +1016,7 @@
       "enabled": false,
       "copyFrom": 2001,
       "name": { "en": "Trade Routes", "zh": "交易航线" },
-      "description": { "en": "The trade drone can make more trades a day (once in the game). Adds to Drone Pilot.", "zh": "无人机每日可交易次数增加（游戏中为1次），与「无人机飞手」叠加" },
+      "description": { "en": "The trade drone can make more trades a day (normally once). Adds to Drone Pilot.", "zh": "无人机每日可交易次数增加（原本为1次），与「无人机飞手」叠加" },
       "levelText": { "en": "+1 / +2 / +3 / +4 / +5 a day", "zh": "每日 +1 / +2 / +3 / +4 / +5次" },
       "fields": { "ShowType": 2, "WebIcon": "../../Res/icon/UI_Item_Icon_Buff_xuhangwurenji.png", "Icon": "Assets/RuntimeAssets/Texture/UI/icon/UI_Item_Icon_Buff_xuhangwurenji.png" },
       "levels": [{ "cost": 13 }, { "cost": 16 }, { "cost": 19 }, { "cost": 23 }, { "cost": 25 }],
@@ -1058,7 +1058,7 @@
       "enabled": false,
       "copyFrom": 2001,
       "name": { "en": "Good Neighbor", "zh": "远亲近邻" },
-      "description": { "en": "Each basket sent to the neighbor or your companion gives more affinity (1 in the game).", "zh": "每次用吊篮给邻居或同伴送物，增加的好感度提高（游戏中为1）" },
+      "description": { "en": "Each basket sent to the neighbor or your companion gives more affinity (normally 1).", "zh": "每次用吊篮给邻居或同伴送物，增加的好感度提高（原本为1）" },
       "levelText": { "en": "+5 / +10 / +15 / +20 / +25", "zh": "+5 / +10 / +15 / +20 / +25" },
       "fields": { "ShowType": 2, "WebIcon": "../../Res/Furniture/UI_Item_Icon_diaolan.png", "Icon": "Assets/RuntimeAssets/Texture/Furniture/UI_Item_Icon_diaolan" },
       "levels": [{ "cost": 13 }, { "cost": 16 }, { "cost": 19 }, { "cost": 23 }, { "cost": 25 }],
@@ -1114,7 +1114,7 @@
       "enabled": false,
       "copyFrom": 2001,
       "name": { "en": "Dealer Discount", "zh": "购车优惠" },
-      "description": { "en": "Vehicles cost fewer coins (bicycle 150, car 500, SUV 900 in the game).", "zh": "购买载具花费的金币减少（游戏中自行车150，汽车500，越野车900）" },
+      "description": { "en": "Vehicles cost fewer coins (normally bicycle 150, car 500, SUV 900).", "zh": "购买载具花费的金币减少（原价自行车150，汽车500，越野车900）" },
       "levelText": { "en": "-5% / -10% / -15% / -20% / -25% / -30% / -35% / -40% / -45% / -50%", "zh": "-5% / -10% / -15% / -20% / -25% / -30% / -35% / -40% / -45% / -50%" },
       "fields": { "ShowType": 2, "WebIcon": "../../Res/Consumable/UI_Item_Icon_Vehicle_M_600100101.png", "Icon": "Assets/RuntimeAssets/Texture/Vehicle/UI_Item_Icon_Vehicle_M_600100101" },
       "levels": [{ "cost": 5 }, { "cost": 8 }, { "cost": 10 }, { "cost": 13 }, { "cost": 15 }, { "cost": 20 }, { "cost": 25 }, { "cost": 30 }, { "cost": 35 }, { "cost": 40 }],

@@ -17,7 +17,7 @@ Each part uses its own setting times `OverallMultiplier`, so `OverallMultiplier 
 
 | Setting | Default | What it does |
 | --- | --- | --- |
-| `StartingPointsMultiplier` | `1` | Multiplies the Planning Points a new endless game starts with (500 in the game). 0 starts with none. `OverallMultiplier` does not apply to it. |
+| `StartingPointsMultiplier` | `1` | Multiplies the Planning Points a new endless game starts with (normally 500). 0 starts with none. `OverallMultiplier` does not apply to it. |
 
 ## Loop
 
@@ -75,7 +75,7 @@ Every talent in the default file starts switched off. Set `"enabled": true` on o
 | Prepper | 5101 | +1 / +2 / +3 hours before the disaster, +0.5 / +1 / +1.5 kg shopping weight. |
 | Insulated Pack | 5102 | Backpack items keep 2 / 3 / 4 times as long. |
 | Quick Rest | 5103 | Resting restores stamina 10 / 20 / 30% faster. |
-| Every Crumb Counts | 5104 | The Ration Press keeps 5 / 10 / 20% more nutrition (60% in the game). |
+| Every Crumb Counts | 5104 | The Ration Press keeps 5 / 10 / 20% more nutrition (normally 60%). |
 | Field Kit | 5105 | Start each run with 6 / 10 / 14 random crafting materials, seeds and medicine. |
 | Solar Engineer | 5106 | Solar panels make 15 / 30 / 45% more power. |
 | Trapper | 5107 | Traps catch prey 10 / 20 / 30% more often. |
@@ -91,19 +91,19 @@ Every talent in the default file starts switched off. Set `"enabled": true` on o
 | Muscle Memory | 5117 | Each run starts with 25 / 50% of the skill levels the last run gained, kept in `BepInEx\config\NewLoopPlus.MuscleMemory.txt` (delete it to start over). |
 | Scout's Notes | 5118 | Start each run with 1 / 2 / 3 drone trading posts already found. |
 | Tinkerer | 5119 | Crafting at a workbench has a 5 / 10 / 15 / 20 / 30% chance to give one of the materials back. |
-| Family Recipe | 5120 | Fresh ingredients and exact recipes add +3 / +6 / +9 / +12 / +15 more cooking quality (+10 each in the game). From level 3, multi-pot cooking unlocks at Cooking Level 1 instead of 3. |
+| Family Recipe | 5120 | Fresh ingredients and exact recipes add +3 / +6 / +9 / +12 / +15 more cooking quality (normally +10 each). From level 3, multi-pot cooking unlocks at Cooking Level 1 instead of 3. |
 | Brewmaster | 5121 | Brewing takes 10 / 20 / 30 / 40 / 50% less time. At levels 3 and 4 each bottle needs 10% less Satiety, at level 5 20% less, so a brew gives more bottles. |
-| Drone Pilot | 5122 | Trade drone trips take 50 / 45 / 40 / 35 / 30 minutes (60 in the game). Level 3 gives one more trade a day, level 5 two more. |
+| Drone Pilot | 5122 | Trade drone trips take 50 / 45 / 40 / 35 / 30 minutes (normally 60). Level 3 gives one more trade a day, level 5 two more. |
 | Hardened Defenses | 5123 | Zombies do 10 / 20 / 30 / 40 / 50% less bite damage to doors, windows and defenses. |
-| Long-Range Scavenging | 5124 | The drone can go scavenging 1 / 2 / 3 / 4 / 5 more times a day (once in the game). |
-| Trade Routes | 5125 | The trade drone can make 1 / 2 / 3 / 4 / 5 more trades a day (once in the game). Adds to Drone Pilot. |
+| Long-Range Scavenging | 5124 | The drone can go scavenging 1 / 2 / 3 / 4 / 5 more times a day (normally once). |
+| Trade Routes | 5125 | The trade drone can make 1 / 2 / 3 / 4 / 5 more trades a day (normally once). Adds to Drone Pilot. |
 | Packed Fresh | 5126 | Backpack food keeps 1.1 / 1.2 / 1.3 / 1.4 / 1.5 / 1.6 / 1.7 / 1.8 / 1.9 / 2.0 times as long. Adds to Insulated Pack and the Insulated Backpack survival plan. |
 | Quick Hands | 5127 | Crafting at a workbench takes 5 / 10 / 15 / 20 / 25 / 30 / 35 / 40 / 45 / 50% less time. |
-| Good Neighbor | 5128 | Each basket sent to the neighbor or your companion gives 5 / 10 / 15 / 20 / 25 more affinity (1 in the game). |
+| Good Neighbor | 5128 | Each basket sent to the neighbor or your companion gives 5 / 10 / 15 / 20 / 25 more affinity (normally 1). |
 | Solar Tuning | 5129 | Solar panels make 5 / 10 / 15 / 20 / 25 / 30 / 35 / 40 / 45 / 50% more power. Adds to Solar Engineer. |
 | Generator Tuning | 5130 | Generators make 5 / 10 / 15 / 20 / 25 / 30 / 35 / 40 / 45 / 50% more power. |
 | Seasoned Explorer | 5131 | Max Exposure while exploring is 50 / 100 / 150 / 200 / 250 / 300 / 350 / 400 / 450 / 500 higher, so trips out can last longer. |
-| Dealer Discount | 5132 | Vehicles cost 5 / 10 / 15 / 20 / 25 / 30 / 35 / 40 / 45 / 50% less (bicycle 150, car 500, SUV 900 in the game). Selling one back pays less to match. |
+| Dealer Discount | 5132 | Vehicles cost 5 / 10 / 15 / 20 / 25 / 30 / 35 / 40 / 45 / 50% less (normally bicycle 150, car 500, SUV 900). Selling one back pays less to match. |
 | Shortcuts | 5133 | Travel before the disaster takes 5 / 10 / 15 / 20 / 25 / 30 / 35 / 40 / 45 / 50% less time, with or without a vehicle. Adds to the vehicle's own cut. |
 | Fast Rotors | 5134 | Every drone trip (trades, scavenging, deliveries) takes 15 / 30 / 45 / 60 / 75% less time, never under a minute. Adds to Drone Pilot. |
 

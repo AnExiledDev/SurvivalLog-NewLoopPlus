@@ -89,8 +89,8 @@ public sealed class Plugin : BasePlugin
             "Multiplies the Planning Points paid for each survived day.\n" +
             "每存活一天所得的信念点乘以这个倍数。");
         var endless = Multiplier("Endless", "StartingPointsMultiplier",
-            "Multiplies the Planning Points a new endless game starts with (500 in the game). 0 starts with none.\n" +
-            "新开无尽模式时初始信念点（游戏中为 500）乘以这个倍数。0 为没有初始信念点。");
+            "Multiplies the Planning Points a new endless game starts with (normally 500). 0 starts with none.\n" +
+            "新开无尽模式时初始信念点（原本为 500）乘以这个倍数。0 为没有初始信念点。");
 
         OptionalLive.Watch(() =>
         {
