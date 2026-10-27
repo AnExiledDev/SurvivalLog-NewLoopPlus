@@ -61,7 +61,7 @@ Every talent in the default file starts switched off. Set `"enabled": true` on o
 | Clearance | 1004 | Five more levels: 35 / 40 / 45 / 50 / 55% off supplies that keep less than 5 days. |
 | Bulk Bargains | 1005 | Five more levels: 30 / 35 / 40 / 45 / 50% off when buying 6 or more. |
 | Hoarding Habit | 1007 | Five more levels: 9 / 10 / 11 / 12 / 15 random food items left in your home's cabinets. |
-| Resourceful Management | 1011 | Five more levels: a loan limit of 2400 / 3000 / 3800 / 4600 / 5500. |
+| Resourceful Management | 1011 | Five more levels: a loan limit of 2400 / 3000 / 3800 / 4600 / 5500. The phone's three bigger loans go up with the level, so the biggest is always your limit. |
 | Interior Decorator | 1012 | Five more levels: 20 / 25 / 30 / 35 / 40% off furniture. |
 | Quick Fortification | 2005 | Five more levels, each as much stronger as the game's levels are. |
 | Gratitude | 2008 | Five more levels: a fulfilled wish's status lasts 15 / 18 / 21 / 24 / 30 hours longer. |

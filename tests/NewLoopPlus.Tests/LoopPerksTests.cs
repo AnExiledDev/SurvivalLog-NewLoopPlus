@@ -315,4 +315,21 @@ public class PerkSettingsTests
     {
         Assert.Equal(bonus, PerkSettings.ExposureBonus(game, added));
     }
+
+    [Theory]
+    [InlineData(1, 8, 6)]
+    [InlineData(2, 8, 7)]
+    [InlineData(3, 8, 8)]
+    [InlineData(1, 4, 2)]
+    [InlineData(3, 4, 4)]
+    [InlineData(1, 3, 1)]
+    [InlineData(3, 3, 3)]
+    [InlineData(2, 0, 2)]
+    [InlineData(2, 1, 2)]
+    [InlineData(3, 2, 3)]
+    [InlineData(4, 8, 4)]
+    public void Bigger_phone_loans_follow_the_Resourceful_Management_level_owned(int choice, int owned, int level)
+    {
+        Assert.Equal(level, PerkSettings.LoanLevel(choice, owned));
+    }
 }

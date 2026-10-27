@@ -44,6 +44,7 @@ public sealed class Plugin : BasePlugin
         Tinkerer.Apply(harmony, log.Write);
         MentalToughnessUses.Apply(harmony, log.Write);
         ExploreTravelHooks.Prepare(harmony, log.Write);
+        LoanTierHooks.Prepare(harmony, log.Write);
         EndlessRewardsSetting.On = BindEndlessEverywhere().Value;
         if (EndlessRewardsSetting.On) EndlessRewardHooks.Apply(harmony, log.Write);
         OptionalLive.Watch(BindStartingBonus(), bonus => LoopStartBonus.Bonus = bonus);

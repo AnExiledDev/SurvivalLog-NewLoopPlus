@@ -10,6 +10,7 @@
 - Seasoned Explorer: up to 500 more Max Exposure while exploring. Ten levels.
 - Dealer Discount: vehicles cost up to 50% less. Ten levels.
 - Shortcuts: travel before the disaster takes up to 50% less time, with or without a vehicle. Ten levels.
+- Resourceful Management past level 3: the phone's three bigger loans now go up with your level, up to 3800 / 4600 / 5500 at level 8. Before, they stopped at 1800.
 - These stack with the game's survival plans and the mod's other rewards that do the same thing.
 - The Talents tab's NEW REWARD can use these effects too.
 - Made for Survival Log 1.1.19611.

@@ -70,4 +70,14 @@ public static class PerkSettings
 
     /// <summary>The game's max exposure bonus with <paramref name="added"/> on top.</summary>
     public static int ExposureBonus(int gameBonus, double added) => gameBonus + Math.Max(0, (int)Math.Round(added));
+
+    /// <summary>The Resourceful Management levels the phone's three bigger loans normally come from.</summary>
+    public const int PhoneLoanLevels = 3;
+
+    /// <summary>
+    /// The Resourceful Management level a phone loan choice (1 to 3) reads its amount from. The phone shows levels 1 to 3;
+    /// with more levels owned, the three choices move up so the last one is the level owned.
+    /// </summary>
+    public static int LoanLevel(int choice, int ownedLevel) =>
+        ownedLevel > PhoneLoanLevels && choice is >= 1 and <= PhoneLoanLevels ? choice + ownedLevel - PhoneLoanLevels : choice;
 }

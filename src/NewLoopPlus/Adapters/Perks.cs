@@ -36,6 +36,14 @@ internal static class Perks
         return NlpPerks.Value(_grants, talentId => owned.ContainsKey(talentId) ? owned[talentId] : 0, effect, field);
     }
 
+    /// <summary>The level owned of a talent; 0 with no save loaded.</summary>
+    public static int Level(int talentId)
+    {
+        var owned = GameSingleton.Existing<GameSaveManager>()?.gameSave?.TalentData?.TalentLevelMap;
+
+        return owned != null && owned.ContainsKey(talentId) ? owned[talentId] : 0;
+    }
+
     public static int Whole(string effect) => (int)Math.Round(Value(effect, NlpPerks.Whole));
 
     public static double Share(string effect) => Value(effect, NlpPerks.Share);

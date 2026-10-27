@@ -11,7 +11,7 @@ namespace NewLoopPlus.Adapters;
 /// StrangerTradeDroneRoundtripSec; Good Neighbor adds to Neighbor_AffinitySend and Companion_AffinitySend (the affinity
 /// a basket gives); the vehicle discount lowers each Config_Vehicle Price, which the shop, its refund and the purchase
 /// all read. The GameKey caches of the settings are kept in step too. Max exposure and travel time are hooks
-/// (<see cref="ExploreTravelHooks"/>), told the amounts here. The amounts follow the levels
+/// (<see cref="ExploreTravelHooks"/>), told the amounts here, and so are the phone's loan choices (<see cref="LoanTierHooks"/>). The amounts follow the levels
 /// owned, so each check works them out again and, when they changed, every value is worked out again from the game's own.
 /// </summary>
 internal sealed class PerkTables
@@ -38,6 +38,8 @@ internal sealed class PerkTables
         if (now < _nextCheckAt) return;
 
         _nextCheckAt = now + CheckSeconds;
+
+        LoanTierHooks.Use(Perks.Level(LoanTierHooks.TalentId));
 
         // With neither effect offered and nothing written, the game's own values stand and there is nothing to check.
         if (!IsAnyOffered() && _amounts == default) return;
