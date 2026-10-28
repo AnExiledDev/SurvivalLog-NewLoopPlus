@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.1
+
+- Fixed: a drone back from a very short trip (with Drone Pilot or Fast Rotors) stayed invisible on its hub and showed no flights after that. It now shows when it lands. A drone that is invisible now shows again after its next trip, or when you load the save.
+
 ## 0.9.0
 
 - Eleven new loop rewards in the talents file, all switched off. Switch them on in the Talents tab or with `"enabled": true` in the file.

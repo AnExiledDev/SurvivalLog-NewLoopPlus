@@ -13,7 +13,7 @@ namespace NewLoopPlus;
 public sealed class Plugin : BasePlugin
 {
     private const string Guid = "com.dev.survivallog.newloopplus";
-    private const string Version = "0.9.0";
+    private const string Version = "0.9.1";
     private const string TalentsFileName = "NewLoopPlus.Talents.json";
     private const string MuscleMemoryFileName = "NewLoopPlus.MuscleMemory.txt";
     private const float MaxMultiplier = 100f;
@@ -32,6 +32,7 @@ public sealed class Plugin : BasePlugin
         log.Write($"===== New Loop Plus {Version} started");
         PageMessages.Apply(harmony, log.Write);
         CompanionBuffs.Apply(harmony, log.Write);
+        DroneReturnShow.Apply(harmony, log.Write);
         EndRunTicker.Page = page;
         EndRunTicker.Talents = tab;
         EndRunTicker.Flow = new EndRun(new GameRun(log.Write), page, log.Write);
