@@ -1,4 +1,3 @@
-using Jint;
 using Xunit;
 
 namespace NewLoopPlus.Tests;
@@ -13,7 +12,7 @@ public class ToastUiSizeTests
     [Fact]
     public void The_toast_is_handed_over_once_and_never_shrunk()
     {
-        var page = new Page();
+        var page = new RootPage();
 
         page.Run("__slnlp.toast('Run ended'); __slnlp.toast('Another message')");
 
@@ -26,7 +25,7 @@ public class ToastUiSizeTests
     [Fact]
     public void A_toast_made_again_after_the_page_lost_it_is_handed_over_again()
     {
-        var page = new Page();
+        var page = new RootPage();
         page.Run("__slnlp.toast('Run ended'); var first = toastNode(); first.remove()");
 
         page.Run("__slnlp.toast('Another message')");
@@ -38,7 +37,7 @@ public class ToastUiSizeTests
     [Fact]
     public void Before_the_Toolkit_loads_the_toast_waits_for_it()
     {
-        var page = new Page("delete window.ExiledUi");
+        var page = new RootPage("delete window.ExiledUi");
 
         page.Run("__slnlp.toast('Run ended')");
 
@@ -49,37 +48,10 @@ public class ToastUiSizeTests
     [Fact]
     public void Nothing_is_handed_over_before_there_is_a_toast_to_show()
     {
-        var page = new Page();
+        var page = new RootPage();
 
         page.Run("__slnlp.setButton('End Run', true)");
 
         Assert.Equal(0, page.Number("handed.length"));
-    }
-
-    /// <summary>page.js on PageFake.js; <paramref name="before"/> runs between the two.</summary>
-    private sealed class Page
-    {
-        private readonly Engine _engine = new();
-
-        public Page(string? before = null)
-        {
-            _engine.Execute(Resource("NewLoopPlus.Tests.PageFake.js"));
-            if (before != null) _engine.Execute(before);
-            _engine.Execute(Resource("NewLoopPlus.page.js"));
-        }
-
-        public void Run(string statements) => _engine.Execute(statements);
-
-        public int Number(string expression) => (int)_engine.Evaluate($"Number({expression})").AsNumber();
-
-        public bool Bool(string expression) => _engine.Evaluate($"!!({expression})").AsBoolean();
-
-        private static string Resource(string name)
-        {
-            using var stream = typeof(ToastUiSizeTests).Assembly.GetManifestResourceStream(name) ?? throw new InvalidOperationException(name + " is not embedded in the test assembly");
-            using var reader = new StreamReader(stream);
-
-            return reader.ReadToEnd();
-        }
     }
 }

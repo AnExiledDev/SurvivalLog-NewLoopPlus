@@ -287,7 +287,16 @@
     new win.MutationObserver(patchPauseMenuSafely).observe(doc, { childList: true, subtree: true });
   }
 
-  // A pause menu page loaded into a new iframe is watched as soon as it loads, not at the next poll.
+  // Only the pause menu's own page loading is patched on the spot. Any other game page loading leaves it to the poll,
+  // since a patch reads the pause menu's size and so makes the browser lay out the page that is loading.
+  function patchOnPauseMenuLoad(event) {
+    var frame = (event && event.target) || this;
+
+    if (frame && /OutSetting\.html/.test(frame.src || '')) patchPauseMenuSafely();
+  }
+
+  // A pause menu page loaded into a new iframe is watched as soon as it loads, not at the next poll. Root.html adds
+  // each page's iframe on its own, so only an added iframe needs a look, never the inside of any other added element.
   function watchForFrames() {
     if (typeof MutationObserver === 'undefined') return;
 
@@ -296,13 +305,7 @@
         var added = records[i].addedNodes;
 
         for (var j = 0; j < added.length; j++) {
-          var node = added[j];
-
-          if (node.nodeType !== 1) continue;
-
-          var frames = node.tagName === 'IFRAME' ? [node] : node.getElementsByTagName('iframe');
-
-          for (var k = 0; k < frames.length; k++) frames[k].addEventListener('load', patchPauseMenuSafely);
+          if (added[j].tagName === 'IFRAME') added[j].addEventListener('load', patchOnPauseMenuLoad);
         }
       }
     }).observe(document.documentElement, { childList: true, subtree: true });

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.9.2
+
+- Less work when the game opens a screen: End Run now only checks the pause menu when the pause menu itself opens, instead of every time any game screen loads.
+- Made for Survival Log 1.1.19611.
+
 ## 0.9.1
 
 - Fixed: a drone back from a very short trip (with Drone Pilot or Fast Rotors) stayed invisible on its hub and showed no flights after that. It now shows when it lands. A drone that is invisible now shows again after its next trip, or when you load the save.
