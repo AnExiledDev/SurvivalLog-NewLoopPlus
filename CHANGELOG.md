@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.10.0
+
+- New: `UiScale` under Interface sets the size of New Loop Plus's short messages on screen on their own, from 75% to 200%, whatever Exiled's Toolkit's UI size is. At 0, the default, they follow the Toolkit's. Needs Exiled's Toolkit 0.11.0 or newer.
+- Made for Survival Log 1.1.19611.
+
 ## 0.9.2
 
 - Less work when the game opens a screen: End Run now only checks the pause menu when the pause menu itself opens, instead of every time any game screen loads.

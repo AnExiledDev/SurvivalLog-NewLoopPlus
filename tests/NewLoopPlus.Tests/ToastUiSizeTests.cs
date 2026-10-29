@@ -17,6 +17,7 @@ public class ToastUiSizeTests
         page.Run("__slnlp.toast('Run ended'); __slnlp.toast('Another message')");
 
         Assert.Equal(1, page.Number("handed.length"));
+        Assert.Equal(1, page.Number("handed.filter(function (h) { return h.options.mod === 'NewLoopPlus'; }).length"));
         Assert.True(page.Bool("handed[0].el === toastNode()"));
         Assert.True(page.Bool("handed[0].options.fit === false"));
     }

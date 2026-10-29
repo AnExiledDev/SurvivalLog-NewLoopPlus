@@ -122,3 +122,9 @@ A talent entry takes:
 | `gives` | What each level gives: a list of `{ "effect": "game:<script>", "choice": { }, "levels": [{ }, ...] }`. `effect` names an effect script one of the game's talents runs, or one of New Loop Plus's own effects as `nlp:<name>` (`interest`, `safety-net`, `extra-pick`, `crisis-veteran`, `second-wind`, `lucky-finds`, `muscle-memory`, `scouts-notes`, `tinkerer`, `family-recipe`, `drone-pilot`; the default file shows the fields each one reads); `choice` holds fields that stay the same at every level, and `levels` one `{ }` of fields per level (a level past the end uses the last). Each give gets its own buff and effect rows, so the talent ID must be 1000 to 9999 and a talent can have at most 10 gives. A level's `buff` is ignored when the talent has gives. |
 
 The `buffs` and `effects` lists at the bottom of the file always apply. Field names are the game's own table names (`ConfigName`, `IntValue0`, `BuffSatietyDel`, `EffectConfigId` and so on). A cost set here is still scaled by `CostMultiplier` and `TalentCostOverrides`.
+
+## Interface
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| `UiScale` | `0` | How big New Loop Plus's short messages on screen are drawn, in percent, from 75 to 200. At `0` they follow the UI size set in Exiled's Toolkit (its `UiScale`). Needs Exiled's Toolkit 0.11.0 or newer. |
