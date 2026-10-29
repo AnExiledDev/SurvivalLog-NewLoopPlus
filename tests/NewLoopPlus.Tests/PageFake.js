@@ -91,6 +91,3 @@ function addFrame(src) {
 var handed = [];
 window.ExiledUi = { size: function (el, options) { handed.push({ el: el, options: options }); } };
 
-function toastNode() {
-  return document.getElementById('slnlp-toast');
-}

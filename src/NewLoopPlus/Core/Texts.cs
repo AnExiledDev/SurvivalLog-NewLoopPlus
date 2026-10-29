@@ -45,6 +45,9 @@ public static class Texts
         "End Run could not close the pause menu, so the run was not ended. See BepInEx/new-loop-plus.log.",
         "无法关闭暂停菜单，本局未结束。详见 BepInEx/new-loop-plus.log。");
 
+    /// <summary>Who a toast is from, on its first line.</summary>
+    public static readonly Phrase Source = new("New Loop Plus", "新轮回+");
+
     public static readonly Phrase Failed = new("End Run failed, see BepInEx/new-loop-plus.log.", "结束本局失败，详见 BepInEx/new-loop-plus.log。");
 
     public static readonly Phrase TalentsSaved = new(

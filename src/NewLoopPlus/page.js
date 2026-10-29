@@ -1,7 +1,6 @@
 // New Loop Plus's web half. Runs in Root.html, the document every game page iframe sits in. Puts "End Run" in the
 // pause menu (OutSetting) above Save & Exit, shows the plugin's confirm dialog there in the game's own dialog style, and
-// shows a short toast when the plugin has something to say after the menu closed, and lays out the end-of-day rewards
-// when Extra Pick offers more than three. Talks to the plugin through
+// lays out the end-of-day rewards when Extra Pick offers more than three. Talks to the plugin through
 // vuplex.postMessage("slmod|newloopplus|<verb>") and is driven by window.__slnlp.
 (function () {
   if (window.__slnlp) return;
@@ -10,9 +9,7 @@
   var BUTTON_ID = 'slnlp-end';
   var DIALOG_ID = 'slnlp-confirm';
   var STYLE_ID = 'slnlp-style';
-  var TOAST_ID = 'slnlp-toast';
   var POLL_MS = 400;
-  var TOAST_MS = 6000;
 
   // The game's pause menu sinks Save & Exit (and its Rewrite button, when shown) to the bottom with margin-top:auto.
   // End Run takes that over and sits right above them, so the two buttons that end things stay together.
@@ -22,12 +19,9 @@
     '#slnlp-confirm .confirm-text{white-space:pre-line}'
   ].join('\n');
 
-  var TOAST_CSS = '#slnlp-toast{position:fixed;left:50%;bottom:120px;transform:translateX(-50%);z-index:2147483002;pointer-events:none;display:none;max-width:640px;text-align:center;padding:10px 18px;border-radius:8px;border:1px solid rgba(255,193,7,.75);background:linear-gradient(180deg,rgba(30,30,33,.94),rgba(18,18,20,.96));color:#eee;font-family:"Microsoft YaHei","PingFang SC",sans-serif;font-size:14px;box-shadow:0 6px 20px rgba(0,0,0,.6)}';
-
   var label = 'End Run';
   var isWanted = false;
   var menuDoc = null;
-  var toastTimer = 0;
   var hasReportedAccess = false;
 
   function send(message) {
@@ -122,43 +116,6 @@
     isWanted = !!isShown;
 
     if (menuDoc) placeButton(menuDoc);
-  }
-
-  function toastNode() {
-    if (!document.getElementById(TOAST_ID + '-style')) {
-      var style = document.createElement('style');
-
-      style.id = TOAST_ID + '-style';
-      style.textContent = TOAST_CSS;
-      document.head.appendChild(style);
-    }
-
-    var node = document.getElementById(TOAST_ID);
-
-    if (node) return node;
-
-    node = document.createElement('div');
-    node.id = TOAST_ID;
-    document.body.appendChild(node);
-    // A one-line message is never shrunk.
-    uiSize(node, { fit: false });
-
-    return node;
-  }
-
-  function toast(text) {
-    var node = toastNode();
-
-    if (!text) {
-      node.style.display = 'none';
-
-      return;
-    }
-
-    node.textContent = text;
-    node.style.display = 'block';
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(function () { node.style.display = 'none'; }, TOAST_MS);
   }
 
   function isShowing(frame) {
@@ -323,22 +280,6 @@
     } catch (e) {}
   }, POLL_MS);
 
-  // Hands a panel to Exiled's Toolkit to be drawn at the player's UI size. Before the Toolkit's script has loaded it
-  // waits in a list the Toolkit reads; without the Toolkit nothing happens.
-  function uiSize(node, options) {
-    options = Object.assign({ mod: 'NewLoopPlus' }, options);
-    var toolkit = window.ExiledUi;
-
-    if (toolkit) {
-      toolkit.size(node, options);
-      return;
-    }
-
-    var waiting = window.__exiledUiWait = window.__exiledUiWait || [];
-    waiting.push([node, options]);
-    if (waiting.length > 32) waiting.shift();
-  }
-
-  window.__slnlp = { setButton: setButton, confirm: confirm, toast: toast };
+  window.__slnlp = { setButton: setButton, confirm: confirm };
   send('ready');
 })();

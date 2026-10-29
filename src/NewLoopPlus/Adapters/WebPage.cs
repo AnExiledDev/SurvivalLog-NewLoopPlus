@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using ExiledToolkit;
 using GameCore.HotUpdate.ReduxUI;
 using NewLoopPlus.Core;
 
@@ -7,7 +8,7 @@ namespace NewLoopPlus.Adapters;
 
 /// <summary>
 /// The mod's half that lives in the game's web UI: page.js, run in the root document the game's own pages sit in. It
-/// puts End Run in the pause menu, shows the confirm dialog there and shows a toast when something went wrong. The web
+/// puts End Run in the pause menu, shows the confirm dialog there; its messages are Exiled's Toolkit toasts. The web
 /// view can reload at any time and lose the script, so it is checked for every couple of seconds and put back when the
 /// page says it is missing.
 /// </summary>
@@ -50,8 +51,16 @@ internal sealed class WebPage : IRunPage
     public void ShowConfirm(ConfirmDialog dialog) =>
         Run("window.__slnlp&&window.__slnlp.confirm(" + string.Join(",", JsText.Literal(dialog.Title), JsText.Literal(dialog.Body), JsText.Literal(dialog.Cancel), JsText.Literal(dialog.Confirm)) + ")");
 
-    /// <summary>The script travels with the toast, so a page that reloaded since the last check still shows it.</summary>
-    public void Toast(string text) => Run(Script() + "\n;window.__slnlp&&window.__slnlp.toast(" + JsText.Literal(text) + ");");
+    /// <summary>A message as an Exiled's Toolkit toast; a failure shows as an error.</summary>
+    public void Toast(string text)
+    {
+        if (string.IsNullOrEmpty(text)) return;
+
+        var isChinese = GameLanguage.IsChinese();
+        var kind = text == Texts.Failed.Pick(isChinese) ? ToastKind.Error : ToastKind.Info;
+
+        if (Toasts.Show(new ToastRequest(Texts.Source.Pick(isChinese), text) { Kind = kind }).IsNone) _log("a toast was not shown: " + text);
+    }
 
     private bool Run(string javaScript)
     {

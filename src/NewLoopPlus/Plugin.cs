@@ -9,11 +9,11 @@ using NewLoopPlus.Core;
 namespace NewLoopPlus;
 
 [BepInPlugin(Guid, "New Loop Plus", Version)]
-[BepInDependency(OptionalLive.ToolkitGuid, BepInDependency.DependencyFlags.SoftDependency)]
+[BepInDependency(OptionalLive.ToolkitGuid, OptionalLive.ToolkitVersion)]
 public sealed class Plugin : BasePlugin
 {
     private const string Guid = "com.dev.survivallog.newloopplus";
-    private const string Version = "0.10.0";
+    private const string Version = "0.10.1";
     private const string TalentsFileName = "NewLoopPlus.Talents.json";
     private const string MuscleMemoryFileName = "NewLoopPlus.MuscleMemory.txt";
     private const float MaxMultiplier = 100f;
@@ -21,10 +21,6 @@ public sealed class Plugin : BasePlugin
 
     public override void Load()
     {
-        if (!OptionalLive.IsToolkitInstalled) Log.LogInfo(OptionalLive.MissingNote);
-
-        OptionalUiSize.Bind(Config);
-
         var log = new ModLog(Log, Path.Combine(Paths.BepInExRootPath, "new-loop-plus.log"));
         var harmony = new Harmony(Guid);
         var page = new WebPage(log.Write);

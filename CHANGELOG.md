@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.10.1
+
+- New Loop Plus's messages (End Run cannot be used now, a perk used at the start of a run, and the like) now show as Exiled's Toolkit toasts. Those toasts also go to the Notifications history.
+- Exiled's Toolkit 0.11.0 or newer is now required.
+- Removed the `UiScale` setting under Interface. The messages are now Exiled's Toolkit toasts, drawn at the Toolkit's own UI size.
+- Made for Survival Log 1.1.19611.
+
 ## 0.10.0
 
 - New: `UiScale` under Interface sets the size of New Loop Plus's short messages on screen on their own, from 75% to 200%, whatever Exiled's Toolkit's UI size is. At 0, the default, they follow the Toolkit's. Needs Exiled's Toolkit 0.11.0 or newer.

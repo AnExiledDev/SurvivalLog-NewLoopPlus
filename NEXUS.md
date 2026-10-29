@@ -39,14 +39,14 @@ Works in English and Chinese.
 [list]
 [*]Survival Log 1.1.19611. A game update can break it until the mod is updated.[/*]
 [*][url=https://www.nexusmods.com/survivallog/mods/12]BepInEx for Survival Log[/url]. Install it first.[/*]
-[*]Optional: [url=https://www.nexusmods.com/survivallog/mods/61]Exiled's Toolkit[/url] 0.4.0 or newer. With it, the points multipliers and the starting bonus changed on the Mod Manager's Mods screen take effect without restarting the game. Without it, they take effect at the next game start. With 0.10.0 or newer, its UI size setting also sizes the mod's short messages on screen, and with 0.11.0 or newer, New Loop Plus's own UiScale setting can set their size for this mod alone.[/*]
+[*][url=https://www.nexusmods.com/survivallog/mods/61]Exiled's Toolkit[/url] 0.11.0 or newer. New Loop Plus does not load without it. It shows New Loop Plus's messages as toasts and applies the points multipliers and the starting bonus changed on the Mod Manager's Mods screen without a restart. Cost settings always apply at the next game start.[/*]
 [*]Optional: Mod Manager 0.7.0 or newer, for the Talents tab. Without it, edit the talents file by hand.[/*]
 [/list]
 
 [size=5]Installation[/size]
 [list=1]
 [*]Install [url=https://www.nexusmods.com/survivallog/mods/12]BepInEx[/url] [i](if no other mods were installed before, start the game once so BepInEx finishes setup, then quit)[/i].[/*]
-[*]Optional, to change settings without a restart: install Exiled's Toolkit the same way. Download its zip and extract it into the game folder.[/*]
+[*]Install Exiled's Toolkit the same way. Download its zip and extract it into the game folder.[/*]
 [*]Download the zip from the Files tab.[/*]
 [*]Extract it into the game folder (the folder with [font=Courier New]SurvivalLog.exe[/font]). The zip holds a BepInEx folder, so the DLL lands in the right place. When asked, merge the folders. The result should be:
 [code]C:\Program Files (x86)\Steam\steamapps\common\Survival Log\BepInEx\plugins\NewLoopPlus.dll[/code][/*]
@@ -56,7 +56,7 @@ Works in English and Chinese.
 Delete [font=Courier New]NewLoopPlus.dll[/font] from the [font=Courier New]BepInEx\plugins[/font] folder. A starting bonus already paid stays paid.
 
 [size=5]Configuration[/size]
-To change settings, edit [font=Courier New]BepInEx\config\com.dev.survivallog.newloopplus.cfg[/font] while the game is closed, or do it in game on the Mod Manager's Mods screen (see [url=https://github.com/AnExiledDev/SurvivalLog-NewLoopPlus/blob/main/CONFIG.md]CONFIG.md[/url] for every setting; the cfg file explains each setting in English and Chinese). The points multipliers and the starting bonus take effect at once; cost settings take effect at the next game start. Without Exiled's Toolkit installed, every change takes effect at the next game start.
+To change settings, edit [font=Courier New]BepInEx\config\com.dev.survivallog.newloopplus.cfg[/font] while the game is closed, or do it in game on the Mod Manager's Mods screen (see [url=https://github.com/AnExiledDev/SurvivalLog-NewLoopPlus/blob/main/CONFIG.md]CONFIG.md[/url] for every setting; the cfg file explains each setting in English and Chinese). The points multipliers and the starting bonus take effect at once; cost settings take effect at the next game start.
 
 [size=5]Feedback[/size]
 Found a bug or have an idea? Come say hi on the [url=https://discord.gg/trTsyxUFqg]Core Directive Discord[/url], or post in this page's Posts tab. For bugs, please include [font=Courier New]BepInEx\LogOutput.log[/font] and [font=Courier New]BepInEx\new-loop-plus.log[/font].
@@ -104,14 +104,14 @@ Open source under MIT: [url=https://github.com/AnExiledDev/SurvivalLog-NewLoopPl
 [list]
 [*]Survival Log 1.1.19611。游戏更新后模组可能暂时失效，直到模组更新为止。[/*]
 [*][url=https://www.nexusmods.com/survivallog/mods/12]BepInEx for Survival Log[/url]，请先安装。[/*]
-[*]可选：[url=https://www.nexusmods.com/survivallog/mods/61]Exiled's Toolkit[/url] 0.4.0 或更新版本。装了它，在 Mod Manager 的「模组」界面改动的信念点倍数和开局奖励无需重启游戏即可生效；没装的话，改动在下次启动游戏时生效。0.10.0 或更新版本还能用它的界面大小设置调整本模组屏幕提示的大小，0.11.0 或更新版本还可以用 New Loop Plus 自己的 UiScale 设置单独调整本模组屏幕提示的大小。[/*]
+[*][url=https://www.nexusmods.com/survivallog/mods/61]Exiled's Toolkit[/url] 0.11.0 或更新版本。没有它本模组不会加载。它把 New Loop Plus 的消息显示为弹出通知，并让在 Mod Manager 的「模组」界面改动的信念点倍数和开局奖励无需重启游戏即可生效。消耗相关的设置始终在下次启动游戏时生效。[/*]
 [*]可选：Mod Manager 0.7.0 或更新版本，用于「天赋」页。没装的话，可以手动编辑天赋文件。[/*]
 [/list]
 
 [size=5]安装[/size]
 [list=1]
 [*]安装 [url=https://www.nexusmods.com/survivallog/mods/12]BepInEx[/url] [i]（如果之前没有装过其他模组，先启动一次游戏，让 BepInEx 完成初始化，然后退出）[/i]。[/*]
-[*]可选（改动设置无需重启游戏）：用同样的方式安装 Exiled's Toolkit，下载它的压缩包并解压到游戏目录。[/*]
+[*]用同样的方式安装 Exiled's Toolkit，下载它的压缩包并解压到游戏目录。[/*]
 [*]在「文件」页下载压缩包。[/*]
 [*]把压缩包解压到游戏目录（[font=Courier New]SurvivalLog.exe[/font] 所在的文件夹）。压缩包里带有 BepInEx 文件夹，DLL 会自动放到正确位置。如果提示合并文件夹，选择合并。解压后应为：
 [code]C:\Program Files (x86)\Steam\steamapps\common\Survival Log\BepInEx\plugins\NewLoopPlus.dll[/code][/*]
@@ -121,7 +121,7 @@ Open source under MIT: [url=https://github.com/AnExiledDev/SurvivalLog-NewLoopPl
 从 [font=Courier New]BepInEx\plugins[/font] 文件夹中删除 [font=Courier New]NewLoopPlus.dll[/font]。已经发放的开局奖励不会收回。
 
 [size=5]配置[/size]
-可以在游戏内 Mod Manager 的「模组」界面修改，也可以在游戏关闭时编辑 [font=Courier New]BepInEx\config\com.dev.survivallog.newloopplus.cfg[/font]。配置文件中每项设置都有中文说明，完整说明见 [url=https://github.com/AnExiledDev/SurvivalLog-NewLoopPlus/blob/main/CONFIG.md]CONFIG.md[/url]（英文）。信念点倍数和开局奖励的改动立即生效；消耗相关的设置在下次启动游戏时生效。没装 Exiled's Toolkit 的话，所有改动都在下次启动游戏时生效。
+可以在游戏内 Mod Manager 的「模组」界面修改，也可以在游戏关闭时编辑 [font=Courier New]BepInEx\config\com.dev.survivallog.newloopplus.cfg[/font]。配置文件中每项设置都有中文说明，完整说明见 [url=https://github.com/AnExiledDev/SurvivalLog-NewLoopPlus/blob/main/CONFIG.md]CONFIG.md[/url]（英文）。信念点倍数和开局奖励的改动立即生效；消耗相关的设置在下次启动游戏时生效。
 
 [size=5]反馈[/size]
 发现 bug 或有好点子？欢迎来 [url=https://discord.gg/trTsyxUFqg]Core Directive Discord[/url] 打个招呼，或在本页的「Posts」标签里发帖。报告 bug 时，请附上 [font=Courier New]BepInEx\LogOutput.log[/font] 和 [font=Courier New]BepInEx\new-loop-plus.log[/font]。
