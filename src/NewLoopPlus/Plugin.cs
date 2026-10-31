@@ -13,7 +13,7 @@ namespace NewLoopPlus;
 public sealed class Plugin : BasePlugin
 {
     private const string Guid = "com.dev.survivallog.newloopplus";
-    private const string Version = "0.10.1";
+    private const string Version = "0.10.2";
     private const string TalentsFileName = "NewLoopPlus.Talents.json";
     private const string MuscleMemoryFileName = "NewLoopPlus.MuscleMemory.txt";
     private const float MaxMultiplier = 100f;
@@ -33,9 +33,11 @@ public sealed class Plugin : BasePlugin
         DroneReturnShow.Apply(harmony, log.Write);
         EndRunTicker.Page = page;
         EndRunTicker.Talents = tab;
-        EndRunTicker.Flow = new EndRun(new GameRun(log.Write), page, log.Write);
+        var endRun = new EndRun(new GameRun(log.Write), page, log.Write);
+        EndRunTicker.Flow = endRun;
         EndRunTicker.Log = log.Write;
         AddComponent<EndRunTicker>();
+        AddEndRunButton(endRun);
         LoopStartBonus.Apply(harmony, log.Write);
         ExtraPick.Apply(harmony, log.Write);
         SecondWind.Apply(harmony, log.Write);
@@ -135,5 +137,20 @@ public sealed class Plugin : BasePlugin
         Config.Bind(section, key, 1f, new ConfigDescription(description, new AcceptableValueRange<float>(0f, MaxMultiplier), tags));
 
     /// <summary>Rounded so a setting such as 1.1 multiplies by 1.1, not by the float nearest it.</summary>
+    /// <summary>
+    /// End Run at the bottom of the pause menu, below every other mod's buttons and right above the game's Restart and
+    /// Save &amp; Exit. Exiled's Toolkit places it with the other mods' menu buttons, so the menu fits on screen.
+    /// </summary>
+    private static void AddEndRunButton(EndRun endRun)
+    {
+        ExiledToolkit.GameMenu.Add(new ExiledToolkit.GameMenuButton("newloopplus.endrun", Texts.Button.En, ExiledToolkit.GameMenuPlace.PauseBottom, () => EndRunTicker.IsAskPending = true)
+        {
+            ChineseLabel = Texts.Button.Zh,
+            Order = 900,
+            Accent = "#EBA308",
+            IsShown = () => endRun.IsButtonShown,
+        });
+    }
+
     private static double Rounded(ConfigEntry<float> entry) => System.Math.Round((double)entry.Value, 4);
 }

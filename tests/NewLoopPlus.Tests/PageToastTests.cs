@@ -4,8 +4,8 @@ namespace NewLoopPlus.Tests;
 
 /// <summary>
 /// New Loop Plus's messages are Exiled's Toolkit toasts shown by the plugin, so page.js, run in Jint on a fake root page
-/// (PageFake.js), draws no notice box of its own. The End Run button and its dialog sit in the game's pause menu in the
-/// game's own style, so they keep the game's size and are not handed to the Toolkit.
+/// (PageFake.js), draws no notice box of its own. End Run's dialog sits in the game's pause menu in the game's own
+/// style, so it keeps the game's size and is not handed to the Toolkit's UI size.
 /// </summary>
 public class PageToastTests
 {
@@ -23,7 +23,7 @@ public class PageToastTests
     {
         var page = new RootPage();
 
-        page.Run("__slnlp.setButton('End Run', true)");
+        page.Run("__slnlp.confirm('End Run?', 'Ends like a death.', 'Cancel', 'End Run')");
 
         Assert.Equal(0, page.Number("handed.length"));
     }

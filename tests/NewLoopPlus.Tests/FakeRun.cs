@@ -34,10 +34,6 @@ internal sealed class FakePage : IRunPage
 {
     public List<ConfirmDialog> Dialogs { get; } = new();
     public List<string> Toasts { get; } = new();
-    public (string Label, bool IsShown)? Button { get; private set; }
-
-    public void ShowButton(string label, bool isShown) => Button = (label, isShown);
-
     public void ShowConfirm(ConfirmDialog dialog) => Dialogs.Add(dialog);
 
     public void Toast(string text) => Toasts.Add(text);

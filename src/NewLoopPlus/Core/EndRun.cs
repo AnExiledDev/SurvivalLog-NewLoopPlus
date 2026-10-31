@@ -27,8 +27,6 @@ public interface IRunGame
 /// <summary>What End Run needs from the pause menu's page.</summary>
 public interface IRunPage
 {
-    void ShowButton(string label, bool isShown);
-
     void ShowConfirm(ConfirmDialog dialog);
 
     void Toast(string text);
@@ -51,7 +49,6 @@ public sealed class EndRun
     private readonly IRunPage _page;
     private readonly Action<string> _log;
     private float? _giveUpAt;
-    private (string Label, bool IsShown)? _shownButton;
 
     public EndRun(IRunGame game, IRunPage page, Action<string> log)
     {
@@ -62,16 +59,8 @@ public sealed class EndRun
 
     public bool IsEnding => _giveUpAt.HasValue;
 
-    /// <summary>Keeps the button's label and visibility in step with the game; <paramref name="isPageNew"/> resends them.</summary>
-    public void RefreshButton(bool isPageNew)
-    {
-        var button = (Texts.Button.Pick(_game.IsChinese()), _game.CanEndRun() && !IsEnding);
-
-        if (!isPageNew && button == _shownButton) return;
-
-        _shownButton = button;
-        _page.ShowButton(button.Item1, button.Item2);
-    }
+    /// <summary>Whether the pause menu shows End Run: in a run that can end, and not once an end is under way.</summary>
+    public bool IsButtonShown => !IsEnding && _game.CanEndRun();
 
     public void Ask()
     {
@@ -103,7 +92,6 @@ public sealed class EndRun
         _log("end run confirmed, closing the pause menu");
         _game.ClosePauseMenu();
         _giveUpAt = now + UnpauseTimeoutSeconds;
-        RefreshButton(isPageNew: false);
     }
 
     /// <summary>Runs once a frame; ends the run on the first frame the clock runs after a confirm.</summary>

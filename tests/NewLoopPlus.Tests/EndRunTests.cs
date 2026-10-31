@@ -152,28 +152,24 @@ public class EndRunTests
     [Fact]
     public void The_button_hides_while_a_confirmed_end_is_pending_and_after_the_run_ends()
     {
-        _flow.RefreshButton(isPageNew: true);
-
-        Assert.Equal((Texts.Button.En, true), _page.Button);
+        Assert.True(_flow.IsButtonShown);
 
         _flow.Confirm(now: 10f);
 
-        Assert.Equal((Texts.Button.En, false), _page.Button);
+        Assert.False(_flow.IsButtonShown);
 
         _game.Paused = false;
         _flow.Tick(now: 10.1f);
-        _flow.RefreshButton(isPageNew: false);
 
-        Assert.Equal((Texts.Button.En, false), _page.Button);
+        Assert.Equal(1, _game.RunsEnded);
+        Assert.False(_flow.IsButtonShown);
     }
 
     [Fact]
-    public void A_reloaded_page_gets_the_button_again_even_when_nothing_changed()
+    public void The_button_is_hidden_where_a_run_cannot_end()
     {
-        _flow.RefreshButton(isPageNew: true);
-        _page.ShowButton("stale", false);
-        _flow.RefreshButton(isPageNew: true);
+        _game.CanEnd = false;
 
-        Assert.Equal((Texts.Button.En, true), _page.Button);
+        Assert.False(_flow.IsButtonShown);
     }
 }

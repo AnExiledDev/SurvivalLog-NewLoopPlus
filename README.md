@@ -4,7 +4,7 @@ End a run whenever you like and go straight to the death screen, so you can star
 
 ## Features
 
-- **End Run button**: the pause menu gets an **End Run** button, right above Save & Exit.
+- **End Run button**: the pause menu gets an **End Run** button near the bottom, below other mods' buttons and above Restart and Save & Exit.
 - **Always asks first**: clicking it opens a confirm dialog. Nothing ends until you click **End Run** in that dialog; Cancel or a click outside it closes the dialog and leaves the run alone.
 - **Shows what you will get**: in a normal run the dialog shows the Planning Points the death screen will pay, split into survival points, crises and days survived. In Casual mode it says the run gives no Planning Points. In endless and challenge runs it says the run is settled on that mode's own results screen.
 - **The game's own death**: on confirm the pause menu closes, and as soon as the game runs again the run ends exactly as a death does. The death screen, the settlement and the save are the game's own.
@@ -41,7 +41,7 @@ With every talent in the talents file switched off, New Loop Plus adds no data o
 
 - Survival Log 1.1.19611. Built and tested on this version; a game update can break it until the mod is updated.
 - The [BepInEx Pack for Survival Log](https://www.nexusmods.com/survivallog/mods/12), the BepInEx 6 (IL2CPP) build for the game.
-- [Exiled's Toolkit](https://github.com/AnExiledDev/SurvivalLog-ExiledToolkit) 0.11.0 or newer. New Loop Plus does not load without it. It shows New Loop Plus's messages as toasts and applies the points multipliers and the starting bonus changed on the Mod Manager's Mods screen without a restart. Cost settings always apply at the next game start.
+- [Exiled's Toolkit](https://github.com/AnExiledDev/SurvivalLog-ExiledToolkit) 0.14.0 or newer. New Loop Plus does not load without it. It shows New Loop Plus's messages as toasts and applies the points multipliers and the starting bonus changed on the Mod Manager's Mods screen without a restart. Cost settings always apply at the next game start.
 - Optional: [Mod Manager](https://www.nexusmods.com/survivallog/mods/73) 0.7.0 or newer, for the Talents tab. Without it, edit the talents file by hand.
 
 ## Install
@@ -60,7 +60,7 @@ Check `BepInEx\LogOutput.log` for `===== New Loop Plus 0.9.2 started`. The same 
 
 With any multiplier set, the log also says what was scaled, such as `survival points now convert at ...` or `... loop reward levels now cost ...`. A per-talent entry it could not read is named there too. The talents file adds a line such as `talents file: enabled 1006, 2017; 10 table rows written`, plus a line for each entry it skipped and why.
 
-If End Run does not show in the pause menu, make sure you are in a loaded run past the tutorial. If the run did not end after you confirmed, the message on screen and the log say why.
+If End Run does not show in the pause menu, make sure you are in a loaded run past the tutorial and that Exiled's Toolkit 0.14.0 or newer is installed: it places the button. If the run did not end after you confirmed, the message on screen and the log say why.
 
 ## Feedback and bug reports
 

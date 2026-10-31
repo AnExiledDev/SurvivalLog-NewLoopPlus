@@ -18,6 +18,9 @@ public sealed class EndRunTicker : MonoBehaviour
     internal static WebPage? Page;
     internal static TalentsTab? Talents;
     internal static Action<string> Log = _ => { };
+
+    /// <summary>Set by the End Run button in the pause menu; taken on the next frame, where a failure is told to the player.</summary>
+    internal static bool IsAskPending;
     private static readonly HashSet<string> ReportedFailures = new();
 
     public EndRunTicker(IntPtr pointer) : base(pointer)
@@ -30,9 +33,15 @@ public sealed class EndRunTicker : MonoBehaviour
 
         try
         {
-            if (Page.KeepInstalled(Time.unscaledTime)) Flow.RefreshButton(isPageNew: false);
-
+            Page.KeepInstalled(Time.unscaledTime);
             TakePageCommands(Flow, Page);
+
+            if (IsAskPending)
+            {
+                IsAskPending = false;
+                Flow.Ask();
+            }
+
             Flow.Tick(Time.unscaledTime);
         }
         catch (Exception ex)
@@ -55,7 +64,6 @@ public sealed class EndRunTicker : MonoBehaviour
                     break;
                 case PageCommand.Ready:
                     Log("page script is running");
-                    flow.RefreshButton(isPageNew: true);
                     break;
                 case PageCommand.NoScript:
                     page.Install();

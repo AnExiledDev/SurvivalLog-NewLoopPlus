@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.10.2
+
+- The End Run button is now placed by Exiled's Toolkit, along with every other mod's menu buttons, so the pause menu stays on screen however many mods add buttons to it. It sits below the other mods' buttons, right above Restart and Save & Exit.
+- Exiled's Toolkit 0.14.0 or newer is now required.
+- Made for Survival Log 1.1.20151.
+
 ## 0.10.1
 
 - New Loop Plus's messages (End Run cannot be used now, a perk used at the start of a run, and the like) now show as Exiled's Toolkit toasts. Those toasts also go to the Notifications history.

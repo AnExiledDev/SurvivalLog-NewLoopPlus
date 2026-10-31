@@ -1,26 +1,17 @@
-// New Loop Plus's web half. Runs in Root.html, the document every game page iframe sits in. Puts "End Run" in the
-// pause menu (OutSetting) above Save & Exit, shows the plugin's confirm dialog there in the game's own dialog style, and
-// lays out the end-of-day rewards when Extra Pick offers more than three. Talks to the plugin through
+// New Loop Plus's web half. Runs in Root.html, the document every game page iframe sits in. Shows End Run's confirm
+// dialog in the pause menu (OutSetting) in the game's own dialog style (the End Run button itself is placed by Exiled's
+// Toolkit, from the plugin), and lays out the end-of-day rewards when Extra Pick offers more than three. Talks to the plugin through
 // vuplex.postMessage("slmod|newloopplus|<verb>") and is driven by window.__slnlp.
 (function () {
   if (window.__slnlp) return;
 
   var PREFIX = 'slmod|newloopplus|';
-  var BUTTON_ID = 'slnlp-end';
   var DIALOG_ID = 'slnlp-confirm';
   var STYLE_ID = 'slnlp-style';
   var POLL_MS = 400;
 
-  // The game's pause menu sinks Save & Exit (and its Rewrite button, when shown) to the bottom with margin-top:auto.
-  // End Run takes that over and sits right above them, so the two buttons that end things stay together.
-  var PAGE_CSS = [
-    '#slnlp-end{margin-top:auto;border-left-color:rgba(235,163,8,.35)}',
-    '#slnlp-end + .btn-restart,#slnlp-end + .btn-exit{margin-top:0}',
-    '#slnlp-confirm .confirm-text{white-space:pre-line}'
-  ].join('\n');
+  var PAGE_CSS = '#slnlp-confirm .confirm-text{white-space:pre-line}';
 
-  var label = 'End Run';
-  var isWanted = false;
   var menuDoc = null;
   var hasReportedAccess = false;
 
@@ -38,29 +29,6 @@
     style.id = STYLE_ID;
     style.textContent = PAGE_CSS;
     doc.head.appendChild(style);
-  }
-
-  // Vue re-renders the menu list whenever it likes and drops foreign nodes, so this runs on every poll.
-  function placeButton(doc) {
-    var list = doc.querySelector('.menu-list');
-    var anchor = list && (list.querySelector(':scope > .btn-restart') || list.querySelector(':scope > .btn-exit'));
-    var button = doc.getElementById(BUTTON_ID);
-
-    if (!anchor || !isWanted) {
-      if (button) button.remove();
-
-      return;
-    }
-
-    if (!button) {
-      button = doc.createElement('div');
-      button.id = BUTTON_ID;
-      button.className = 'main-btn';
-      button.addEventListener('click', function () { send('ask'); });
-    }
-
-    if (button.nextElementSibling !== anchor) list.insertBefore(button, anchor);
-    if (button.textContent !== label) button.textContent = label;
   }
 
   function hideDialog(doc) {
@@ -95,7 +63,10 @@
     return dialog;
   }
 
+  // The button's click reaches here through the plugin, so the menu may have opened since the last poll: look again.
   function confirm(title, body, cancel, ok) {
+    patchPauseMenuSafely();
+
     if (!menuDoc || !menuDoc.body) {
       send('diag|no pause menu to show the confirm dialog in');
 
@@ -109,13 +80,6 @@
     dialog.querySelector('.c-btn-cancel').textContent = cancel;
     dialog.querySelector('.c-btn-confirm').textContent = ok;
     dialog.classList.add('active');
-  }
-
-  function setButton(text, isShown) {
-    label = text || label;
-    isWanted = !!isShown;
-
-    if (menuDoc) placeButton(menuDoc);
   }
 
   function isShowing(frame) {
@@ -150,9 +114,7 @@
       }
 
       found = doc;
-      watchPauseMenu(doc);
       addStyle(doc);
-      placeButton(doc);
     }
 
     if (menuDoc && menuDoc !== found) hideDialog(menuDoc);
@@ -233,43 +195,6 @@
     } catch (e) {}
   }
 
-  // Vue redraws the menu list as the menu opens, which drops End Run; putting it back the moment that happens, rather
-  // than at the next poll, keeps it from popping in after the game's own buttons. An observer runs before the next paint.
-  function watchPauseMenu(doc) {
-    var win = doc.defaultView;
-
-    if (doc.slnlpWatched || !win || typeof win.MutationObserver === 'undefined') return;
-
-    doc.slnlpWatched = true;
-    new win.MutationObserver(patchPauseMenuSafely).observe(doc, { childList: true, subtree: true });
-  }
-
-  // Only the pause menu's own page loading is patched on the spot. Any other game page loading leaves it to the poll,
-  // since a patch reads the pause menu's size and so makes the browser lay out the page that is loading.
-  function patchOnPauseMenuLoad(event) {
-    var frame = (event && event.target) || this;
-
-    if (frame && /OutSetting\.html/.test(frame.src || '')) patchPauseMenuSafely();
-  }
-
-  // A pause menu page loaded into a new iframe is watched as soon as it loads, not at the next poll. Root.html adds
-  // each page's iframe on its own, so only an added iframe needs a look, never the inside of any other added element.
-  function watchForFrames() {
-    if (typeof MutationObserver === 'undefined') return;
-
-    new MutationObserver(function (records) {
-      for (var i = 0; i < records.length; i++) {
-        var added = records[i].addedNodes;
-
-        for (var j = 0; j < added.length; j++) {
-          if (added[j].tagName === 'IFRAME') added[j].addEventListener('load', patchOnPauseMenuLoad);
-        }
-      }
-    }).observe(document.documentElement, { childList: true, subtree: true });
-  }
-
-  watchForFrames();
-
   setInterval(function () {
     try {
       patchPauseMenu();
@@ -280,6 +205,6 @@
     } catch (e) {}
   }, POLL_MS);
 
-  window.__slnlp = { setButton: setButton, confirm: confirm };
+  window.__slnlp = { confirm: confirm };
   send('ready');
 })();

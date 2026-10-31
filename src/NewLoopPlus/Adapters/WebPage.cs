@@ -8,7 +8,8 @@ namespace NewLoopPlus.Adapters;
 
 /// <summary>
 /// The mod's half that lives in the game's web UI: page.js, run in the root document the game's own pages sit in. It
-/// puts End Run in the pause menu, shows the confirm dialog there; its messages are Exiled's Toolkit toasts. The web
+/// shows End Run's confirm dialog in the pause menu; the End Run button itself is placed by Exiled's Toolkit, and the
+/// messages are Exiled's Toolkit toasts. The web
 /// view can reload at any time and lose the script, so it is checked for every couple of seconds and put back when the
 /// page says it is missing.
 /// </summary>
@@ -29,24 +30,18 @@ internal sealed class WebPage : IRunPage
         _log = log;
     }
 
-    /// <summary>True on the frames that checked for the script, so the caller can keep the button in step at the same pace.</summary>
-    public bool KeepInstalled(float now)
+    public void KeepInstalled(float now)
     {
-        if (now < _nextCheckAt) return false;
+        if (now < _nextCheckAt) return;
 
         _nextCheckAt = now + CheckSeconds;
         Run("window.__slnlp||" + NoScriptReply);
-
-        return true;
     }
 
     public void Install()
     {
         if (Run(Script())) _log("page script sent to the web UI");
     }
-
-    public void ShowButton(string label, bool isShown) =>
-        Run("window.__slnlp&&window.__slnlp.setButton(" + JsText.Literal(label) + "," + (isShown ? "true" : "false") + ")");
 
     public void ShowConfirm(ConfirmDialog dialog) =>
         Run("window.__slnlp&&window.__slnlp.confirm(" + string.Join(",", JsText.Literal(dialog.Title), JsText.Literal(dialog.Body), JsText.Literal(dialog.Cancel), JsText.Literal(dialog.Confirm)) + ")");

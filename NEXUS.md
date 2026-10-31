@@ -6,7 +6,7 @@ Want a fresh loop without waiting for your character to die? New Loop Plus adds 
 
 [size=5]Main features[/size]
 [list]
-[*][b]End Run button[/b]: the pause menu gets an End Run button, right above Save & Exit.[/*]
+[*][b]End Run button[/b]: the pause menu gets an End Run button near the bottom, below other mods' buttons and above Restart and Save & Exit.[/*]
 [*][b]Always asks first[/b]: nothing ends until you click End Run in the confirm dialog. Cancel, or a click outside it, leaves the run alone.[/*]
 [*][b]Shows what you will get[/b]: in a normal run the dialog shows the Planning Points the death screen will pay, split into survival points, crises and days survived.[/*]
 [*][b]Planning Points multipliers[/b]: one overall setting, plus one each for survival points, crises and events, and days survived. The death screen and the End Run preview show the scaled points.[/*]
@@ -39,7 +39,7 @@ Works in English and Chinese.
 [list]
 [*]Survival Log 1.1.19611. A game update can break it until the mod is updated.[/*]
 [*][url=https://www.nexusmods.com/survivallog/mods/12]BepInEx for Survival Log[/url]. Install it first.[/*]
-[*][url=https://www.nexusmods.com/survivallog/mods/61]Exiled's Toolkit[/url] 0.11.0 or newer. New Loop Plus does not load without it. It shows New Loop Plus's messages as toasts and applies the points multipliers and the starting bonus changed on the Mod Manager's Mods screen without a restart. Cost settings always apply at the next game start.[/*]
+[*][url=https://www.nexusmods.com/survivallog/mods/61]Exiled's Toolkit[/url] 0.14.0 or newer. New Loop Plus does not load without it. It shows New Loop Plus's messages as toasts and applies the points multipliers and the starting bonus changed on the Mod Manager's Mods screen without a restart. Cost settings always apply at the next game start.[/*]
 [*]Optional: Mod Manager 0.7.0 or newer, for the Talents tab. Without it, edit the talents file by hand.[/*]
 [/list]
 
@@ -72,7 +72,7 @@ Open source under MIT: [url=https://github.com/AnExiledDev/SurvivalLog-NewLoopPl
 
 [size=5]主要功能[/size]
 [list]
-[*][b]「结束本局」按钮[/b]：暂停菜单中保存退出按钮的上方多了一个「结束本局」按钮。[/*]
+[*][b]「结束本局」按钮[/b]：暂停菜单靠下的位置多了一个「结束本局」按钮，位于其他模组的按钮下方、重新开始和保存退出的上方。[/*]
 [*][b]先确认再结束[/b]：只有在确认窗口中点击「结束本局」后才会结束。点击「取消」或窗口外部，本局照常继续。[/*]
 [*][b]预先显示收益[/b]：普通模式下，确认窗口会显示结算界面将给出的信念点，并按生存点、危机和生存天数分开列出。[/*]
 [*][b]信念点倍数[/b]：一个总倍数，另有生存点、危机与事件、生存天数各一个倍数。结算界面和「结束本局」的预览都会显示调整后的信念点。[/*]
@@ -104,7 +104,7 @@ Open source under MIT: [url=https://github.com/AnExiledDev/SurvivalLog-NewLoopPl
 [list]
 [*]Survival Log 1.1.19611。游戏更新后模组可能暂时失效，直到模组更新为止。[/*]
 [*][url=https://www.nexusmods.com/survivallog/mods/12]BepInEx for Survival Log[/url]，请先安装。[/*]
-[*][url=https://www.nexusmods.com/survivallog/mods/61]Exiled's Toolkit[/url] 0.11.0 或更新版本。没有它本模组不会加载。它把 New Loop Plus 的消息显示为弹出通知，并让在 Mod Manager 的「模组」界面改动的信念点倍数和开局奖励无需重启游戏即可生效。消耗相关的设置始终在下次启动游戏时生效。[/*]
+[*][url=https://www.nexusmods.com/survivallog/mods/61]Exiled's Toolkit[/url] 0.14.0 或更新版本。没有它本模组不会加载。它把 New Loop Plus 的消息显示为弹出通知，并让在 Mod Manager 的「模组」界面改动的信念点倍数和开局奖励无需重启游戏即可生效。消耗相关的设置始终在下次启动游戏时生效。[/*]
 [*]可选：Mod Manager 0.7.0 或更新版本，用于「天赋」页。没装的话，可以手动编辑天赋文件。[/*]
 [/list]
 
