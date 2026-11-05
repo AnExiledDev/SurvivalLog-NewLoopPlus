@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using ExiledToolkit.Game;
+using ExiledToolkit.Web;
 using NewLoopPlus.Core;
 using UnityEngine;
 
@@ -17,6 +19,7 @@ public sealed class EndRunTicker : MonoBehaviour
     internal static EndRun? Flow;
     internal static WebPage? Page;
     internal static TalentsTab? Talents;
+    internal static PageMailbox? Messages;
     internal static Action<string> Log = _ => { };
 
     /// <summary>Set by the End Run button in the pause menu; taken on the next frame, where a failure is told to the player.</summary>
@@ -52,9 +55,11 @@ public sealed class EndRunTicker : MonoBehaviour
 
     private static void TakePageCommands(EndRun flow, WebPage page)
     {
-        while (PageMessages.TryTake(out var command))
+        if (Messages == null) return;
+
+        while (Messages.TryTake(out var message))
         {
-            switch (command)
+            switch (PageCommand.Parse(message))
             {
                 case PageCommand.Ask:
                     flow.Ask();

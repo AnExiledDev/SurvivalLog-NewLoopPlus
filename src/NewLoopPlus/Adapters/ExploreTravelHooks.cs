@@ -1,7 +1,6 @@
-using System;
+using ExiledToolkit.Game;
 using GameCore.HotUpdate;
 using GameCore.HotUpdate.Battle.Logic;
-using HarmonyLib;
 using NewLoopPlus.Core;
 
 namespace NewLoopPlus.Adapters;
@@ -15,8 +14,7 @@ namespace NewLoopPlus.Adapters;
 /// </summary>
 internal static class ExploreTravelHooks
 {
-    private static Harmony? _harmony;
-    private static Action<string> _log = _ => { };
+    private static PatchKit? _hooks;
     private static bool _exposureHooked;
     private static bool _travelHooked;
 
@@ -26,10 +24,9 @@ internal static class ExploreTravelHooks
     /// <summary>The share cut from travel time; set by PerkTables.</summary>
     public static double TravelCut { get; private set; }
 
-    public static void Prepare(Harmony harmony, Action<string> log)
+    public static void Prepare(PatchKit hooks)
     {
-        _harmony = harmony;
-        _log = log;
+        _hooks = hooks;
     }
 
     public static void Use(int exposureAdded, double travelCut)
@@ -37,30 +34,20 @@ internal static class ExploreTravelHooks
         ExposureAdded = exposureAdded;
         TravelCut = travelCut;
 
-        if (_harmony == null) return;
+        if (_hooks == null) return;
 
         if (exposureAdded > 0 && !_exposureHooked)
         {
             _exposureHooked = true;
-            Hook(AccessTools.Method(typeof(ProficiencyManager), nameof(ProficiencyManager.GetExploreMaxExposureBonus)), nameof(AfterExposureBonus), "max exposure, the max exposure reward adds nothing");
+            _hooks.Patch(typeof(ExploreTravelHooks), typeof(ProficiencyManager), nameof(ProficiencyManager.GetExploreMaxExposureBonus), postfix: nameof(AfterExposureBonus),
+                consequence: "the max exposure reward adds nothing");
         }
 
         if (travelCut > 0 && !_travelHooked)
         {
             _travelHooked = true;
-            Hook(AccessTools.Method(typeof(VehicleConfig), nameof(VehicleConfig.GetEffectiveTimeCoeff)), nameof(AfterTimeCoeff), "travel time, the travel time reward cuts nothing");
-        }
-    }
-
-    private static void Hook(System.Reflection.MethodBase target, string postfix, string what)
-    {
-        try
-        {
-            _harmony!.Patch(target, postfix: new HarmonyMethod(typeof(ExploreTravelHooks), postfix));
-        }
-        catch (Exception ex)
-        {
-            _log($"could not hook {what}: {ex.Message}");
+            _hooks.Patch(typeof(ExploreTravelHooks), typeof(VehicleConfig), nameof(VehicleConfig.GetEffectiveTimeCoeff), postfix: nameof(AfterTimeCoeff),
+                consequence: "the travel time reward cuts nothing");
         }
     }
 

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using ExiledToolkit.Game;
 using NewLoopPlus.Core;
 
 namespace NewLoopPlus.Adapters;

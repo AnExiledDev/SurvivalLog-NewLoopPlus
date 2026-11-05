@@ -2,6 +2,9 @@ using System.IO;
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Unity.IL2CPP;
+using ExiledToolkit;
+using ExiledToolkit.Game;
+using ExiledToolkit.Kit;
 using HarmonyLib;
 using NewLoopPlus.Adapters;
 using NewLoopPlus.Core;
@@ -9,11 +12,17 @@ using NewLoopPlus.Core;
 namespace NewLoopPlus;
 
 [BepInPlugin(Guid, "New Loop Plus", Version)]
-[BepInDependency(OptionalLive.ToolkitGuid, OptionalLive.ToolkitVersion)]
+[BepInDependency(ToolkitGuid, ToolkitVersion)]
 public sealed class Plugin : BasePlugin
 {
     private const string Guid = "com.dev.survivallog.newloopplus";
-    private const string Version = "0.10.2";
+    private const string Version = "0.10.3";
+
+    /// <summary>Exiled's Toolkit: its shared helpers, toasts, live settings and the End Run button's place in the pause menu all come from it.</summary>
+    private const string ToolkitGuid = "com.dev.survivallog.exiledtoolkit";
+    private const string ToolkitVersion = ">=0.19.0";
+
+    private const string LogFileName = "new-loop-plus.log";
     private const string TalentsFileName = "NewLoopPlus.Talents.json";
     private const string MuscleMemoryFileName = "NewLoopPlus.MuscleMemory.txt";
     private const float MaxMultiplier = 100f;
@@ -21,16 +30,17 @@ public sealed class Plugin : BasePlugin
 
     public override void Load()
     {
-        var log = new ModLog(Log, Path.Combine(Paths.BepInExRootPath, "new-loop-plus.log"));
+        var log = new ModLog(Log, LogFileName);
         var harmony = new Harmony(Guid);
+        var hooks = new PatchKit(harmony, log.Write);
         var page = new WebPage(log.Write);
         var talentsPath = Path.Combine(Paths.ConfigPath, TalentsFileName);
         var tab = new TalentsTab(talentsPath, page, log.Write);
 
         log.Write($"===== New Loop Plus {Version} started");
-        PageMessages.Apply(harmony, log.Write);
-        CompanionBuffs.Apply(harmony, log.Write);
-        DroneReturnShow.Apply(harmony, log.Write);
+        CompanionBuffs.Apply(hooks);
+        DroneReturnShow.Apply(hooks);
+        EndRunTicker.Messages = ExiledToolkit.Web.PageInbox.Listen(PageCommand.Prefix);
         EndRunTicker.Page = page;
         EndRunTicker.Talents = tab;
         var endRun = new EndRun(new GameRun(log.Write), page, log.Write);
@@ -38,17 +48,17 @@ public sealed class Plugin : BasePlugin
         EndRunTicker.Log = log.Write;
         AddComponent<EndRunTicker>();
         AddEndRunButton(endRun);
-        LoopStartBonus.Apply(harmony, log.Write);
-        ExtraPick.Apply(harmony, log.Write);
-        SecondWind.Apply(harmony, log.Write);
-        LuckyFinds.Apply(harmony, log.Write);
-        Tinkerer.Apply(harmony, log.Write);
-        MentalToughnessUses.Apply(harmony, log.Write);
-        ExploreTravelHooks.Prepare(harmony, log.Write);
-        LoanTierHooks.Prepare(harmony, log.Write);
+        LoopStartBonus.Apply(hooks, log.Write);
+        ExtraPick.Apply(harmony, hooks, log.Write);
+        SecondWind.Apply(hooks, log.Write);
+        LuckyFinds.Apply(hooks);
+        Tinkerer.Apply(hooks, log.Write);
+        MentalToughnessUses.Apply(hooks, log.Write);
+        ExploreTravelHooks.Prepare(hooks);
+        LoanTierHooks.Prepare(hooks);
         EndlessRewardsSetting.On = BindEndlessEverywhere().Value;
-        if (EndlessRewardsSetting.On) EndlessRewardHooks.Apply(harmony, log.Write);
-        OptionalLive.Watch(BindStartingBonus(), bonus => LoopStartBonus.Bonus = bonus);
+        if (EndlessRewardsSetting.On) EndlessRewardHooks.Apply(hooks, log.Write);
+        LiveSettings.Watch(BindStartingBonus(), bonus => LoopStartBonus.Bonus = bonus);
         StartScaling(BindCosts(log.Write), TalentFileStore.Load(talentsPath, log.Write), tab, log.Write);
     }
 
@@ -94,7 +104,7 @@ public sealed class Plugin : BasePlugin
             "Multiplies the Planning Points a new endless game starts with (normally 500). 0 starts with none.\n" +
             "新开无尽模式时初始信念点（原本为 500）乘以这个倍数。0 为没有初始信念点。");
 
-        OptionalLive.Watch(() =>
+        LiveSettings.Watch(() =>
         {
             var multipliers = new PointsMultipliers(Rounded(overall), Rounded(survival), Rounded(crisis), Rounded(record), Rounded(endless));
 

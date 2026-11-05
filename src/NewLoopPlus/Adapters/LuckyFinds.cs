@@ -1,6 +1,6 @@
 using System;
+using ExiledToolkit.Game;
 using GameCore.HotUpdate.Battle.Logic;
-using HarmonyLib;
 using NewLoopPlus.Core;
 
 namespace NewLoopPlus.Adapters;
@@ -15,21 +15,14 @@ internal static class LuckyFinds
 {
     private static readonly Random Dice = new();
 
-    private static Action<string> _log = _ => { };
-    private static bool _hasReportedFailure;
+    private static PatchKit? _hooks;
 
-    public static void Apply(Harmony harmony, Action<string> log)
+    public static void Apply(PatchKit hooks)
     {
-        _log = log;
+        _hooks = hooks;
 
-        try
-        {
-            harmony.Patch(AccessTools.Method(typeof(DifficultyTools), nameof(DifficultyTools.RollExploreLootCopies), new[] { typeof(bool) }), postfix: new HarmonyMethod(typeof(LuckyFinds), nameof(AfterRoll)));
-        }
-        catch (Exception ex)
-        {
-            log("could not hook loot rolls, Lucky Finds gives no extra loot: " + ex.Message);
-        }
+        hooks.Patch(typeof(LuckyFinds), typeof(DifficultyTools), nameof(DifficultyTools.RollExploreLootCopies), new[] { typeof(bool) }, postfix: nameof(AfterRoll),
+            consequence: "Lucky Finds gives no extra loot");
     }
 
     /// <summary>Never throws into the game.</summary>
@@ -45,10 +38,7 @@ internal static class LuckyFinds
         }
         catch (Exception ex)
         {
-            if (_hasReportedFailure) return;
-
-            _hasReportedFailure = true;
-            _log("Lucky Finds failed, loot is the game's own (reported once): " + ex);
+            _hooks?.Fail("rolling Lucky Finds, loot is the game's own", ex);
         }
     }
 }

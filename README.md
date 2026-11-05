@@ -11,7 +11,7 @@ End a run whenever you like and go straight to the death screen, so you can star
 - **Planning Points multipliers**: one overall setting, plus one each for the three parts a run pays: survival points, crises and events, and days survived. The death screen, its breakdown and the End Run preview all show the scaled points.
 - **Starting bonus**: extra Planning Points at the start of each new loop, paid as the loop reward screen opens after a run, so you can spend them right there.
 - **Endless starting points**: a multiplier for the 500 Planning Points a new endless game starts with.
-- **Change it in game**: with Exiled's Toolkit installed, the points multipliers and the starting bonus can be changed on the Mod Manager's Mods screen and apply at once.
+- **Change it in game**: the points multipliers and the starting bonus can be changed on the Mod Manager's Mods screen and apply at once.
 - **Loop reward costs**: one multiplier for what every loop reward upgrade costs, plus your own multiplier for single talents by ID. The upgrade screen shows, checks and charges the new price, and its reset refunds what you paid.
 - **Talents file**: `BepInEx\config\NewLoopPlus.Talents.json` lets you change loop rewards by hand: costs, buffs, text, extra levels, and new talents copied from existing ones. It ships with ten talents the game has in its data but never offers, all switched off. Five work as the game left them (Driver, No-Till Soil, Trailblazer, Liaison, Radio Station). Five were unfinished and get new effects from the mod (Well-Connected, Last-Minute Preparation, Resourceful, Yoga Master, Shut-In). See [CONFIG.md](CONFIG.md#talents-file).
 - **Thirty-four new loop rewards**, also in the talents file and switched off. Eighteen use effects the game already has, such as Prepper, Insulated Pack, Field Kit, Old Friend (start with an HK-1 robot), Brewmaster, Hardened Defenses, Long-Range Scavenging, Trade Routes, Quick Hands and Generator Tuning. Sixteen have effects made by the mod: Interest, Safety Net, Extra Pick, Crisis Veteran, Second Wind, Lucky Finds, Muscle Memory, Scout's Notes, Tinkerer, Family Recipe, Drone Pilot, Good Neighbor (more affinity per basket), Seasoned Explorer (higher Max Exposure), Dealer Discount (cheaper vehicles) Shortcuts (faster travel before the disaster) and Fast Rotors (faster drone trips). The full list is in [CONFIG.md](CONFIG.md#talents-file).
@@ -41,7 +41,7 @@ With every talent in the talents file switched off, New Loop Plus adds no data o
 
 - Survival Log 1.1.19611. Built and tested on this version; a game update can break it until the mod is updated.
 - The [BepInEx Pack for Survival Log](https://www.nexusmods.com/survivallog/mods/12), the BepInEx 6 (IL2CPP) build for the game.
-- [Exiled's Toolkit](https://github.com/AnExiledDev/SurvivalLog-ExiledToolkit) 0.14.0 or newer. New Loop Plus does not load without it. It shows New Loop Plus's messages as toasts and applies the points multipliers and the starting bonus changed on the Mod Manager's Mods screen without a restart. Cost settings always apply at the next game start.
+- [Exiled's Toolkit](https://github.com/AnExiledDev/SurvivalLog-ExiledToolkit) 0.19.0 or newer. New Loop Plus does not load without it. It shows New Loop Plus's messages as toasts and applies the points multipliers and the starting bonus changed on the Mod Manager's Mods screen without a restart. Cost settings always apply at the next game start.
 - Optional: [Mod Manager](https://www.nexusmods.com/survivallog/mods/73) 0.7.0 or newer, for the Talents tab. Without it, edit the talents file by hand.
 
 ## Install
@@ -60,7 +60,7 @@ Check `BepInEx\LogOutput.log` for `===== New Loop Plus 0.9.2 started`. The same 
 
 With any multiplier set, the log also says what was scaled, such as `survival points now convert at ...` or `... loop reward levels now cost ...`. A per-talent entry it could not read is named there too. The talents file adds a line such as `talents file: enabled 1006, 2017; 10 table rows written`, plus a line for each entry it skipped and why.
 
-If End Run does not show in the pause menu, make sure you are in a loaded run past the tutorial and that Exiled's Toolkit 0.14.0 or newer is installed: it places the button. If the run did not end after you confirmed, the message on screen and the log say why.
+If End Run does not show in the pause menu, make sure you are in a loaded run past the tutorial and that Exiled's Toolkit 0.19.0 or newer is installed: it places the button. If the run did not end after you confirmed, the message on screen and the log say why.
 
 ## Feedback and bug reports
 

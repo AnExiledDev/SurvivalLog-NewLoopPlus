@@ -1,34 +1,25 @@
 // New Loop Plus's web half. Runs in Root.html, the document every game page iframe sits in. Shows End Run's confirm
 // dialog in the pause menu (OutSetting) in the game's own dialog style (the End Run button itself is placed by Exiled's
-// Toolkit, from the plugin), and lays out the end-of-day rewards when Extra Pick offers more than three. Talks to the plugin through
-// vuplex.postMessage("slmod|newloopplus|<verb>") and is driven by window.__slnlp.
+// Toolkit, from the plugin), and lays out the end-of-day rewards when Extra Pick offers more than three. Talks to the
+// plugin through Exiled's Toolkit's page API ("slmod|newloopplus|<verb>") and is driven by window.__slnlp.
 (function () {
   if (window.__slnlp) return;
 
   var PREFIX = 'slmod|newloopplus|';
   var DIALOG_ID = 'slnlp-confirm';
   var STYLE_ID = 'slnlp-style';
-  var POLL_MS = 400;
+  var PAUSE_MENU_PAGE = /OutSetting\.html/;
+  var REWARDS_PAGE = /RogueSelect\.html/;
 
   var PAGE_CSS = '#slnlp-confirm .confirm-text{white-space:pre-line}';
 
+  var etk = null;
+  var pauseMenuWatch = null;
   var menuDoc = null;
-  var hasReportedAccess = false;
 
+  // Through the Toolkit's bridge. Nothing goes before its page API is there; the page says it is ready once it is.
   function send(message) {
-    try {
-      if (window.vuplex) window.vuplex.postMessage(PREFIX + message);
-    } catch (e) {}
-  }
-
-  function addStyle(doc) {
-    if (doc.getElementById(STYLE_ID)) return;
-
-    var style = doc.createElement('style');
-
-    style.id = STYLE_ID;
-    style.textContent = PAGE_CSS;
-    doc.head.appendChild(style);
+    if (etk) etk.send(PREFIX, message);
   }
 
   function hideDialog(doc) {
@@ -63,9 +54,9 @@
     return dialog;
   }
 
-  // The button's click reaches here through the plugin, so the menu may have opened since the last poll: look again.
+  // The button's click reaches here through the plugin, so the menu may have opened since the last check: look again.
   function confirm(title, body, cancel, ok) {
-    patchPauseMenuSafely();
+    findPauseMenu();
 
     if (!menuDoc || !menuDoc.body) {
       send('diag|no pause menu to show the confirm dialog in');
@@ -86,40 +77,36 @@
     return frame.offsetWidth > 0 && frame.offsetHeight > 0;
   }
 
-  // The pause menu is a same-origin iframe, so its document can be reached from here; polled because the game creates
-  // and hides that iframe whenever it likes. A dialog left open when the menu hides is closed, so it never greets the
-  // player the next time the menu opens.
-  function patchPauseMenu() {
-    var frames = document.querySelectorAll('iframe');
-    var found = null;
+  // The pause menu is a same-origin iframe the game creates and hides whenever it likes, so it is handed over at every
+  // check. A dialog left open when the menu hides is closed, so it never greets the player the next time the menu opens.
+  function watchPauseMenu(doc, frame) {
+    if (!doc.body) return false;
 
-    for (var i = 0; i < frames.length; i++) {
-      if (!/OutSetting\.html/.test(frames[i].src || '')) continue;
+    if (!isShowing(frame)) {
+      hideDialog(doc);
 
-      var doc = null;
+      if (menuDoc === doc) menuDoc = null;
 
-      try {
-        doc = frames[i].contentDocument;
-      } catch (e) {}
-
-      if (!doc || !doc.body) {
-        if (!hasReportedAccess) send('diag|cannot reach the pause menu document (root ' + location.protocol + ', iframe ' + frames[i].src + ')');
-        hasReportedAccess = true;
-        continue;
-      }
-
-      if (!isShowing(frames[i])) {
-        hideDialog(doc);
-        continue;
-      }
-
-      found = doc;
-      addStyle(doc);
+      return;
     }
 
-    if (menuDoc && menuDoc !== found) hideDialog(menuDoc);
+    if (menuDoc && menuDoc !== doc) hideDialog(menuDoc);
 
-    menuDoc = found;
+    menuDoc = doc;
+    etk.addStyle(doc, STYLE_ID, PAGE_CSS);
+  }
+
+  // A menu that is gone since the last check is forgotten, and its dialog closed, so the dialog only ever shows in the
+  // menu showing now.
+  function findPauseMenu() {
+    if (!pauseMenuWatch) return;
+
+    var before = menuDoc;
+
+    menuDoc = null;
+    pauseMenuWatch.refresh();
+
+    if (before && before !== menuDoc) hideDialog(before);
   }
 
   // Extra Pick can put more than the game's three cards on the end-of-day rewards page (RogueSelect.html). They go in
@@ -160,51 +147,27 @@
 
     var rows = Math.ceil(cardCount / MOST_PER_ROW);
 
-    if (!doc.getElementById(GRID_STYLE_ID)) {
-      var style = doc.createElement('style');
-
-      style.id = GRID_STYLE_ID;
-      style.textContent = GRID_CSS;
-      doc.head.appendChild(style);
-    }
-
+    etk.addStyle(doc, GRID_STYLE_ID, GRID_CSS);
     root.classList.add(MANY);
     root.classList.toggle(COMPACT, rows > 1);
     root.style.setProperty('--slnlp-columns', String(Math.ceil(cardCount / rows)));
   }
 
-  function patchRewardsPage() {
-    var frames = document.querySelectorAll('iframe');
+  // The game adds cards after the page loads, and a refresh redraws them, so the page is handed over at every check.
+  function watchRewardsPage(doc) {
+    if (!doc.documentElement || !doc.head) return false;
 
-    for (var i = 0; i < frames.length; i++) {
-      if (!/RogueSelect\.html/.test(frames[i].src || '')) continue;
-
-      var doc = null;
-
-      try {
-        doc = frames[i].contentDocument;
-      } catch (e) {}
-
-      if (doc && doc.documentElement && doc.head) arrangeCards(doc, !!window.__slmorerewards);
-    }
+    arrangeCards(doc, !!window.__slmorerewards);
   }
 
-  function patchPauseMenuSafely() {
-    try {
-      patchPauseMenu();
-    } catch (e) {}
+  // Runs once the Toolkit's page API is there.
+  function startWithToolkit(api) {
+    etk = api;
+    pauseMenuWatch = etk.watchPages(PAUSE_MENU_PAGE, watchPauseMenu, { everyCheck: true });
+    etk.watchPages(REWARDS_PAGE, watchRewardsPage, { everyCheck: true });
+    send('ready');
   }
-
-  setInterval(function () {
-    try {
-      patchPauseMenu();
-    } catch (e) {}
-
-    try {
-      patchRewardsPage();
-    } catch (e) {}
-  }, POLL_MS);
 
   window.__slnlp = { confirm: confirm };
-  send('ready');
+  (window.ExiledToolkitReady = window.ExiledToolkitReady || []).push(startWithToolkit);
 })();

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.10.3
+
+- Now uses Exiled's Toolkit for its shared parts, so it needs Exiled's Toolkit 0.19.0 or newer.
+- Made for Survival Log 1.1.20719.
+
 ## 0.10.2
 
 - The End Run button is now placed by Exiled's Toolkit, along with every other mod's menu buttons, so the pause menu stays on screen however many mods add buttons to it. It sits below the other mods' buttons, right above Restart and Save & Exit.

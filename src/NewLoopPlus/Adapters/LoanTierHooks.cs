@@ -1,8 +1,7 @@
-using System;
+using ExiledToolkit.Game;
 using GameCore.HotUpdate;
 using GameCore.HotUpdate.Battle.Logic;
 using GameCore.HotUpdate.ReduxUI;
-using HarmonyLib;
 using NewLoopPlus.Core;
 
 namespace NewLoopPlus.Adapters;
@@ -18,42 +17,28 @@ internal static class LoanTierHooks
 {
     public const int TalentId = 1011;
 
-    private static Harmony? _harmony;
-    private static Action<string> _log = _ => { };
+    private const string Consequence = "the bigger loans stay at level 3";
+
+    private static PatchKit? _hooks;
     private static bool _hooked;
 
     /// <summary>The level of Resourceful Management owned; set by PerkTables.</summary>
     public static int Owned { get; private set; }
 
-    public static void Prepare(Harmony harmony, Action<string> log)
+    public static void Prepare(PatchKit hooks)
     {
-        _harmony = harmony;
-        _log = log;
+        _hooks = hooks;
     }
 
     public static void Use(int owned)
     {
         Owned = owned;
 
-        if (_harmony == null || owned <= PerkSettings.PhoneLoanLevels || _hooked) return;
+        if (_hooks == null || owned <= PerkSettings.PhoneLoanLevels || _hooked) return;
 
         _hooked = true;
-        Hook(AccessTools.Method(typeof(WebUI_PhoneSMS), "GetLoanExtraBonusByLv"), new HarmonyMethod(typeof(LoanTierHooks), nameof(BeforeShownBonus)), null, "the phone's loan amounts");
-        Hook(AccessTools.Method(typeof(LoanSharkManager), "GetExtraTierBonus"), null, new HarmonyMethod(typeof(LoanTierHooks), nameof(AfterTierBonus)), "the loan money paid out");
-    }
-
-    private static void Hook(System.Reflection.MethodBase? target, HarmonyMethod? prefix, HarmonyMethod? postfix, string what)
-    {
-        try
-        {
-            if (target == null) throw new MissingMethodException(what);
-
-            _harmony!.Patch(target, prefix: prefix, postfix: postfix);
-        }
-        catch (Exception ex)
-        {
-            _log($"could not hook {what}, the bigger loans stay at level 3: {ex.Message}");
-        }
+        _hooks.Patch(typeof(LoanTierHooks), typeof(WebUI_PhoneSMS), "GetLoanExtraBonusByLv", prefix: nameof(BeforeShownBonus), consequence: Consequence);
+        _hooks.Patch(typeof(LoanTierHooks), typeof(LoanSharkManager), "GetExtraTierBonus", postfix: nameof(AfterTierBonus), consequence: Consequence);
     }
 
     private static void BeforeShownBonus(ref int __0)

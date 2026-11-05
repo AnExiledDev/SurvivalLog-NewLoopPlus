@@ -1,9 +1,10 @@
 using System;
 using System.Collections.Generic;
+using ExiledToolkit.Game;
+using ExiledToolkit.Kit;
 using GameCore.HotUpdate;
 using GameCore.HotUpdate.Battle.Logic;
 using GameCore.HotUpdate.ReduxUI;
-using HarmonyLib;
 using NewLoopPlus.Core;
 
 namespace NewLoopPlus.Adapters;
@@ -19,26 +20,21 @@ namespace NewLoopPlus.Adapters;
 internal static class LoopStartBonus
 {
     private static Action<string> _log = _ => { };
+    private static PatchKit? _hooks;
     private static int _bonus;
-    private static bool _hasReportedFailure;
 
     public static int Bonus
     {
         set => _bonus = Math.Max(0, value);
     }
 
-    public static void Apply(Harmony harmony, Action<string> log)
+    public static void Apply(PatchKit hooks, Action<string> log)
     {
         _log = log;
+        _hooks = hooks;
 
-        try
-        {
-            harmony.Patch(AccessTools.Method(typeof(Reducer_Web_RebirthUpgrade), "RA_Open"), prefix: new HarmonyMethod(typeof(LoopStartBonus), nameof(BeforeOpen)));
-        }
-        catch (Exception ex)
-        {
-            log("could not hook the loop reward screen, the starting bonus, Interest and Safety Net will not be paid: " + ex.Message);
-        }
+        hooks.Patch(typeof(LoopStartBonus), typeof(Reducer_Web_RebirthUpgrade), "RA_Open", prefix: nameof(BeforeOpen),
+            consequence: "the starting bonus, Interest and Safety Net will not be paid");
     }
 
     /// <summary>Never throws into the game, and never stops the screen opening.</summary>
@@ -66,10 +62,7 @@ internal static class LoopStartBonus
         }
         catch (Exception ex)
         {
-            if (_hasReportedFailure) return;
-
-            _hasReportedFailure = true;
-            _log("could not pay the loop start points (reported once): " + ex);
+            _hooks?.Fail("paying the loop start points", ex);
         }
     }
 
@@ -101,7 +94,7 @@ internal static class LoopStartBonus
 
         _log($"paid {payment.What}: {payment.Points} Planning Points for the new loop");
 
-        if (payment.Toast is { } toast) EndRunTicker.Page?.Toast(toast.Format(GameLanguage.IsChinese(), payment.Points));
+        if (payment.Toast is { } toast) EndRunTicker.Page?.Toast(toast.Say(GameLanguage.IsChinese(), payment.Points));
     }
 
     /// <summary>A talent's payment is shown to the player; the starting bonus is a setting they chose, so it is not.</summary>

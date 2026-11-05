@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using ExiledToolkit.Game;
 using GameCore.HotUpdate;
 using GameCore.HotUpdate.Battle;
 using GameCore.HotUpdate.Battle.Logic;
@@ -142,7 +143,7 @@ internal sealed class RunStartPerks
 
         tags.AddTags(list);
         _log("Scout's Notes marked " + string.Join(", ", scouted));
-        EndRunTicker.Page?.Toast(Texts.ScoutsNotesUsed.Format(GameLanguage.IsChinese(), scouted.Count));
+        EndRunTicker.Page?.Toast(Texts.ScoutsNotesUsed.Say(GameLanguage.IsChinese(), scouted.Count));
     }
 
     /// <summary>Writes the run's skill levels when they change; a write that fails is tried again next check.</summary>

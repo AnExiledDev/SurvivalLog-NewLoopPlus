@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
+using ExiledToolkit.Game;
 using GameCore.HotUpdate.Battle.Logic;
-using HarmonyLib;
 using NewLoopPlus.Core;
 
 namespace NewLoopPlus.Adapters;
@@ -13,23 +13,20 @@ namespace NewLoopPlus.Adapters;
 /// </summary>
 internal static class CompanionBuffs
 {
+    private const string Doing = "adding or removing a loop reward's extra buffs";
+    private const string Consequence = "a loop reward that gives more than one thing gives only its first";
+
     private static readonly Dictionary<int, IReadOnlyList<int>> Riders = new();
-    private static Action<string> _log = _ => { };
-    private static bool _hasReportedFailure;
+    private static PatchKit? _hooks;
 
-    public static void Apply(Harmony harmony, Action<string> log)
+    /// <summary>Taking the extra buffs away is hooked only once giving them is.</summary>
+    public static void Apply(PatchKit hooks)
     {
-        _log = log;
+        _hooks = hooks;
 
-        try
-        {
-            harmony.Patch(AccessTools.Method(typeof(BuffComponent), nameof(BuffComponent.AddBuff), new[] { typeof(long), typeof(int) }), postfix: new HarmonyMethod(typeof(CompanionBuffs), nameof(AfterAdd)));
-            harmony.Patch(AccessTools.Method(typeof(BuffComponent), nameof(BuffComponent.RemoveBuff), new[] { typeof(int) }), postfix: new HarmonyMethod(typeof(CompanionBuffs), nameof(AfterRemove)));
-        }
-        catch (Exception ex)
-        {
-            log("could not hook buffs, a loop reward that gives more than one thing gives only its first: " + ex.Message);
-        }
+        if (!hooks.Patch(typeof(CompanionBuffs), typeof(BuffComponent), nameof(BuffComponent.AddBuff), new[] { typeof(long), typeof(int) }, postfix: nameof(AfterAdd), consequence: Consequence)) return;
+
+        hooks.Patch(typeof(CompanionBuffs), typeof(BuffComponent), nameof(BuffComponent.RemoveBuff), new[] { typeof(int) }, postfix: nameof(AfterRemove), consequence: Consequence);
     }
 
     /// <summary>Replaces the companions; called each time the talents file is written into the tables.</summary>
@@ -51,7 +48,7 @@ internal static class CompanionBuffs
         }
         catch (Exception ex)
         {
-            ReportOnce(ex);
+            _hooks?.Fail(Doing, ex);
         }
     }
 
@@ -65,15 +62,7 @@ internal static class CompanionBuffs
         }
         catch (Exception ex)
         {
-            ReportOnce(ex);
+            _hooks?.Fail(Doing, ex);
         }
-    }
-
-    private static void ReportOnce(Exception ex)
-    {
-        if (_hasReportedFailure) return;
-
-        _hasReportedFailure = true;
-        _log("could not add or remove a loop reward's extra buffs (reported once): " + ex);
     }
 }

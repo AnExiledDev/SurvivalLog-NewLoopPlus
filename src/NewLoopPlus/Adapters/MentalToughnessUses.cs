@@ -1,6 +1,6 @@
 using System;
+using ExiledToolkit.Game;
 using GameCore.HotUpdate.Battle.Logic;
-using HarmonyLib;
 using NewLoopPlus.Core;
 
 namespace NewLoopPlus.Adapters;
@@ -18,23 +18,15 @@ internal static class MentalToughnessUses
     public static MultiUseBuffs Buffs { get; } = new();
 
     private static Action<string> _log = _ => { };
-    private static bool _hasReportedFailure;
+    private static PatchKit? _hooks;
 
-    public static void Apply(Harmony harmony, Action<string> log)
+    public static void Apply(PatchKit hooks, Action<string> log)
     {
         _log = log;
+        _hooks = hooks;
 
-        try
-        {
-            var target = AccessTools.Method(typeof(BuffComponent), nameof(BuffComponent.RemoveBuffLayer), new[] { typeof(int), typeof(int) })
-                ?? throw new MissingMethodException("BuffComponent.RemoveBuffLayer");
-
-            harmony.Patch(target, prefix: new HarmonyMethod(typeof(MentalToughnessUses), nameof(BeforeRemoveLayer)));
-        }
-        catch (Exception ex)
-        {
-            _log($"{HookFailure.Prefix} buff layers, Mental Toughness has one use at every level: " + ex.Message);
-        }
+        hooks.Patch(typeof(MentalToughnessUses), typeof(BuffComponent), nameof(BuffComponent.RemoveBuffLayer), new[] { typeof(int), typeof(int) }, prefix: nameof(BeforeRemoveLayer),
+            consequence: "Mental Toughness has one use at every level");
     }
 
     private static bool BeforeRemoveLayer(BuffComponent __instance, int __0, int __1)
@@ -59,11 +51,7 @@ internal static class MentalToughnessUses
         }
         catch (Exception ex)
         {
-            if (!_hasReportedFailure)
-            {
-                _hasReportedFailure = true;
-                _log("the Mental Toughness hook failed, the game's own step ran instead (reported once): " + ex);
-            }
+            _hooks?.Fail("using Mental Toughness, the game's own step ran instead", ex);
 
             return true;
         }

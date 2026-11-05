@@ -1,16 +1,7 @@
 using System.Collections.Generic;
-using System.Globalization;
+using ExiledToolkit.Kit;
 
 namespace NewLoopPlus.Core;
-
-/// <summary>One piece of on-screen text in the two languages the game ships.</summary>
-public readonly record struct Phrase(string En, string Zh)
-{
-    public string Pick(bool isChinese) => isChinese ? Zh : En;
-
-    /// <summary>The picked text with its {0}, {1}, ... filled in.</summary>
-    public string Format(bool isChinese, params object[] values) => string.Format(CultureInfo.InvariantCulture, Pick(isChinese), values);
-}
 
 /// <summary>The words the mod puts on screen.</summary>
 public static class Texts

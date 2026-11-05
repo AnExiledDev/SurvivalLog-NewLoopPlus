@@ -49,7 +49,7 @@ public class TextsTests
     [InlineData(true)]
     public void Every_part_of_the_points_line_is_filled_in_in_both_languages(bool isChinese)
     {
-        var line = Texts.PointsLine.Format(isChinese, 1001, 1002, 1003, 1004);
+        var line = Texts.PointsLine.Say(isChinese, 1001, 1002, 1003, 1004);
 
         Assert.DoesNotContain("{", line);
         Assert.All(new[] { "1001", "1002", "1003", "1004" }, number => Assert.Contains(number, line));

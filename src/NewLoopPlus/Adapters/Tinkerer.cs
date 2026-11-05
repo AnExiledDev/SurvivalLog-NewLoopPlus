@@ -1,7 +1,7 @@
 using System;
+using ExiledToolkit.Game;
 using GameCore.HotUpdate;
 using GameCore.HotUpdate.Battle.Logic;
-using HarmonyLib;
 using NewLoopPlus.Core;
 
 namespace NewLoopPlus.Adapters;
@@ -18,21 +18,18 @@ internal static class Tinkerer
 {
     private static readonly Random Dice = new();
 
-    private static Action<string> _log = _ => { };
-    private static bool _hasReportedFailure;
+    private const string Doing = "giving a material back with Tinkerer, crafting is the game's own";
 
-    public static void Apply(Harmony harmony, Action<string> log)
+    private static Action<string> _log = _ => { };
+    private static PatchKit? _hooks;
+
+    public static void Apply(PatchKit hooks, Action<string> log)
     {
         _log = log;
+        _hooks = hooks;
 
-        try
-        {
-            harmony.Patch(AccessTools.Method(typeof(ToolTableManager), nameof(ToolTableManager.TryCreateItem), new[] { typeof(long) }), prefix: new HarmonyMethod(typeof(Tinkerer), nameof(BeforeCraft)), postfix: new HarmonyMethod(typeof(Tinkerer), nameof(AfterCraft)));
-        }
-        catch (Exception ex)
-        {
-            log("could not hook crafting, Tinkerer gives no materials back: " + ex.Message);
-        }
+        hooks.Patch(typeof(Tinkerer), typeof(ToolTableManager), nameof(ToolTableManager.TryCreateItem), new[] { typeof(long) }, prefix: nameof(BeforeCraft), postfix: nameof(AfterCraft),
+            consequence: "Tinkerer gives no materials back");
     }
 
     /// <summary>The material noted before a craft, or null when the roll missed. Never throws into the game.</summary>
@@ -66,7 +63,7 @@ internal static class Tinkerer
         }
         catch (Exception ex)
         {
-            ReportFailure(ex);
+            _hooks?.Fail(Doing, ex);
         }
     }
 
@@ -88,16 +85,8 @@ internal static class Tinkerer
         }
         catch (Exception ex)
         {
-            ReportFailure(ex);
+            _hooks?.Fail(Doing, ex);
         }
-    }
-
-    private static void ReportFailure(Exception ex)
-    {
-        if (_hasReportedFailure) return;
-
-        _hasReportedFailure = true;
-        _log("Tinkerer failed, crafting is the game's own (reported once): " + ex);
     }
 
     private sealed record Material(long InstanceId, int ConfigId, int TimeLeft, int OriginalTimeLeft, int UseTimes, int MaxUseTimes);

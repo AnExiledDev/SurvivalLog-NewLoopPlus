@@ -1,5 +1,6 @@
 using System;
 using System.Reflection;
+using ExiledToolkit.Game;
 using GameCore.HotUpdate;
 using GameCore.HotUpdate.Battle;
 using GameCore.HotUpdate.Battle.Logic;
@@ -20,25 +21,27 @@ namespace NewLoopPlus.Adapters;
 internal static class SecondWind
 {
     private const string UsesSpentKey = "nlp.secondwind";
+    private const string Consequence = "Second Wind will not save a run";
 
     private static Action<string> _log = _ => { };
+    private static PatchKit? _hooks;
     private static MethodInfo? _setVitality;
-    private static bool _hasReportedFailure;
 
-    public static void Apply(Harmony harmony, Action<string> log)
+    /// <summary>The death is hooked only when Vitality can be put back, since the hook needs it to save the run.</summary>
+    public static void Apply(PatchKit hooks, Action<string> log)
     {
         _log = log;
+        _hooks = hooks;
+        _setVitality = AccessTools.Method(typeof(AttributeComponent), "SetBaseValue_Float", new[] { typeof(AttrName), typeof(float), typeof(bool) });
 
-        try
+        if (_setVitality == null)
         {
-            _setVitality = AccessTools.Method(typeof(AttributeComponent), "SetBaseValue_Float", new[] { typeof(AttrName), typeof(float), typeof(bool) })
-                           ?? throw new MissingMethodException("AttributeComponent.SetBaseValue_Float(AttrName, float, bool)");
-            harmony.Patch(AccessTools.Method(typeof(BaseAgent), nameof(BaseAgent.TriggerDead)), prefix: new HarmonyMethod(typeof(SecondWind), nameof(BeforeDeath)));
+            log($"{HookFailure.Prefix} {nameof(BaseAgent)}.{nameof(BaseAgent.TriggerDead)}, {Consequence}: AttributeComponent.SetBaseValue_Float(AttrName, float, bool) is missing");
+
+            return;
         }
-        catch (Exception ex)
-        {
-            log("could not hook deaths, Second Wind will not save a run: " + ex.Message);
-        }
+
+        hooks.Patch(typeof(SecondWind), typeof(BaseAgent), nameof(BaseAgent.TriggerDead), prefix: nameof(BeforeDeath), consequence: Consequence);
     }
 
     /// <summary>False skips the death. Never throws into the game; on any failure the death goes ahead as the game's.</summary>
@@ -67,17 +70,13 @@ internal static class SecondWind
             _setVitality.Invoke(attributes, new object[] { AttrName.Vitality, left, true });
             GameCounter.SetCounter(UsesSpentKey, usesSpent + 1);
             _log($"Second Wind turned a death away: Vitality {vitality:0.##} set to {left:0.##}, {usesPerRun - usesSpent - 1} of {usesPerRun} uses left this run");
-            EndRunTicker.Page?.Toast(Texts.SecondWindUsed.Format(GameLanguage.IsChinese(), usesPerRun - usesSpent - 1));
+            EndRunTicker.Page?.Toast(Texts.SecondWindUsed.Say(GameLanguage.IsChinese(), usesPerRun - usesSpent - 1));
 
             return false;
         }
         catch (Exception ex)
         {
-            if (!_hasReportedFailure)
-            {
-                _hasReportedFailure = true;
-                _log("Second Wind failed, the death went ahead (reported once): " + ex);
-            }
+            _hooks?.Fail("turning a death away with Second Wind, the death went ahead", ex);
 
             return true;
         }

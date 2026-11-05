@@ -1,6 +1,6 @@
 using System;
+using ExiledToolkit.Game;
 using GameCore.HotUpdate.Battle.Show;
-using HarmonyLib;
 using NewLoopPlus.Core;
 
 namespace NewLoopPlus.Adapters;
@@ -13,21 +13,14 @@ namespace NewLoopPlus.Adapters;
 /// </summary>
 internal static class DroneReturnShow
 {
-    private static Action<string> _log = _ => { };
-    private static bool _hasReportedFailure;
+    private static PatchKit? _hooks;
 
-    public static void Apply(Harmony harmony, Action<string> log)
+    public static void Apply(PatchKit hooks)
     {
-        _log = log;
+        _hooks = hooks;
 
-        try
-        {
-            harmony.Patch(AccessTools.Method(typeof(AgentModel), nameof(AgentModel.PlayDroneTimeline), new[] { typeof(string) }), prefix: new HarmonyMethod(typeof(DroneReturnShow), nameof(BeforePlay)));
-        }
-        catch (Exception ex)
-        {
-            log("could not hook the drone's animations, a drone back from a very short trip can stay invisible: " + ex.Message);
-        }
+        hooks.Patch(typeof(DroneReturnShow), typeof(AgentModel), nameof(AgentModel.PlayDroneTimeline), new[] { typeof(string) }, prefix: nameof(BeforePlay),
+            consequence: "a drone back from a very short trip can stay invisible");
     }
 
     /// <summary>Never throws into the game.</summary>
@@ -39,10 +32,7 @@ internal static class DroneReturnShow
         }
         catch (Exception ex)
         {
-            if (_hasReportedFailure) return;
-
-            _hasReportedFailure = true;
-            _log("could not keep a drone visible after a short trip: " + ex.Message);
+            _hooks?.Fail("keeping a drone visible after a short trip", ex);
         }
     }
 }

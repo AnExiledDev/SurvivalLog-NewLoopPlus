@@ -34,7 +34,7 @@ public class EndRunTests
 
         _flow.Ask();
 
-        Assert.Contains(Texts.PointsLine.Format(false, 69, 50, 7, 12), _page.Dialogs[0].Body);
+        Assert.Contains(Texts.PointsLine.Say(false, 69, 50, 7, 12), _page.Dialogs[0].Body);
     }
 
     [Fact]

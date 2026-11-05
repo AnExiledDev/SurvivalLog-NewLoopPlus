@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using ExiledToolkit.Game;
 using GameCore.HotUpdate;
 using GameCore.HotUpdate.Battle.Logic;
 using HarmonyLib;
@@ -22,13 +23,15 @@ internal static class ExtraPick
 {
     private static readonly Type[] DayParameters = { typeof(int), typeof(Il2CppIntSet), typeof(int), typeof(int) };
     private static readonly Type[] RefreshParameters = { typeof(int), typeof(Il2CppInts), typeof(Il2CppInts), typeof(Il2CppIntSet), typeof(int), typeof(int) };
-    private static readonly HashSet<string> ReportedFailures = new();
 
     private static Action<string> _log = _ => { };
+    private static PatchKit? _hooks;
 
-    public static void Apply(Harmony harmony, Action<string> log)
+    /// <summary>Placed with Harmony itself rather than through <see cref="PatchKit"/>, which cannot ask to run last.</summary>
+    public static void Apply(Harmony harmony, PatchKit hooks, Action<string> log)
     {
         _log = log;
+        _hooks = hooks;
         Hook(harmony, DayParameters, nameof(AddToDayRewards), "the end of the day");
         Hook(harmony, RefreshParameters, nameof(AddToRefresh), "a refresh");
     }
@@ -57,7 +60,7 @@ internal static class ExtraPick
         }
         catch (Exception ex)
         {
-            Fail("adding Extra Pick rewards at the end of the day", ex);
+            _hooks?.Fail("adding Extra Pick rewards at the end of the day", ex);
         }
     }
 
@@ -73,7 +76,7 @@ internal static class ExtraPick
         }
         catch (Exception ex)
         {
-            Fail("adding Extra Pick rewards on a refresh", ex);
+            _hooks?.Fail("adding Extra Pick rewards on a refresh", ex);
         }
     }
 
@@ -105,12 +108,6 @@ internal static class ExtraPick
         for (var i = 0; i < ids.Count && i < amounts.Count; i++) groups.Add(new RewardGroup(ids[i], amounts[i]));
 
         return groups;
-    }
-
-    /// <summary>Each failure is written once: the game calls these hooks again and again.</summary>
-    private static void Fail(string doing, Exception ex)
-    {
-        if (ReportedFailures.Add(doing)) _log($"failed {doing} (reported once): {ex}");
     }
 
     private static int? First(Il2CppInts? rewards) => rewards != null && rewards.Count > 0 ? rewards[0] : null;

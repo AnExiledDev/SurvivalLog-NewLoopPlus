@@ -1,50 +1,44 @@
 using System;
-using System.IO;
 using ExiledToolkit;
-using GameCore.HotUpdate.ReduxUI;
+using ExiledToolkit.Game;
+using ExiledToolkit.Web;
 using NewLoopPlus.Core;
+using ToolkitPage = ExiledToolkit.Web.WebPage;
 
 namespace NewLoopPlus.Adapters;
 
 /// <summary>
 /// The mod's half that lives in the game's web UI: page.js, run in the root document the game's own pages sit in. It
 /// shows End Run's confirm dialog in the pause menu; the End Run button itself is placed by Exiled's Toolkit, and the
-/// messages are Exiled's Toolkit toasts. The web
-/// view can reload at any time and lose the script, so it is checked for every couple of seconds and put back when the
-/// page says it is missing.
+/// messages are Exiled's Toolkit toasts. The web view can reload at any time and lose the script, so Exiled's Toolkit
+/// checks for it every couple of seconds and it is put back when the page says it is missing.
 /// </summary>
 internal sealed class WebPage : IRunPage
 {
-    private const float CheckSeconds = 2f;
     private const string PageResource = "NewLoopPlus.page.js";
     private const string TalentsTabResource = "NewLoopPlus.talents-tab.js";
-    private const string NoScriptReply = "window.vuplex&&window.vuplex.postMessage('" + PageCommand.Prefix + "noscript')";
+    private const string Global = "window.__slnlp";
 
+    private readonly ToolkitPage _page;
     private readonly Action<string> _log;
-    private string? _script;
-    private float _nextCheckAt;
-    private bool _hasReportedRunFailure;
 
     public WebPage(Action<string> log)
     {
         _log = log;
+
+        // The pause menu script and the Talents tab travel together, so a reloaded page gets both back at once.
+        _page = new ToolkitPage(typeof(WebPage).Assembly, PageResource, Global, PageCommand.Prefix + "noscript", log)
+        {
+            ExtraResources = new[] { TalentsTabResource },
+        };
     }
 
-    public void KeepInstalled(float now)
-    {
-        if (now < _nextCheckAt) return;
+    public void KeepInstalled(double now) => _page.KeepInstalled(now);
 
-        _nextCheckAt = now + CheckSeconds;
-        Run("window.__slnlp||" + NoScriptReply);
-    }
-
-    public void Install()
-    {
-        if (Run(Script())) _log("page script sent to the web UI");
-    }
+    public void Install() => _page.Install();
 
     public void ShowConfirm(ConfirmDialog dialog) =>
-        Run("window.__slnlp&&window.__slnlp.confirm(" + string.Join(",", JsText.Literal(dialog.Title), JsText.Literal(dialog.Body), JsText.Literal(dialog.Cancel), JsText.Literal(dialog.Confirm)) + ")");
+        _page.Run(Global + "&&" + Global + ".confirm(" + string.Join(",", JsText.Literal(dialog.Title), JsText.Literal(dialog.Body), JsText.Literal(dialog.Cancel), JsText.Literal(dialog.Confirm)) + ")");
 
     /// <summary>A message as an Exiled's Toolkit toast; a failure shows as an error.</summary>
     public void Toast(string text)
@@ -57,39 +51,6 @@ internal sealed class WebPage : IRunPage
         if (Toasts.Show(new ToastRequest(Texts.Source.Pick(isChinese), text) { Kind = kind }).IsNone) _log("a toast was not shown: " + text);
     }
 
-    private bool Run(string javaScript)
-    {
-        var webView = GameSingleton.Existing<ReduxUISystem>()?.GetWebUILayer()?.canvasWebViewPrefab?.WebView;
-
-        if (webView == null) return false;
-
-        try
-        {
-            webView.ExecuteJavaScript(javaScript, null);
-
-            return true;
-        }
-        catch (Exception ex)
-        {
-            if (!_hasReportedRunFailure) _log("could not run script in the web UI (reported once): " + ex.Message);
-
-            _hasReportedRunFailure = true;
-
-            return false;
-        }
-    }
-
     /// <summary>Runs a call into the page's scripts, such as a reply to the Talents tab.</summary>
-    public void Call(string javaScript) => Run(javaScript);
-
-    /// <summary>The pause menu script and the Talents tab travel together, so a reloaded page gets both back at once.</summary>
-    private string Script() => _script ??= Resource(PageResource) + "\n;" + Resource(TalentsTabResource);
-
-    private static string Resource(string name)
-    {
-        using var stream = typeof(WebPage).Assembly.GetManifestResourceStream(name) ?? throw new InvalidOperationException(name + " is not embedded");
-        using var reader = new StreamReader(stream);
-
-        return reader.ReadToEnd();
-    }
+    public void Call(string javaScript) => _page.Run(javaScript);
 }

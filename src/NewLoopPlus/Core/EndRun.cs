@@ -160,6 +160,6 @@ public sealed class EndRun
 
         _log($"points preview: survival {preview.Survival}, crisis {preview.Crisis}, record {preview.Record}, total {preview.Total} ({inputs})");
 
-        return Texts.PointsLine.Format(isChinese, preview.Total, preview.Survival, preview.Crisis, preview.Record);
+        return Texts.PointsLine.Say(isChinese, preview.Total, preview.Survival, preview.Crisis, preview.Record);
     }
 }

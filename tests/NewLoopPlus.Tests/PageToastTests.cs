@@ -23,8 +23,10 @@ public class PageToastTests
     {
         var page = new RootPage();
 
+        page.Run("addFrame('../UI/OutSetting.html')");
         page.Run("__slnlp.confirm('End Run?', 'Ends like a death.', 'Cancel', 'End Run')");
 
+        Assert.True(page.Bool("frames[0].contentDocument.getElementById('slnlp-confirm')"));
         Assert.Equal(0, page.Number("handed.length"));
     }
 }
