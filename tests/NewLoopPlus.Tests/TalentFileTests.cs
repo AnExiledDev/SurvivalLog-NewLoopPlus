@@ -11,7 +11,7 @@ public class TalentFileTests
 {
     private static readonly int[] CutTalentsThatWork = { 1006, 2017, 3076, 4004, 4006 };
     private static readonly int[] CutTalentsFinishedByTheMod = { 1008, 1010, 2004, 2006, 2007 };
-    private static readonly int[] NewRewards = Enumerable.Range(5101, 34).ToArray();
+    private static readonly int[] NewRewards = Enumerable.Range(5101, 36).ToArray();
     private static readonly int[] FiveLevelTalentsMadeTen = { 1001, 1002, 1003, 1004, 1005, 1007, 2005, 2008, 2010 };
     private static readonly int[] ThreeLevelTalentsMadeEight = { 1011, 1012, 2011, 2013, 2014, 2015, 2016, 2018 };
 

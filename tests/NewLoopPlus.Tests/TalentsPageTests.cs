@@ -33,9 +33,11 @@ public class TalentsPageTests
         new("", "Assets/NoWebIcon"),
     };
 
-    private static JsonElement Data(string? fileText, params string[] startProblems)
+    private static JsonElement Data(string? fileText, params string[] startProblems) => Data(fileText, false, startProblems);
+
+    private static JsonElement Data(string? fileText, bool windPower, params string[] startProblems)
     {
-        var call = TalentsPage.DataCall(new[] { Awakening, EndlessSolar }, new[] { "PreDisaster_AddCountDownTime", "AE_PowerSolarEfficiency", "Buff/AE_PowerSolarEfficiency" }, Items, fileText, startProblems);
+        var call = TalentsPage.DataCall(new[] { Awakening, EndlessSolar }, new[] { "PreDisaster_AddCountDownTime", "AE_PowerSolarEfficiency", "Buff/AE_PowerSolarEfficiency" }, Items, fileText, startProblems, windPower);
 
         Assert.StartsWith(CallStart, call);
         Assert.EndsWith(")", call);
@@ -43,6 +45,13 @@ public class TalentsPageTests
         Assert.DoesNotContain("</", call);
 
         return JsonDocument.Parse(call.Substring(CallStart.Length, call.Length - CallStart.Length - 1)).RootElement;
+    }
+
+    [Fact]
+    public void The_tab_is_told_whether_Wind_Power_is_installed_so_it_offers_the_wind_effect_only_then()
+    {
+        Assert.True(Data("{}", true).GetProperty("windPower").GetBoolean());
+        Assert.False(Data("{}", false).GetProperty("windPower").GetBoolean());
     }
 
     [Fact]

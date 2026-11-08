@@ -885,6 +885,13 @@
     line: v => '-' + fmt(v.FloatValue0) + '%',
     desc: (v, zh) => zh ? '无人机行程耗时减少' + fmt(v.FloatValue0) + '%' : 'Drone trips take ' + fmt(v.FloatValue0) + '% less time.' });
 
+  // Offered only with Wind Power installed; it multiplies Wind Power's turbines.
+  fx({ id: 'nlp:wind-power', src: 'nlp', nlp: 'wind-power', needs: 'windPower', cat: 'home', scripts: [],
+    en: 'Better wind turbines', zh: '风力增效', what: ['Wind turbines make more power. Needs Wind Power.', '风力发电机产电更多。需要Wind Power模组。'],
+    params: [pct('FloatValue0', 'More power', '产电增加', [15, 30, 45])],
+    line: v => '+' + fmt(v.FloatValue0) + '%',
+    desc: (v, zh) => zh ? '风力发电机产电提高' + fmt(v.FloatValue0) + '%' : 'Wind turbine output increased by ' + fmt(v.FloatValue0) + '%.' });
+
   const FX_BY_ID = {};
 
   FX.forEach(f => { FX_BY_ID[f.id] = f; });
@@ -913,7 +920,7 @@
     return Math.max(p.min, round2(v));
   }
 
-  const isAvailable = f => !!f.nlp || f.scripts.some(s => st.scripts.has(s));
+  const isAvailable = f => f.needs ? !!(st.data && st.data[f.needs]) : !!f.nlp || f.scripts.some(s => st.scripts.has(s));
 
   // ---- Which effect a script and its numbers are. ----
 

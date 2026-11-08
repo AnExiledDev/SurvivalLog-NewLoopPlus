@@ -55,10 +55,13 @@ public static class NlpEffect
     /// <summary>FloatValue0: the share cut from every drone trip.</summary>
     public const string DroneSpeed = "drone-speed";
 
+    /// <summary>FloatValue0: the share more power Wind Power's turbines make. Offered only with Wind Power 0.9.3 or newer installed.</summary>
+    public const string WindPower = "wind-power";
+
     public static readonly IReadOnlyList<string> All = new[]
     {
         Interest, SafetyNet, ExtraPick, CrisisVeteran, SecondWind, LuckyFinds, MuscleMemory, ScoutsNotes, Tinkerer, FamilyRecipe, DronePilot,
-        GoodNeighbor, MaxExposure, VehicleDiscount, TravelTime, DroneSpeed,
+        GoodNeighbor, MaxExposure, VehicleDiscount, TravelTime, DroneSpeed, WindPower,
     };
 }
 

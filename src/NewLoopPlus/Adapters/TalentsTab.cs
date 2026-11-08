@@ -21,6 +21,9 @@ internal sealed class TalentsTab
     private IReadOnlyList<GameIcon> _items = Array.Empty<GameIcon>();
     private IReadOnlyList<string> _startProblems = Array.Empty<string>();
 
+    /// <summary>With Wind Power installed, the tab offers the wind effect for a new reward.</summary>
+    public bool HasWindPower { get; set; }
+
     public TalentsTab(string path, WebPage page, Action<string> log)
     {
         _path = path;
@@ -50,7 +53,7 @@ internal sealed class TalentsTab
             _log("Talents tab: could not read the talents file: " + ex.Message);
         }
 
-        _page.Call(TalentsPage.DataCall(_game, _scripts, _items, text, _startProblems));
+        _page.Call(TalentsPage.DataCall(_game, _scripts, _items, text, _startProblems, HasWindPower));
     }
 
     public void Save(string json)

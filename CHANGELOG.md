@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.11.0
+
+- Two new loop rewards for Wind Power's turbines, switched off like the other new rewards: Wind Engineer (15 / 30 / 45% more power) and Wind Tuning (5% to 50% more over ten levels, adds to Wind Engineer). They need Wind Power 0.9.3 or newer; without it they are left out of the game.
+- With Wind Power installed, the Talents tab offers "Better wind turbines" as an effect for a new reward.
+- They are in the talents file a new install writes. A talents file you already have keeps what it has: add them with the Talents tab, or delete the file to get every default back.
+- Made for Survival Log 1.1.20719.
+
 ## 0.10.3
 
 - Now uses Exiled's Toolkit for its shared parts, so it needs Exiled's Toolkit 0.19.0 or newer.

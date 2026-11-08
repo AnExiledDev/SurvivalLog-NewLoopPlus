@@ -13,10 +13,11 @@ namespace NewLoopPlus;
 
 [BepInPlugin(Guid, "New Loop Plus", Version)]
 [BepInDependency(ToolkitGuid, ToolkitVersion)]
+[BepInDependency(WindLink.Guid, BepInDependency.DependencyFlags.SoftDependency)]
 public sealed class Plugin : BasePlugin
 {
     private const string Guid = "com.dev.survivallog.newloopplus";
-    private const string Version = "0.10.3";
+    private const string Version = "0.11.0";
 
     /// <summary>Exiled's Toolkit: its shared helpers, toasts, live settings and the End Run button's place in the pause menu all come from it.</summary>
     private const string ToolkitGuid = "com.dev.survivallog.exiledtoolkit";
@@ -59,7 +60,36 @@ public sealed class Plugin : BasePlugin
         EndlessRewardsSetting.On = BindEndlessEverywhere().Value;
         if (EndlessRewardsSetting.On) EndlessRewardHooks.Apply(hooks, log.Write);
         LiveSettings.Watch(BindStartingBonus(), bonus => LoopStartBonus.Bonus = bonus);
-        StartScaling(BindCosts(log.Write), TalentFileStore.Load(talentsPath, log.Write), tab, log.Write);
+        tab.HasWindPower = LinkWind(log.Write);
+        var talents = TalentFileStore.Load(talentsPath, log.Write);
+        StartScaling(BindCosts(log.Write), tab.HasWindPower ? talents : WindLink.WithoutWind(talents), tab, log.Write);
+    }
+
+    /// <summary>
+    /// With Wind Power installed, the wind talents owned make its turbines stronger. Without it, or with a Wind Power too
+    /// old to take them, the wind talents stay out of the talent tree and the tab does not offer them.
+    /// </summary>
+    private static bool LinkWind(System.Action<string> log)
+    {
+        if (!IL2CPPChainloader.Instance.Plugins.ContainsKey(WindLink.Guid)) return false;
+
+        try
+        {
+            if (WindLink.Add(System.AppDomain.CurrentDomain.GetAssemblies(), "New Loop Plus", () => WindLink.Multiplier(Perks.Share(NlpEffect.WindPower))))
+            {
+                log("wind talents work with Wind Power's turbines");
+
+                return true;
+            }
+
+            log("Wind Power is older than 0.9.3, so the wind talents are left out");
+        }
+        catch (System.Exception ex)
+        {
+            log("could not hand the wind talents to Wind Power, so they are left out: " + ex.Message);
+        }
+
+        return false;
     }
 
     /// <summary>

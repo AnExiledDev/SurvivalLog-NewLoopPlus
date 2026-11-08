@@ -106,6 +106,8 @@ Every talent in the default file starts switched off. Set `"enabled": true` on o
 | Dealer Discount | 5132 | Vehicles cost 5 / 10 / 15 / 20 / 25 / 30 / 35 / 40 / 45 / 50% less (normally bicycle 150, car 500, SUV 900). Selling one back pays less to match. |
 | Shortcuts | 5133 | Travel before the disaster takes 5 / 10 / 15 / 20 / 25 / 30 / 35 / 40 / 45 / 50% less time, with or without a vehicle. Adds to the vehicle's own cut. |
 | Fast Rotors | 5134 | Every drone trip (trades, scavenging, deliveries) takes 15 / 30 / 45 / 60 / 75% less time, never under a minute. Adds to Drone Pilot. |
+| Wind Engineer | 5135 | Wind Power's turbines make 15 / 30 / 45% more power. Needs Wind Power 0.9.3 or newer; without it this reward is left out. |
+| Wind Tuning | 5136 | Wind Power's turbines make 5 / 10 / 15 / 20 / 25 / 30 / 35 / 40 / 45 / 50% more power. Adds to Wind Engineer. Needs Wind Power 0.9.3 or newer; without it this reward is left out. |
 
 A talent entry takes:
 

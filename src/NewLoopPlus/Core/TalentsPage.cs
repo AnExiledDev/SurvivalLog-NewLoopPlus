@@ -45,13 +45,14 @@ public static class TalentsPage
     /// not JSON at all, which the tab takes as "do not save over it". Every non-ASCII character is escaped, so the data can
     /// never end the script early. <paramref name="game"/> holds every game talent and <paramref name="scripts"/> the
     /// effect scripts they run, loop reward or not, since a give can use any of them and a reward can show any of their
-    /// images. <paramref name="items"/> are the item images a reward can show too.
+    /// images. <paramref name="items"/> are the item images a reward can show too. <paramref name="windPower"/> says
+    /// Wind Power is installed, so the tab offers the wind effect.
     /// </summary>
-    public static string DataCall(IReadOnlyList<GameTalent> game, IEnumerable<string> scripts, IEnumerable<GameIcon> items, string? fileText, IReadOnlyList<string> startProblems)
+    public static string DataCall(IReadOnlyList<GameTalent> game, IEnumerable<string> scripts, IEnumerable<GameIcon> items, string? fileText, IReadOnlyList<string> startProblems, bool windPower = false)
     {
         var problems = (fileText == null ? new[] { "the talents file could not be read" } : TalentFile.Parse(fileText).Problems).Concat(startProblems).Distinct().ToList();
 
-        return "window.__slnlpTalents&&window.__slnlpTalents.data(" + Json(writer => WriteData(writer, game, scripts, items, fileText, problems)) + ")";
+        return "window.__slnlpTalents&&window.__slnlpTalents.data(" + Json(writer => WriteData(writer, game, scripts, items, fileText, problems, windPower)) + ")";
     }
 
     /// <summary>A reply to a save, shown in the tab's status line.</summary>
@@ -86,9 +87,10 @@ public static class TalentsPage
         return path;
     }
 
-    private static void WriteData(Utf8JsonWriter writer, IReadOnlyList<GameTalent> game, IEnumerable<string> scripts, IEnumerable<GameIcon> items, string? fileText, IReadOnlyList<string> problems)
+    private static void WriteData(Utf8JsonWriter writer, IReadOnlyList<GameTalent> game, IEnumerable<string> scripts, IEnumerable<GameIcon> items, string? fileText, IReadOnlyList<string> problems, bool windPower)
     {
         writer.WriteStartObject();
+        writer.WriteBoolean("windPower", windPower);
         writer.WriteStartArray("game");
 
         foreach (var talent in game.Where(talent => talent.Id is >= FirstTalent and <= LastTalent).OrderBy(talent => talent.Id)) WriteTalent(writer, talent);

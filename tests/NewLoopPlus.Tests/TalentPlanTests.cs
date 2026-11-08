@@ -296,6 +296,23 @@ public class TalentPlanTests
     }
 
     [Fact]
+    public void Two_wind_talents_add_up_into_what_Wind_Power_multiplies_its_turbines_by()
+    {
+        var plan = Plan("""
+            { "talents": [
+              { "id": 3076, "gives": [ { "effect": "nlp:wind-power", "levels": [ { "FloatValue0": 0.15 }, { "FloatValue0": 0.3 } ] } ] },
+              { "id": 1006, "gives": [ { "effect": "nlp:wind-power", "levels": [ { "FloatValue0": 0.05 } ] } ] }
+            ] }
+            """);
+        var share = NlpPerks.Value(plan.Grants, talentId => talentId == 3076 ? 2 : 1, NlpEffect.WindPower, NlpPerks.Share);
+
+        Assert.Empty(plan.Problems);
+        Assert.Equal(0.35, share, 6);
+        Assert.Equal(1.35f, WindLink.Multiplier(share), 5);
+        Assert.Equal(1f, WindLink.Multiplier(NlpPerks.Value(plan.Grants, _ => 0, NlpEffect.WindPower, NlpPerks.Share)));
+    }
+
+    [Fact]
     public void A_New_Loop_Plus_give_runs_the_do_nothing_script_and_keeps_its_numbers_for_the_mod()
     {
         var plan = Plan("""
