@@ -4,7 +4,7 @@ namespace NewLoopPlus.Tests;
 
 /// <summary>
 /// New Loop Plus's messages are Exiled's Toolkit toasts shown by the plugin, so page.js, run in Jint on a fake root page
-/// (PageFake.js), draws no notice box of its own. End Run's dialog sits in the game's pause menu in the game's own
+/// (PageFake.js), draws no notice box of its own. End Run's dialog sits in the game's pause menu in the game's
 /// style, so it keeps the game's size and is not handed to the Toolkit's UI size.
 /// </summary>
 public class PageToastTests

@@ -35,7 +35,7 @@ public readonly record struct PointsPreview(int Survival, int Crisis, int Record
 
 /// <summary>
 /// The game's death settlement, worked out without running it: the real one adds the points and saves, so it may only
-/// run when the run really ends. The two paths mirror the game's own: the first settle of a round pays all converted
+/// run when the run really ends. The two paths mirror the game's: the first settle of a round pays all converted
 /// survival points, a later one pays only what was converted since.
 /// </summary>
 public static class Settlement

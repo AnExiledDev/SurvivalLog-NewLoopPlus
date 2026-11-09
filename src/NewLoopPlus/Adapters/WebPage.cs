@@ -8,7 +8,7 @@ using ToolkitPage = ExiledToolkit.Web.WebPage;
 namespace NewLoopPlus.Adapters;
 
 /// <summary>
-/// The mod's half that lives in the game's web UI: page.js, run in the root document the game's own pages sit in. It
+/// The mod's half that lives in the game's web UI: page.js, run in the root document the game's pages sit in. It
 /// shows End Run's confirm dialog in the pause menu; the End Run button itself is placed by Exiled's Toolkit, and the
 /// messages are Exiled's Toolkit toasts. The web view can reload at any time and lose the script, so Exiled's Toolkit
 /// checks for it every couple of seconds and it is put back when the page says it is missing.

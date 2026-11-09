@@ -231,7 +231,7 @@ public class TalentFileTests
     {
         public bool HasEffect(int id) => id == 200000009 || id / 100000 == 2001 || id / 100000 == 2002;
 
-        // Plus the game's own talent level buffs, TalentID * 100 + level * 10 for levels 1 to 5.
+        // Plus the game's talent level buffs, TalentID * 100 + level * 10 for levels 1 to 5.
         public bool HasBuff(int id) => id == 9 || (id is >= 100000 and < 400000 && id % 10 == 0 && id % 100 / 10 is >= 1 and <= 5);
 
         // Every script the default file's gives use, and the empty one New Loop Plus's own effects ride on.

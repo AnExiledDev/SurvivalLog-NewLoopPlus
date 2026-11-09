@@ -51,7 +51,7 @@ internal static class MentalToughnessUses
         }
         catch (Exception ex)
         {
-            _hooks?.Fail("using Mental Toughness, the game's own step ran instead", ex);
+            _hooks?.Fail("using Mental Toughness, the game's step ran instead", ex);
 
             return true;
         }

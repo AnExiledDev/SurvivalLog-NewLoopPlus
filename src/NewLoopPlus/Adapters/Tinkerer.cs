@@ -18,7 +18,7 @@ internal static class Tinkerer
 {
     private static readonly Random Dice = new();
 
-    private const string Doing = "giving a material back with Tinkerer, crafting is the game's own";
+    private const string Doing = "giving a material back with Tinkerer, crafting is the game's";
 
     private static Action<string> _log = _ => { };
     private static PatchKit? _hooks;

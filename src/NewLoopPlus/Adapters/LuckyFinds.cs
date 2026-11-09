@@ -38,7 +38,7 @@ internal static class LuckyFinds
         }
         catch (Exception ex)
         {
-            _hooks?.Fail("rolling Lucky Finds, loot is the game's own", ex);
+            _hooks?.Fail("rolling Lucky Finds, loot is the game's", ex);
         }
     }
 }

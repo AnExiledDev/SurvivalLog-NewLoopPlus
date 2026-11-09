@@ -9,7 +9,7 @@ namespace NewLoopPlus.Adapters;
 /// <summary>
 /// The plugin's side of the Talents tab in the Mod Manager: hands the tab the game's talents and the talents file, and
 /// writes the file back when the tab saves. The game's talents are read once, before the file changed them, so the tab
-/// always compares against the game's own rewards. A save takes effect at the next start, like any edit of the file.
+/// always compares against the game's rewards. A save takes effect at the next start, like any edit of the file.
 /// </summary>
 internal sealed class TalentsTab
 {

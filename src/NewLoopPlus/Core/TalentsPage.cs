@@ -15,7 +15,7 @@ public sealed record GameLevel(int Lv, int Cost, int Buff, LocalText Description
 /// <summary>A game talent as the Talents tab shows it, read before the talents file changed anything.</summary>
 public sealed record GameTalent(int Id, int Type, int Endless, int Available, int Show, string WebIcon, string Icon, LocalText Name, LocalText LevelText, IReadOnlyList<GameLevel> Levels);
 
-/// <summary>An image a reward can show: its path for web pages and its path for the game's own screens.</summary>
+/// <summary>An image a reward can show: its path for web pages and its path for the game's screens.</summary>
 public sealed record GameIcon(string WebIcon, string Icon);
 
 /// <summary>What a save from the Talents tab comes to: the text to write, or why nothing is written.</summary>

@@ -12,7 +12,7 @@ namespace NewLoopPlus.Adapters;
 /// <summary>
 /// Writes the talents file into the game's effect, buff and talent tables and its two language maps, once the game has
 /// loaded them. It writes again only if the game loads the tables afresh, so it never fights the cost scaling, which
-/// treats whatever it finds there as the game's own price. Before writing, it reads the game's own loop rewards for the
+/// treats whatever it finds there as the game's price. Before writing, it reads the game's loop rewards for the
 /// Talents tab, which needs them as the game made them.
 /// </summary>
 internal sealed class TalentTables

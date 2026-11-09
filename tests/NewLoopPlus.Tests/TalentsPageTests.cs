@@ -5,7 +5,7 @@ using Xunit;
 
 namespace NewLoopPlus.Tests;
 
-/// <summary>The Talents tab sees the game's own talents and the file, and a save never writes a file the mod cannot read.</summary>
+/// <summary>The Talents tab sees the game's talents and the file, and a save never writes a file the mod cannot read.</summary>
 public class TalentsPageTests
 {
     private const string CallStart = "window.__slnlpTalents&&window.__slnlpTalents.data(";

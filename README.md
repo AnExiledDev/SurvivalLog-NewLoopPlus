@@ -7,7 +7,7 @@ End a run whenever you like and go straight to the death screen, so you can star
 - **End Run button**: the pause menu gets an **End Run** button near the bottom, below other mods' buttons and above Restart and Save & Exit.
 - **Always asks first**: clicking it opens a confirm dialog. Nothing ends until you click **End Run** in that dialog; Cancel or a click outside it closes the dialog and leaves the run alone.
 - **Shows what you will get**: in a normal run the dialog shows the Planning Points the death screen will pay, split into survival points, crises and days survived. In Casual mode it says the run gives no Planning Points. In endless and challenge runs it says the run is settled on that mode's own results screen.
-- **The game's own death**: on confirm the pause menu closes, and as soon as the game runs again the run ends exactly as a death does. The death screen, the settlement and the save are the game's own.
+- **The game's death**: on confirm the pause menu closes, and as soon as the game runs again the run ends exactly as a death does. The death screen, the settlement and the save are the game's.
 - **Planning Points multipliers**: one overall setting, plus one each for the three parts a run pays: survival points, crises and events, and days survived. The death screen, its breakdown and the End Run preview all show the scaled points.
 - **Starting bonus**: extra Planning Points at the start of each new loop, paid as the loop reward screen opens after a run, so you can spend them right there.
 - **Endless starting points**: a multiplier for the 500 Planning Points a new endless game starts with.
@@ -22,7 +22,7 @@ End a run whenever you like and go straight to the death screen, so you can star
 
 The button only shows in a loaded run past the tutorial that has not already ended. The button and the dialog follow the game's language, English or Simplified Chinese.
 
-With every talent in the talents file switched off, New Loop Plus adds no data of its own to your save. A switched-on talent can leave its levels, and with Last-Minute Preparation its door and window buffs, in the save; switch it off and play a run before removing the mod. You can remove it at any time; points and costs go back to the game's own at the next start. A starting bonus already paid stays paid. Settings are in [CONFIG.md](CONFIG.md).
+With every talent in the talents file switched off, New Loop Plus adds no data of its own to your save. A switched-on talent can leave its levels, and with Last-Minute Preparation its door and window buffs, in the save; switch it off and play a run before removing the mod. You can remove it at any time; points and costs go back to the game's at the next start. A starting bonus already paid stays paid. Settings are in [CONFIG.md](CONFIG.md).
 
 ## Known issues and limits
 
@@ -33,7 +33,7 @@ With every talent in the talents file switched off, New Loop Plus adds no data o
 - Saving from the Talents tab drops the comments in the talents file. The file as it was is kept next to it as `NewLoopPlus.Talents.json.bak`.
 - The Talents tab can change the numbers of the five rewards New Loop Plus finished, but not which effects they give.
 - The talents that were unfinished in the game are the mod's own design, and their text was rewritten to match what they now do.
-- With Seasoned Explorer, a few screens that show Max Exposure before a trip may still show the game's own number; the trip itself uses the higher one.
+- With Seasoned Explorer, a few screens that show Max Exposure before a trip may still show the game's number; the trip itself uses the higher one.
 - Endless rewards bought outside endless stay bought when EndlessRewardsEverywhere is switched off again, but most of them then do nothing outside endless.
 - The points preview is worked out the way the game settles a death. If a value it needs cannot be read, the dialog says the death screen will show the points instead.
 

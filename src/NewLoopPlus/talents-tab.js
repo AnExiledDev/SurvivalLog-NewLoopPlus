@@ -397,7 +397,7 @@
     return (/^[AEFHILMNORSX]/.test(name) ? 'an ' : 'a ') + name;
   }
 
-  // Filled from the game's own reward names once the data arrives.
+  // Filled from the game's reward names once the data arrives.
   const named = { groups: [], skills: [], xp: [], work: [], robots: [] };
 
   function nameOptions() {
@@ -461,7 +461,7 @@
     FX.push(Object.assign({ usedBy: [], finishes: [], params: [], modes: 'both', pickable: true, raw: false }, o, { scripts: o.scripts || [o.script] }));
   }
 
-  // ---- The game's own effect scripts, with names and units a player can read. ----
+  // ---- The game's effect scripts, with names and units a player can read. ----
 
   fx({ id: 'game:countdown', src: 'game', cat: 'prep', script: 'PreDisaster_AddCountDownTime',
     en: 'More time before the disaster', zh: '灾难前更多时间', what: ['Adds hours to the countdown before the disaster hits.', '增加灾难来临前的倒计时。'],
@@ -1894,7 +1894,7 @@
 
     if (!ghost && !e.frozen && e.givesLocked) html += note(L('What this reward gives cannot be changed here; its cost, levels and text can.', '此奖励的效果无法在这里修改；消耗、等级和文字可以。'));
 
-    if (hasNoScript(e)) html += note(L('This reward runs from the game\'s own code, so there is no effect to show. An effect you add gives on top of it.', '此奖励由游戏自身代码运行，没有可显示的效果。添加的效果会额外生效。'));
+    if (hasNoScript(e)) html += note(L('This reward runs from the game\'s code, so there is no effect to show. An effect you add gives on top of it.', '此奖励由游戏自身代码运行，没有可显示的效果。添加的效果会额外生效。'));
 
     return html;
   }

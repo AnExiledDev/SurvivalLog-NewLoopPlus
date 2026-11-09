@@ -6,14 +6,14 @@ using NewLoopPlus.Core;
 namespace NewLoopPlus.Adapters;
 
 /// <summary>
-/// Family Recipe and Drone Pilot change the game's own settings, so cooking, the trade drone and their previews all
+/// Family Recipe and Drone Pilot change the game's settings, so cooking, the trade drone and their previews all
 /// show the change with nothing patched. Family Recipe adds to GlobalSetting CookingQuality_FreshBonus and
 /// CookingQuality_ExactMatchBonus and lowers CookingMultiPot_UnlockLevel; Drone Pilot shortens
 /// StrangerTradeDroneRoundtripSec; Good Neighbor adds to Neighbor_AffinitySend and Companion_AffinitySend (the affinity
 /// a basket gives); the vehicle discount lowers each Config_Vehicle Price, which the shop, its refund and the purchase
 /// all read. The GameKey caches of the settings are kept in step too. Max exposure and travel time are hooks
 /// (<see cref="ExploreTravelHooks"/>), told the amounts here, and so are the phone's loan choices (<see cref="LoanTierHooks"/>). The amounts follow the levels
-/// owned, so each check works them out again and, when they changed, every value is worked out again from the game's own.
+/// owned, so each check works them out again and, when they changed, every value is worked out again from the game's.
 /// </summary>
 internal sealed class PerkTables
 {
@@ -42,7 +42,7 @@ internal sealed class PerkTables
 
         LoanTierHooks.Use(Perks.Level(LoanTierHooks.TalentId));
 
-        // With neither effect offered and nothing written, the game's own values stand and there is nothing to check.
+        // With neither effect offered and nothing written, the game's values stand and there is nothing to check.
         if (!IsAnyOffered() && _amounts == default) return;
 
         var amounts = new Amounts(Perks.Whole(NlpEffect.DronePilot), Perks.Whole(NlpEffect.FamilyRecipe), (int)Math.Round(Perks.Value(NlpEffect.FamilyRecipe, NlpPerks.SecondWhole)),

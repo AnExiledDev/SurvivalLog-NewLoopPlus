@@ -411,7 +411,7 @@
         {"cost": 35, "buff": 200600}
       ],
       "effects": [
-        // FloatValue0 is the repair speed added (the game's own levels add 0.15 each).
+        // FloatValue0 is the repair speed added (the game's levels add 0.15 each).
         {"id": 200200560, "copyFrom": 200200550, "fields": {"FloatValue0": 0.9}},
         {"id": 200200570, "copyFrom": 200200550, "fields": {"FloatValue0": 1.05}},
         {"id": 200200580, "copyFrom": 200200550, "fields": {"FloatValue0": 1.2}},
@@ -670,7 +670,7 @@
       ]
     },
 
-    // New loop rewards made from effects the game's own talents run.
+    // New loop rewards made from effects the game's talents run.
     {
       "id": 5101,  // Prepper
       "enabled": false,

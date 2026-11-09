@@ -8,7 +8,7 @@ namespace NewLoopPlus.Core;
 /// Decides when a game table needs sweeping again. A sweep reads every row through the game's runtime, so it runs
 /// only when the table was replaced (the game loads a fresh table object), its row count changed, or one of a few
 /// watched rows no longer holds the value this mod wrote. Only rows this mod changed are watched: a reload puts the
-/// game's own value back, which only shows on a row whose value this mod changed.
+/// game's value back, which only shows on a row whose value this mod changed.
 /// </summary>
 public sealed class SweepGate<TKey, TValue>
     where TValue : struct, IEquatable<TValue>

@@ -9,7 +9,7 @@ namespace NewLoopPlus.Adapters;
 
 /// <summary>
 /// The reinforce rules of the talents file. While the survivor holds a talent buff named in a rule, every door and
-/// window of the home carries that rule's buff; the game's own Reinforce buffs raise Max Durability the same way. A
+/// window of the home carries that rule's buff; the game's Reinforce buffs raise Max Durability the same way. A
 /// door or window built later, or a new home after the disaster, is picked up at the next check. Each piece of
 /// furniture gets a rule's buff once, so it stacks with the player's own reinforcing but never with itself.
 /// </summary>

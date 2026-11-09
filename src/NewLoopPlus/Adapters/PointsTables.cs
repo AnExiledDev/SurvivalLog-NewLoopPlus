@@ -7,13 +7,13 @@ using NewLoopPlus.Core;
 namespace NewLoopPlus.Adapters;
 
 /// <summary>
-/// Scales the Planning Points a run earns by editing the game's own numbers, so the death screen, its breakdown and
+/// Scales the Planning Points a run earns by editing the game's numbers, so the death screen, its breakdown and
 /// the End Run preview all show the scaled points with nothing patched:
 /// survival points convert at GlobalSetting SurvivalToBelief, each survived day pays GlobalSetting RecordRewardBelief,
 /// and every crisis and event reward pays its Config_RewardSet BeliefPoint (both the in-run grants and the crisis
 /// total the death screen adds up). A new endless game starts with GlobalSetting Endless_FaithGrant. The GlobalSetting
 /// values are also cached by GameKey once read, so the caches are kept in step. The multipliers can change while the
-/// game runs; the next check then scales every value again from the game's own. Crisis Veteran, when owned, raises the
+/// game runs; the next check then scales every value again from the game's. Crisis Veteran, when owned, raises the
 /// crisis multiplier on top of the setting, so it is checked each time too.
 /// </summary>
 internal sealed class PointsTables
@@ -66,7 +66,7 @@ internal sealed class PointsTables
         ScaleEndlessGrant(config);
     }
 
-    /// <summary>Every value is scaled again from the game's own on this check.</summary>
+    /// <summary>Every value is scaled again from the game's on this check.</summary>
     private void Rescale(PointsMultipliers multipliers)
     {
         _multipliers = multipliers;

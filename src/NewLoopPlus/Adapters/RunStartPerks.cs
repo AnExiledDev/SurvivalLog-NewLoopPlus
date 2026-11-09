@@ -13,7 +13,7 @@ namespace NewLoopPlus.Adapters;
 /// The talents that act once as a run starts: Muscle Memory brings the skills up towards the last run's levels, and
 /// Scout's Notes marks trading posts as already found. Each is done once per run: the run's own counters (GameCounter,
 /// saved with the run) say it was, so a reload does not do it again. A run counts as started a few seconds after it has
-/// loaded and the clock runs, so the game's own start-of-run levels and tags are in first. The tutorial is left alone.
+/// loaded and the clock runs, so the game's start-of-run levels and tags are in first. The tutorial is left alone.
 /// While a run goes on, its skill levels are written to <see cref="MuscleMemory"/>'s file whenever they change, for
 /// the next run to read.
 /// </summary>

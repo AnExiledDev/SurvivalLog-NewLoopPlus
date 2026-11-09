@@ -1,5 +1,5 @@
 // New Loop Plus's web half. Runs in Root.html, the document every game page iframe sits in. Shows End Run's confirm
-// dialog in the pause menu (OutSetting) in the game's own dialog style (the End Run button itself is placed by Exiled's
+// dialog in the pause menu (OutSetting) in the game's dialog style (the End Run button itself is placed by Exiled's
 // Toolkit, from the plugin), and lays out the end-of-day rewards when Extra Pick offers more than three. Talks to the
 // plugin through Exiled's Toolkit's page API ("slmod|newloopplus|<verb>") and is driven by window.__slnlp.
 (function () {
@@ -28,7 +28,7 @@
     if (dialog) dialog.classList.remove('active');
   }
 
-  // The game's own confirm dialog markup and classes (warn-overlay sits above the menu), built once per document.
+  // The game's confirm dialog markup and classes (warn-overlay sits above the menu), built once per document.
   function dialogIn(doc) {
     var dialog = doc.getElementById(DIALOG_ID);
 

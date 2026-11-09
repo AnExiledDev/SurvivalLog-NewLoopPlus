@@ -6,7 +6,7 @@ namespace NewLoopPlus.Core;
 /// <summary>
 /// The game's endless-only loop rewards that the EndlessRewardsEverywhere setting offers in every mode. The camp rewards
 /// and Cartographer stay endless only: they need the endless camps and map. Outside endless the game reads these
-/// rewards' strength as 0 in a few places, so the hooks put the game's own endless math back in; this holds that math.
+/// rewards' strength as 0 in a few places, so the hooks put the game's endless math back in; this holds that math.
 /// </summary>
 public static class EndlessRewards
 {

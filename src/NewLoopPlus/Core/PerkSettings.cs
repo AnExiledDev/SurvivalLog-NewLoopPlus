@@ -3,8 +3,8 @@ using System;
 namespace NewLoopPlus.Core;
 
 /// <summary>
-/// The game settings Family Recipe and Drone Pilot change, worked out from the game's own value and the amount owned.
-/// With nothing owned every value is the game's own.
+/// The game settings Family Recipe and Drone Pilot change, worked out from the game's value and the amount owned.
+/// With nothing owned every value is the game's.
 /// </summary>
 public static class PerkSettings
 {
@@ -16,7 +16,7 @@ public static class PerkSettings
 
     /// <summary>
     /// A drone trip with <paramref name="cutSeconds"/> taken off, then <paramref name="share"/> of what is left,
-    /// never under a minute (or the game's own, when that is shorter).
+    /// never under a minute (or the game's, when that is shorter).
     /// </summary>
     public static int TripSeconds(int gameSeconds, double cutSeconds, double share = 0)
     {
@@ -50,7 +50,7 @@ public static class PerkSettings
     /// <summary>The affinity a basket gives, with <paramref name="added"/> on top.</summary>
     public static int AffinityPerBasket(int gameAffinity, double added) => gameAffinity + Math.Max(0, (int)Math.Round(added));
 
-    /// <summary>A vehicle's price with <paramref name="discount"/> taken off, rounded, never below 1 (or the game's own, when that is lower).</summary>
+    /// <summary>A vehicle's price with <paramref name="discount"/> taken off, rounded, never below 1 (or the game's, when that is lower).</summary>
     public static int VehiclePrice(int gamePrice, double discount)
     {
         var cut = Math.Min(Math.Max(discount, 0), MaxVehicleDiscount);

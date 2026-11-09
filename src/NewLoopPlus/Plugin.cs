@@ -94,7 +94,7 @@ public sealed class Plugin : BasePlugin
 
     /// <summary>
     /// The points tables are always checked, because a multiplier changed in game may need them put back. The talents
-    /// file is written before the costs are scaled, so a cost it sets is scaled like the game's own.
+    /// file is written before the costs are scaled, so a cost it sets is scaled like the game's.
     /// </summary>
     private void StartScaling(CostMultipliers costs, TalentFile talents, TalentsTab tab, System.Action<string> log)
     {
@@ -110,7 +110,7 @@ public sealed class Plugin : BasePlugin
         if (reinforce.Count > 0) ScaleTicker.Checks.Add(new DoorWindowReinforcement(reinforce, log).Tick);
 
         if (costs.ChangesAnything) ScaleTicker.Checks.Add(new TalentCosts(costs, log).Tick);
-        else log("loop reward costs are the game's own");
+        else log("loop reward costs are the game's");
 
         ScaleTicker.Log = log;
         AddComponent<ScaleTicker>();
@@ -139,7 +139,7 @@ public sealed class Plugin : BasePlugin
             var multipliers = new PointsMultipliers(Rounded(overall), Rounded(survival), Rounded(crisis), Rounded(record), Rounded(endless));
 
             tables.Use(multipliers);
-            log(multipliers.ChangesAnything ? $"Planning Points multipliers: {multipliers}" : "Planning Points multipliers are all 1, points are the game's own");
+            log(multipliers.ChangesAnything ? $"Planning Points multipliers: {multipliers}" : "Planning Points multipliers are all 1, points are the game's");
         }, overall, survival, crisis, record, endless);
     }
 

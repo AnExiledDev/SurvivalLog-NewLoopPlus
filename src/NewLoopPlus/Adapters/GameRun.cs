@@ -12,7 +12,7 @@ namespace NewLoopPlus.Adapters;
 
 /// <summary>
 /// The game side of End Run. The run ends through BattleMain.GameOver with the arguments LeadingRole.OnStateDead
-/// passes on a real death, so the death screen, settlement and save are the game's own.
+/// passes on a real death, so the death screen, settlement and save are the game's.
 /// </summary>
 internal sealed class GameRun : IRunGame
 {

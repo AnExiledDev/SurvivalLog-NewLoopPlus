@@ -5,7 +5,7 @@ Description (BBCode):
 [center][img]https://sldb.core-directive.com/media/save/3-remove-with-care.png[/img]
 [img]https://sldb.core-directive.com/media/notice/beta.png[/img][/center]
 
-Want a fresh loop without waiting for your character to die? New Loop Plus adds an End Run button to the pause menu. Confirm, and the run ends exactly as a death does: the death screen, the settlement and the save are the game's own. It also lets you tune how many Planning Points a run earns and what loop rewards cost.
+Want a fresh loop without waiting for your character to die? New Loop Plus adds an End Run button to the pause menu. Confirm, and the run ends exactly as a death does: the death screen, the settlement and the save are the game's. It also lets you tune how many Planning Points a run earns and what loop rewards cost.
 
 [size=5]Main features[/size]
 [list]
@@ -22,7 +22,7 @@ Want a fresh loop without waiting for your character to die? New Loop Plus adds 
 [*][b]Endless rewards everywhere[/b]: an option, off by default, that offers the endless mode loop rewards in every mode and makes them work there as they do in endless. The camp rewards and Cartographer stay endless only.[/*]
 [*][b]Talents tab[/b]: with the Mod Manager 0.7.0 or newer, New Loop Plus's page gets a Talents tab that edits the talents file for you. Change what any loop reward costs, how many levels it has, its numbers and its text, switch the file's rewards on or off, or click NEW REWARD to build your own from the effects the game's rewards use and the mod's own, with any talent or item image. SAVE writes the file; the changes apply at the next game start.[/*]
 [/list]
-With every talent in the talents file switched off, New Loop Plus adds no data of its own to your save. A switched-on talent can leave its levels in the save; switch it off and play a run before removing the mod. Points and costs go back to the game's own at the next start.
+With every talent in the talents file switched off, New Loop Plus adds no data of its own to your save. A switched-on talent can leave its levels in the save; switch it off and play a run before removing the mod. Points and costs go back to the game's at the next start.
 
 Works in English and Chinese.
 

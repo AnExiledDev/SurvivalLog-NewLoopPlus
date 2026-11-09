@@ -225,7 +225,7 @@ public class CrisisVeteranTests
     }
 }
 
-/// <summary>Family Recipe and Drone Pilot change game settings, and with nothing owned leave the game's own.</summary>
+/// <summary>Family Recipe and Drone Pilot change game settings, and with nothing owned leave the game's.</summary>
 public class PerkSettingsTests
 {
     [Theory]

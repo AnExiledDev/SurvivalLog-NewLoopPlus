@@ -17,7 +17,7 @@ public sealed class MultiUseBuffs
 
     public int Count => _ids.Count;
 
-    /// <summary>The uses left after spending <paramref name="spent"/> of <paramref name="uses"/>, or null when the game's own step is right: not one of these buffs, or no use left after it.</summary>
+    /// <summary>The uses left after spending <paramref name="spent"/> of <paramref name="uses"/>, or null when the game's step is right: not one of these buffs, or no use left after it.</summary>
     public int? UsesLeft(int buffId, int uses, int spent)
     {
         if (!_ids.Contains(buffId) || spent <= 0) return null;

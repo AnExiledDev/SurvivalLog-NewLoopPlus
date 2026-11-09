@@ -16,7 +16,7 @@ namespace NewLoopPlus.Adapters;
 /// Config_DailyRandom groups and cut the list to 3, and a day with a fixed list (no groups) is left alone. The hooks
 /// run after the game's pick and draw the extras from the same groups the same way, keeping out every reward already
 /// offered and the ones the game is cooling down. They run last, so with More Rewards installed the extras come on top
-/// of its count. Buying does not check the offer list, so an extra reward is bought like the game's own.
+/// of its count. Buying does not check the offer list, so an extra reward is bought like the game's.
 /// Static because Harmony hooks are.
 /// </summary>
 internal static class ExtraPick

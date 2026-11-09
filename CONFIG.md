@@ -1,6 +1,6 @@
 # New Loop Plus settings
 
-Settings live in `BepInEx\config\com.dev.survivallog.newloopplus.cfg`, created the first time the game starts with the mod. Change it in game on the Mod Manager's Mods screen, or edit the file while the game is closed. Points, Endless and Loop settings apply at once, except `EndlessRewardsEverywhere`; Costs settings apply at the next game start. Delete the file to get the defaults back. Every multiplier goes from 0 to 100, and 1 is the game's own amount.
+Settings live in `BepInEx\config\com.dev.survivallog.newloopplus.cfg`, created the first time the game starts with the mod. Change it in game on the Mod Manager's Mods screen, or edit the file while the game is closed. Points, Endless and Loop settings apply at once, except `EndlessRewardsEverywhere`; Costs settings apply at the next game start. Delete the file to get the defaults back. Every multiplier goes from 0 to 100, and 1 is the game's amount.
 
 ## Points
 
@@ -123,4 +123,4 @@ A talent entry takes:
 | `reinforce` | `[{ "talentBuff": A, "doorWindowBuff": B }]`: while you have buff A, every door and window of your home gets buff B. |
 | `gives` | What each level gives: a list of `{ "effect": "game:<script>", "choice": { }, "levels": [{ }, ...] }`. `effect` names an effect script one of the game's talents runs, or one of New Loop Plus's own effects as `nlp:<name>` (`interest`, `safety-net`, `extra-pick`, `crisis-veteran`, `second-wind`, `lucky-finds`, `muscle-memory`, `scouts-notes`, `tinkerer`, `family-recipe`, `drone-pilot`; the default file shows the fields each one reads); `choice` holds fields that stay the same at every level, and `levels` one `{ }` of fields per level (a level past the end uses the last). Each give gets its own buff and effect rows, so the talent ID must be 1000 to 9999 and a talent can have at most 10 gives. A level's `buff` is ignored when the talent has gives. |
 
-The `buffs` and `effects` lists at the bottom of the file always apply. Field names are the game's own table names (`ConfigName`, `IntValue0`, `BuffSatietyDel`, `EffectConfigId` and so on). A cost set here is still scaled by `CostMultiplier` and `TalentCostOverrides`.
+The `buffs` and `effects` lists at the bottom of the file always apply. Field names are the game's table names (`ConfigName`, `IntValue0`, `BuffSatietyDel`, `EffectConfigId` and so on). A cost set here is still scaled by `CostMultiplier` and `TalentCostOverrides`.
