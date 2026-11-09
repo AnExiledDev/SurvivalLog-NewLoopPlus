@@ -2,6 +2,8 @@ Name: New Loop Plus
 Summary: End a run from the pause menu and start a new loop at once, tune the Planning Points runs earn and what loop rewards cost, and add new loop rewards. Thirty-six new rewards and five more levels for seventeen game rewards ship switched off, and a Talents tab in the Mod Manager lets you edit any reward or build your own.
 
 Description (BBCode):
+[center][img]https://sldb.core-directive.com/media/notice/beta.png[/img][/center]
+
 Want a fresh loop without waiting for your character to die? New Loop Plus adds an End Run button to the pause menu. Confirm, and the run ends exactly as a death does: the death screen, the settlement and the save are the game's own. It also lets you tune how many Planning Points a run earns and what loop rewards cost.
 
 [size=5]Main features[/size]
