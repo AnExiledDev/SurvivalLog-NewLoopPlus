@@ -17,11 +17,11 @@ namespace NewLoopPlus;
 public sealed class Plugin : BasePlugin
 {
     private const string Guid = "com.dev.survivallog.newloopplus";
-    private const string Version = "0.11.0";
+    private const string Version = "0.11.1";
 
     /// <summary>Exiled's Toolkit: its shared helpers, toasts, live settings and the End Run button's place in the pause menu all come from it.</summary>
     private const string ToolkitGuid = "com.dev.survivallog.exiledtoolkit";
-    private const string ToolkitVersion = ">=0.19.0";
+    private const string ToolkitVersion = ">=0.20.0";
 
     private const string LogFileName = "new-loop-plus.log";
     private const string TalentsFileName = "NewLoopPlus.Talents.json";
@@ -50,7 +50,7 @@ public sealed class Plugin : BasePlugin
         AddComponent<EndRunTicker>();
         AddEndRunButton(endRun);
         LoopStartBonus.Apply(hooks, log.Write);
-        ExtraPick.Apply(harmony, hooks, log.Write);
+        ExtraPick.Apply(hooks, log.Write);
         SecondWind.Apply(hooks, log.Write);
         LuckyFinds.Apply(hooks);
         Tinkerer.Apply(hooks, log.Write);

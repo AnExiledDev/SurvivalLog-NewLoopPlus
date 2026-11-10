@@ -27,28 +27,17 @@ internal static class ExtraPick
     private static Action<string> _log = _ => { };
     private static PatchKit? _hooks;
 
-    /// <summary>Placed with Harmony itself rather than through <see cref="PatchKit"/>, which cannot ask to run last.</summary>
-    public static void Apply(Harmony harmony, PatchKit hooks, Action<string> log)
+    public static void Apply(PatchKit hooks, Action<string> log)
     {
         _log = log;
         _hooks = hooks;
-        Hook(harmony, DayParameters, nameof(AddToDayRewards), "the end of the day");
-        Hook(harmony, RefreshParameters, nameof(AddToRefresh), "a refresh");
+        Hook(hooks, DayParameters, nameof(AddToDayRewards), "the end of the day");
+        Hook(hooks, RefreshParameters, nameof(AddToRefresh), "a refresh");
     }
 
-    private static void Hook(Harmony harmony, Type[] parameters, string postfix, string when)
-    {
-        try
-        {
-            var target = AccessTools.Method(typeof(SurvivalPlanningComponent), nameof(SurvivalPlanningComponent.GetRandomSurvivalPlanIds), parameters);
-
-            harmony.Patch(target, postfix: new HarmonyMethod(typeof(ExtraPick), postfix) { priority = Priority.Last });
-        }
-        catch (Exception ex)
-        {
-            _log($"could not hook the end-of-day rewards, Extra Pick adds nothing to {when}: {ex.Message}");
-        }
-    }
+    private static void Hook(PatchKit hooks, Type[] parameters, string postfix, string when) =>
+        hooks.Patch(typeof(ExtraPick), typeof(SurvivalPlanningComponent), nameof(SurvivalPlanningComponent.GetRandomSurvivalPlanIds), parameters, Priority.Last,
+            postfix: postfix, consequence: $"Extra Pick adds nothing to {when}");
 
     private static void AddToDayRewards(SurvivalPlanningComponent __instance, int day, Il2CppIntSet cooldownIds, Il2CppInts __result)
     {

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.11.1
+
+- Now needs Exiled's Toolkit 0.20.0 or newer.
+- Made for Survival Log 1.1.20719.
+
 ## 0.11.0
 
 - Two new loop rewards for Wind Power's turbines, switched off like the other new rewards: Wind Engineer (15 / 30 / 45% more power) and Wind Tuning (5% to 50% more over ten levels, adds to Wind Engineer). They need Wind Power 0.9.3 or newer; without it they are left out of the game.
