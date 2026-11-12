@@ -374,7 +374,7 @@
     ['farm', 'Farming', '种植'],
     ['defense', 'Traps and defense', '陷阱与防御'],
     ['money', 'Money and trade', '金钱与交易'],
-    ['loop', 'The loop', '轮回'],
+    ['loop', 'Loop', '轮回'],
     ['raw', 'Other game scripts', '其他游戏脚本']
   ].map(c => ({ id: c[0], en: c[1], zh: c[2] }));
 
@@ -569,7 +569,7 @@
     desc: (v, zh, p) => zh ? opt(p[0], v.stat, true) + '上限+' + fmt(v.BuffMax) : 'Max ' + opt(p[0], v.stat) + ' +' + fmt(v.BuffMax) + '.' });
 
   fx({ id: 'game:cold', src: 'game', cat: 'body', script: 'AE_ColdDebuffReduce',
-    en: 'Resist the cold', zh: '耐寒', what: ['Cold snaps take less Satiety, Morale and Health.', '寒潮受冻时扣减的饱腹、心态、活力减少。'],
+    en: 'Resist the cold', zh: '耐寒', what: ['Cold snaps take less Satiety, Morale and Vitality.', '寒潮受冻时扣减的饱腹、心态、活力减少。'],
     params: [pct('FloatValue0', 'Less cold damage', '受冻减免', [25, 40, 50])],
     line: v => '-' + fmt(v.FloatValue0) + '%',
     desc: (v, zh) => zh ? '寒潮受冻时，扣减的饱腹 / 心态 / 活力减免' + fmt(v.FloatValue0) + '%' : 'Cold snaps take ' + fmt(v.FloatValue0) + '% less Satiety, Morale and Vitality.' });
@@ -703,7 +703,7 @@
     desc: (v, zh) => zh ? '结算时购买奖励选项享受' + fmt(v.FloatValue0) + '%折扣' : fmt(v.FloatValue0) + '% off rewards bought at settlement.' });
 
   fx({ id: 'game:savings', src: 'game', cat: 'money', script: 'Savings_Plan',
-    en: 'More Survival Points each day', zh: '每日生存点加成', what: ['A share more of each day\'s Survival Points.', '每天获得的生存点增加。'],
+    en: 'More Survival Points each day', zh: '每日生存点加成', what: ['Each day pays more Survival Points.', '每天获得的生存点增加。'],
     params: [pct('FloatValue0', 'More points', '生存点加成', [5, 10, 15])],
     line: v => '+' + fmt(v.FloatValue0) + '%',
     desc: (v, zh) => zh ? '每天获得的生存点增加' + fmt(v.FloatValue0) + '%' : 'Daily Survival Points +' + fmt(v.FloatValue0) + '%.' });
@@ -769,7 +769,7 @@
 
   fx({ id: 'nlp:alone', src: 'nlp', cat: 'morale', scripts: [], pickable: false, finishes: [2007],
     en: 'Morale while alone', zh: '独处恢复心态', what: ['Morale comes back on a timer while you are Lonely.', '处于「孤独」状态时定时恢复心态。'],
-    params: [num('BuffInterval', 'Hours between each Morale', '每次恢复心态间隔', ['h', '小时'], [5, 4, 3, 2, 1], { scale: 1 / 3600, min: 0.5, step: 0.5 })],
+    params: [num('BuffInterval', 'Hours per Morale point', '每次恢复心态间隔', ['h', '小时'], [5, 4, 3, 2, 1], { scale: 1 / 3600, min: 0.5, step: 0.5 })],
     line: (v, zh) => fmt(v.BuffInterval) + (zh ? '小时' : 'h'),
     desc: (v, zh) => zh ? '处于「孤独」状态时，每' + fmt(v.BuffInterval) + '小时恢复1点心态' : 'While Lonely, recover 1 Morale every ' + fmt(v.BuffInterval) + ' hours.' });
 
@@ -782,7 +782,7 @@
     desc: (v, zh) => zh ? '新轮回开始时，获得保留信念点的' + fmt(v.FloatValue0) + '%' : 'Each new loop pays ' + fmt(v.FloatValue0) + '% interest on the Planning Points you kept.' });
 
   fx({ id: 'nlp:safety-net', src: 'nlp', nlp: 'safety-net', cat: 'loop', scripts: [],
-    en: 'Fewest points a run pays', zh: '信念点保底', what: ['A run that settles for less pays at least this many Planning Points.', '结算的信念点不足时补足到保底值。'],
+    en: 'Minimum points a run pays', zh: '信念点保底', what: ['A run that pays less is topped up to this many Planning Points as the next loop starts.', '结算的信念点不足时补足到保底值。'],
     params: [num('IntValue0', 'At least', '至少', ['points', '点'], [100, 200, 300], { step: 50 })],
     line: (v, zh) => fmt(v.IntValue0) + (zh ? '点' : ' points'),
     desc: (v, zh) => zh ? '一局结算所得的信念点不足' + fmt(v.IntValue0) + '点时，在开始新轮回时补足' : 'A run that pays fewer than ' + fmt(v.IntValue0) + ' Planning Points is topped up to ' + fmt(v.IntValue0) + ' as the next loop starts.' });
@@ -868,7 +868,7 @@
     desc: (v, zh) => zh ? '最大暴露上限 +' + fmt(v.IntValue0) : 'Max Exposure +' + fmt(v.IntValue0) + '.' });
 
   fx({ id: 'nlp:vehicle-discount', src: 'nlp', nlp: 'vehicle-discount', cat: 'money', scripts: [],
-    en: 'Cheaper vehicles', zh: '载具降价', what: ['Vehicles cost fewer coins, at most 90% off.', '购买载具花费的金币减少，最多减90%。'],
+    en: 'Cheaper vehicles', zh: '载具降价', what: ['Vehicles cost less, at most 90% off.', '购买载具更便宜，最多减90%。'],
     params: [pct('FloatValue0', 'Off the price', '降价', [10, 20, 30])],
     line: v => '-' + fmt(v.FloatValue0) + '%',
     desc: (v, zh) => zh ? '载具价格降低' + fmt(v.FloatValue0) + '%' : 'Vehicles cost ' + fmt(v.FloatValue0) + '% less.' });
@@ -1884,17 +1884,17 @@
     const note = text => '<div class="nnote">' + text + '</div>';
     let html;
 
-    if (e.frozen && !ghost) html = note(L('This reward uses parts of the file the tab cannot edit; change it in NewLoopPlus.Talents.json.', '此奖励使用了本页无法编辑的文件内容；请在 NewLoopPlus.Talents.json 中修改。'));
-    else if (ghost) html = note(L('This reward is the game\'s, unchanged.', '这是游戏原版奖励，未修改。'));
-    else if (e.fresh) html = note(L('A reward of your own. Pick an icon, a name and what it gives; the text writes itself from the numbers.', '你自己的奖励。选图标、名称和效果；文字会根据数字自动生成。'));
+    if (e.frozen && !ghost) html = note(L('This reward uses parts of the file the tab cannot edit. Change it in NewLoopPlus.Talents.json.', '此奖励使用了本页无法编辑的文件内容。请在 NewLoopPlus.Talents.json 中修改。'));
+    else if (ghost) html = note(L('This is one of the game\'s rewards, and it hasn\'t been changed.', '这是游戏中的奖励，没有改动过。'));
+    else if (e.fresh) html = note(L('A reward of your own. Pick an icon, a name and what it gives. The text writes itself from the numbers.', '你自己的奖励。选图标、名称和效果。文字会根据数字自动生成。'));
     else if (e.kind === 'cut') html = note(L('The game left this reward\'s effect in place but never offers it. Switching it on adds it to the loop screen as it is.', '游戏保留了此奖励的效果但从未提供。打开后它会原样出现在轮回界面。'));
-    else if (e.kind === 'finished') html = note(L('The game never finished this reward. New Loop Plus adds the missing effect; the numbers above are what it gives.', '游戏未完成此奖励。新轮回+补上了缺失的效果；上面的数字就是它给的。'));
+    else if (e.kind === 'finished') html = note(L('The game never finished this reward. New Loop Plus adds the missing effect. The numbers above are what it gives.', '游戏未完成此奖励。新轮回+补上了缺失的效果。上面的数字就是它给的。'));
     else if (e.kind === 'new') html = note(L('A new reward, copied from', '一个新奖励，复制自') + ' <b>' + esc(e.copySrc ? textIn(e.copySrc.name, st.lang) : '#' + e.copyFrom) + '</b>');
     else html = note(L('You can change what it gives, its cost, levels and text here.', '这里可以改效果、消耗、等级和文字。'));
 
-    if (!ghost && !e.frozen && e.givesLocked) html += note(L('What this reward gives cannot be changed here; its cost, levels and text can.', '此奖励的效果无法在这里修改；消耗、等级和文字可以。'));
+    if (!ghost && !e.frozen && e.givesLocked) html += note(L('You can change this reward\'s cost, levels and text here, but not what it gives.', '这里可以修改此奖励的消耗、等级和文字，但不能修改它的效果。'));
 
-    if (hasNoScript(e)) html += note(L('This reward runs from the game\'s code, so there is no effect to show. An effect you add gives on top of it.', '此奖励由游戏自身代码运行，没有可显示的效果。添加的效果会额外生效。'));
+    if (hasNoScript(e)) html += note(L('The game\'s code runs this reward, so there is no effect to show. Any effect you add works on top of it.', '此奖励由游戏自身代码运行，没有可显示的效果。添加的效果会额外生效。'));
 
     return html;
   }
@@ -2261,12 +2261,12 @@
 
     if (f.modes === 'endless') notes.push(L('The game only applies this in Endless mode.', '游戏只在无尽模式中生效。'));
 
-    if (f.nlp) notes.push(L('Run by New Loop Plus itself, not by a game script.', '由新轮回+自身实现，而非游戏脚本。'));
+    if (f.nlp) notes.push(L('New Loop Plus runs this effect itself.', '由新轮回+自身实现。'));
     else if (f.src === 'nlp') notes.push(L('Written by New Loop Plus to finish a reward the game left empty.', '由新轮回+编写，用于补完游戏留空的奖励。'));
 
     if (f.raw) notes.push(L('A game script with no friendly names yet. Its numbers are the raw fields from the game\'s tables.', '尚未命名的游戏脚本。数值为游戏表中的原始字段。'));
 
-    if (!numsOf(f).length) notes.push(L('No numbers: a reward with only this effect is the same at every level.', '没有数值：只有此效果的奖励每级相同。'));
+    if (!numsOf(f).length) notes.push(L('This effect has no numbers, so a reward with only this effect is the same at every level.', '此效果没有数值，所以只有此效果的奖励每级都一样。'));
 
     let html = '<div class="fxd"><div class="fxd-top"><img src="' + esc(fxIcon(f)) + '" alt=""><div>' +
       '<div class="fxd-n">' + esc(fxName(f, st.lang === 'zh')) + '</div>' +
@@ -2279,7 +2279,7 @@
 
     if (users.length) html += '<h4>' + L('REWARDS THAT USE IT', '使用它的奖励') + '</h4><div class="ub">' + users.map(id => '<span><img src="' + esc(st.byId[id] ? st.byId[id].icon : '') + '" alt="">' + esc(talentName(id)) + '</span>').join('') + '</div>';
 
-    if (notes.length) html += '<h4>' + L('GOOD TO KNOW', '提示') + '</h4>' + notes.map(n => '<div class="fn">' + n + '</div>').join('');
+    if (notes.length) html += '<h4>' + L('NOTES', '提示') + '</h4>' + notes.map(n => '<div class="fn">' + n + '</div>').join('');
 
     return html + chooseButton(e, f) + '</div>';
   }

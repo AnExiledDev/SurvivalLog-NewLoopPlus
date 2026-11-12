@@ -1,6 +1,6 @@
 # New Loop Plus settings
 
-Settings live in `BepInEx\config\com.dev.survivallog.newloopplus.cfg`, created the first time the game starts with the mod. Change it in game on the Mod Manager's Mods screen, or edit the file while the game is closed. Points, Endless and Loop settings apply at once, except `EndlessRewardsEverywhere`; Costs settings apply at the next game start. Delete the file to get the defaults back. Every multiplier goes from 0 to 100, and 1 is the game's amount.
+Settings live in `BepInEx\config\com.dev.survivallog.newloopplus.cfg`, created the first time the game starts with the mod. Change them in game on the Mod Manager's Mods screen, or edit the file while the game is closed. Points, Endless and Loop settings apply at once, except `EndlessRewardsEverywhere`. Costs settings apply at the next game start. Delete the file to get the defaults back. You set every multiplier from 0 to 100, and 1 changes nothing.
 
 ## Points
 
@@ -37,9 +37,9 @@ Survival plans, bought with survival points during a run, are not changed by the
 
 ## Talents file
 
-With the Mod Manager 0.7.0 or newer, the Talents tab on New Loop Plus's page edits this file for you, and SAVE writes it. Saving drops the comments; the file as it was is kept as `NewLoopPlus.Talents.json.bak`. Saved changes apply at the next game start.
+With the Mod Manager 0.7.0 or newer, the Talents tab on New Loop Plus's page edits this file for you, and SAVE writes it. Saving drops the comments, and the file as it was is kept as `NewLoopPlus.Talents.json.bak`. Saved changes apply at the next game start.
 
-`BepInEx\config\NewLoopPlus.Talents.json` is written the first time the game starts with the mod. It is read once at game start, so edit it while the game is closed. Delete it to get the defaults back. Comments (`//`) and trailing commas are allowed. An entry that cannot be read is skipped and named in `BepInEx\new-loop-plus.log`; the rest still apply. A file that is not valid JSON applies nothing.
+`BepInEx\config\NewLoopPlus.Talents.json` is written the first time the game starts with the mod. It is read once at game start, so edit it while the game is closed. Delete it to get the defaults back. Comments (`//`) and trailing commas are allowed. An entry that cannot be read is skipped and named in `BepInEx\new-loop-plus.log`, and the rest still apply. A file that is not valid JSON applies nothing.
 
 Every talent in the default file starts switched off. Set `"enabled": true` on one to add it to the loop rewards.
 
@@ -63,13 +63,13 @@ Every talent in the default file starts switched off. Set `"enabled": true` on o
 | Hoarding Habit | 1007 | Five more levels: 9 / 10 / 11 / 12 / 15 random food items left in your home's cabinets. |
 | Resourceful Management | 1011 | Five more levels: a loan limit of 2400 / 3000 / 3800 / 4600 / 5500. The phone's three bigger loans go up with the level, so the biggest is always your limit. |
 | Interior Decorator | 1012 | Five more levels: 20 / 25 / 30 / 35 / 40% off furniture. |
-| Quick Fortification | 2005 | Five more levels, each as much stronger as the game's levels are. |
+| Quick Fortification | 2005 | Five more levels: fix windows and doors 90 / 105 / 120 / 135 / 150% more efficiently. The game's five levels go up by 15% each. |
 | Gratitude | 2008 | Five more levels: a fulfilled wish's status lasts 15 / 18 / 21 / 24 / 30 hours longer. |
 | Mental Toughness | 2010 | Five more levels, with more than one use: +80 Morale twice, +90 twice, +90 three times, +100 three times, +100 four times. Each use also gives Tranquility. |
 | Energy Saver | 2011 | Five more levels: power use 25 / 30 / 35 / 40 / 50% lower. |
 | Bargaining | 2013 | Five more levels: strangers value your goods 40 / 50 / 60 / 80 / 100% higher. |
 | Deep Freeze | 2014 | Five more levels: food spoils 55 / 65 / 75 / 85 / 90% slower in the Refrigerator. |
-| Mold Master | 2015 | Eight levels in all: 15 / 30 / 45 / 60 / 70 / 80 / 90 / 100% less quality penalty from spoiled ingredients. The game's level 3 already takes off all of it, so levels 2 and 3 are weaker than the game's. |
+| Mold Master | 2015 | Eight levels in all: 15 / 30 / 45 / 60 / 70 / 80 / 90 / 100% less quality penalty from spoiled ingredients. The game's level 3 already takes off all of it, so levels 2 and 3 are weaker than before. |
 | Long Harvest | 2016 | Five more levels: the harvest window lasts 130 / 160 / 200 / 250 / 300% longer. |
 | Cold-Resistant Constitution | 2018 | Five more levels: cold waves take 55 / 60 / 65 / 70 / 75% less Satiety, Morale and Vitality. |
 | Prepper | 5101 | +1 / +2 / +3 hours before the disaster, +0.5 / +1 / +1.5 kg shopping weight. |
@@ -83,7 +83,7 @@ Every talent in the default file starts switched off. Set `"enabled": true` on o
 | Old Friend | 5109 | Start with an HK-1 sorting robot and its full set of blueprints. |
 | Light Footed | 5110 | Exposure builds 10 / 20 / 30% slower while exploring. |
 | Interest | 5111 | As each new loop starts, 5 / 10 / 15% interest on the Planning Points kept from the last one. |
-| Safety Net | 5112 | A run that pays fewer than 100 / 200 / 300 Planning Points is topped up to it as the next loop starts. |
+| Safety Net | 5112 | A run that pays fewer than 100 / 200 / 300 Planning Points is topped up to that amount as the next loop starts. |
 | Extra Pick | 5113 | +1 / +2 rewards to choose from at the end of each day. |
 | Crisis Veteran | 5114 | Crises and events reward 10 / 20 / 30% more Planning Points. |
 | Second Wind | 5115 | Once / twice per run, running out of Life leaves you at 30 Life instead. |
@@ -103,11 +103,11 @@ Every talent in the default file starts switched off. Set `"enabled": true` on o
 | Solar Tuning | 5129 | Solar panels make 5 / 10 / 15 / 20 / 25 / 30 / 35 / 40 / 45 / 50% more power. Adds to Solar Engineer. |
 | Generator Tuning | 5130 | Generators make 5 / 10 / 15 / 20 / 25 / 30 / 35 / 40 / 45 / 50% more power. |
 | Seasoned Explorer | 5131 | Max Exposure while exploring is 50 / 100 / 150 / 200 / 250 / 300 / 350 / 400 / 450 / 500 higher, so trips out can last longer. |
-| Dealer Discount | 5132 | Vehicles cost 5 / 10 / 15 / 20 / 25 / 30 / 35 / 40 / 45 / 50% less (normally bicycle 150, car 500, SUV 900). Selling one back pays less to match. |
-| Shortcuts | 5133 | Travel before the disaster takes 5 / 10 / 15 / 20 / 25 / 30 / 35 / 40 / 45 / 50% less time, with or without a vehicle. Adds to the vehicle's own cut. |
-| Fast Rotors | 5134 | Every drone trip (trades, scavenging, deliveries) takes 15 / 30 / 45 / 60 / 75% less time, never under a minute. Adds to Drone Pilot. |
-| Wind Engineer | 5135 | Wind Power's turbines make 15 / 30 / 45% more power. Needs Wind Power 0.9.3 or newer; without it this reward is left out. |
-| Wind Tuning | 5136 | Wind Power's turbines make 5 / 10 / 15 / 20 / 25 / 30 / 35 / 40 / 45 / 50% more power. Adds to Wind Engineer. Needs Wind Power 0.9.3 or newer; without it this reward is left out. |
+| Dealer Discount | 5132 | Vehicles cost 5 / 10 / 15 / 20 / 25 / 30 / 35 / 40 / 45 / 50% less (normally $150 for a bicycle, $500 for a car and $900 for an SUV). Selling one back pays less to match. |
+| Shortcuts | 5133 | Travel before the disaster takes 5 / 10 / 15 / 20 / 25 / 30 / 35 / 40 / 45 / 50% less time, with or without a vehicle. It stacks with the time a vehicle already saves. |
+| Fast Rotors | 5134 | Every drone trip takes 15 / 30 / 45 / 60 / 75% less time, including trades, scavenging and deliveries. A trip never takes under a minute. Adds to Drone Pilot. |
+| Wind Engineer | 5135 | Wind Power's turbines make 15 / 30 / 45% more power. Needs Wind Power 0.9.3 or newer. Without it, this reward is left out. |
+| Wind Tuning | 5136 | Wind Power's turbines make 5 / 10 / 15 / 20 / 25 / 30 / 35 / 40 / 45 / 50% more power. Adds to Wind Engineer. Needs Wind Power 0.9.3 or newer. Without it, this reward is left out. |
 
 A talent entry takes:
 
@@ -118,9 +118,9 @@ A talent entry takes:
 | `copyFrom` | For a talent ID the game does not have: the talent whose rows the new one starts from. |
 | `name`, `description`, `levelText` | Text, either `"plain"` or `{ "en": "...", "zh": "..." }`. A missing language shows the other one. |
 | `fields` | Any talent table field for every level, such as `{ "ShowType": 2 }`. |
-| `levels` | One `{ }` per level, each with optional `cost`, `buff`, `description`, `levelText` and `fields`. More levels than the game has adds levels copied from the highest one; fewer hides the rest. |
+| `levels` | One `{ }` per level, each with optional `cost`, `buff`, `description`, `levelText` and `fields`. More levels than the game has adds levels copied from the highest one, and fewer hides the rest. |
 | `buffs`, `effects` | Buff and effect table rows this talent changes, or makes when given a `copyFrom`. Each has an `id`, an optional `copyFrom` and `fields`. |
 | `reinforce` | `[{ "talentBuff": A, "doorWindowBuff": B }]`: while you have buff A, every door and window of your home gets buff B. |
-| `gives` | What each level gives: a list of `{ "effect": "game:<script>", "choice": { }, "levels": [{ }, ...] }`. `effect` names an effect script one of the game's talents runs, or one of New Loop Plus's own effects as `nlp:<name>` (`interest`, `safety-net`, `extra-pick`, `crisis-veteran`, `second-wind`, `lucky-finds`, `muscle-memory`, `scouts-notes`, `tinkerer`, `family-recipe`, `drone-pilot`; the default file shows the fields each one reads); `choice` holds fields that stay the same at every level, and `levels` one `{ }` of fields per level (a level past the end uses the last). Each give gets its own buff and effect rows, so the talent ID must be 1000 to 9999 and a talent can have at most 10 gives. A level's `buff` is ignored when the talent has gives. |
+| `gives` | What each level gives: a list of `{ "effect": "game:<script>", "choice": { }, "levels": [{ }, ...] }`. `effect` names an effect script one of the game's talents runs, or one of New Loop Plus's own effects as `nlp:<name>`: `interest`, `safety-net`, `extra-pick`, `crisis-veteran`, `second-wind`, `lucky-finds`, `muscle-memory`, `scouts-notes`, `tinkerer`, `family-recipe`, `drone-pilot`, `good-neighbor`, `max-exposure`, `vehicle-discount`, `travel-time`, `drone-speed` and `wind-power` (needs Wind Power). The default file shows the fields each one reads. `choice` holds fields that stay the same at every level, and `levels` holds one `{ }` of fields per level (a level past the end uses the last). Each give gets its own buff and effect rows, so the talent ID must be 1000 to 9999 and a talent can have at most 10 gives. A level's `buff` is ignored when the talent has gives. |
 
-The `buffs` and `effects` lists at the bottom of the file always apply. Field names are the game's table names (`ConfigName`, `IntValue0`, `BuffSatietyDel`, `EffectConfigId` and so on). A cost set here is still scaled by `CostMultiplier` and `TalentCostOverrides`.
+The `buffs` and `effects` lists at the bottom of the file always apply. Field names are the game's table names (`ConfigName`, `IntValue0`, `BuffSatietyDel`, `EffectConfigId` and so on). A cost set here is still multiplied by `CostMultiplier` and `TalentCostOverrides`.

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.11.2
+
+- Clearer wording in the settings, on screen and in the Talents tab.
+- Made for Survival Log 1.1.20719.
+
 ## 0.11.1
 
 - Now needs Exiled's Toolkit 0.20.0 or newer.
@@ -7,9 +12,9 @@
 
 ## 0.11.0
 
-- Two new loop rewards for Wind Power's turbines, switched off like the other new rewards: Wind Engineer (15 / 30 / 45% more power) and Wind Tuning (5% to 50% more over ten levels, adds to Wind Engineer). They need Wind Power 0.9.3 or newer; without it they are left out of the game.
+- Two new loop rewards for Wind Power's turbines, switched off like the other new rewards: Wind Engineer (15 / 30 / 45% more power) and Wind Tuning (5% to 50% more over ten levels, adds to Wind Engineer). They need Wind Power 0.9.3 or newer. Without it, they are left out of the game.
 - With Wind Power installed, the Talents tab offers "Better wind turbines" as an effect for a new reward.
-- They are in the talents file a new install writes. A talents file you already have keeps what it has: add them with the Talents tab, or delete the file to get every default back.
+- A new install gets them in its talents file. If you already have a talents file, it stays as it is, so add them with the Talents tab or delete the file to get every default back.
 - Made for Survival Log 1.1.20719.
 
 ## 0.10.3
@@ -25,19 +30,19 @@
 
 ## 0.10.1
 
-- New Loop Plus's messages (End Run cannot be used now, a perk used at the start of a run, and the like) now show as Exiled's Toolkit toasts. Those toasts also go to the Notifications history.
+- New Loop Plus's messages now show as Exiled's Toolkit toasts, such as when End Run can't be used or a reward kicks in at the start of a run. Those toasts also go to the Notifications history.
 - Exiled's Toolkit 0.11.0 or newer is now required.
-- Removed the `UiScale` setting under Interface. The messages are now Exiled's Toolkit toasts, drawn at the Toolkit's own UI size.
+- Removed the `UiScale` setting under Interface, since the messages now use the Toolkit's UI size.
 - Made for Survival Log 1.1.19611.
 
 ## 0.10.0
 
-- New: `UiScale` under Interface sets the size of New Loop Plus's short messages on screen on their own, from 75% to 200%, whatever Exiled's Toolkit's UI size is. At 0, the default, they follow the Toolkit's. Needs Exiled's Toolkit 0.11.0 or newer.
+- New: `UiScale` under Interface lets you set the size of New Loop Plus's short messages on screen, from 75% to 200%, separately from Exiled's Toolkit's UI size. At 0, the default, they match the Toolkit's size. Needs Exiled's Toolkit 0.11.0 or newer.
 - Made for Survival Log 1.1.19611.
 
 ## 0.9.2
 
-- Less work when the game opens a screen: End Run now only checks the pause menu when the pause menu itself opens, instead of every time any game screen loads.
+- Opening game screens is a little lighter. End Run now checks the pause menu only when the pause menu opens, instead of every time any game screen loads.
 - Made for Survival Log 1.1.19611.
 
 ## 0.9.1
@@ -55,7 +60,7 @@
 - Dealer Discount: vehicles cost up to 50% less. Ten levels.
 - Shortcuts: travel before the disaster takes up to 50% less time, with or without a vehicle. Ten levels.
 - Resourceful Management past level 3: the phone's three bigger loans now go up with your level, up to 3800 / 4600 / 5500 at level 8. Before, they stopped at 1800.
-- These stack with the game's survival plans and the mod's other rewards that do the same thing.
+- These new rewards stack with survival plans and other rewards that do the same thing.
 - The Talents tab's NEW REWARD can use these effects too.
 - Made for Survival Log 1.1.19611.
 
@@ -90,7 +95,7 @@
 
 ## 0.6.2
 
-- Less stutter: the talent and reward tables are only rewritten when the game reloads them, and the background checks take turns instead of all running in the same frame.
+- Less stutter. The talent and reward tables are only rewritten when the game reloads them, and the background checks now take turns instead of all running in the same frame.
 
 ## 0.6.1
 
@@ -107,10 +112,9 @@
 
 ## 0.5.0
 
-- A Talents tab on New Loop Plus's page in the Mod Manager (0.7.0 or newer). It lists every loop reward, and you can change what each one costs, how many levels it has, its numbers, its text, and switch the file's rewards on or off. NEW REWARD makes a reward of your own from the effects the game's rewards use, with an icon, a name, a column and text that writes itself from the numbers. SAVE writes the talents file; changes apply at the next game start.
-- The talents file takes `gives` on a talent: the effects each level gives, by the name of a game effect script. The tab writes these for you.
+- A Talents tab on New Loop Plus's page in the Mod Manager (0.7.0 or newer). It lists every loop reward, and you can change what each one costs, how many levels it has, its numbers, its text, and switch the file's rewards on or off. NEW REWARD makes a reward of your own from the effects the game's rewards use, with an icon, a name, a column and text that writes itself from the numbers. SAVE writes the talents file, and changes apply at the next game start.
+- A talent in the talents file can now have `gives`, a list of the game effects each level gives. The Talents tab writes these for you.
 - Saving from the tab drops the comments in the talents file. The file as it was before is kept next to it as `NewLoopPlus.Talents.json.bak`.
-
 - After a game update, Mod Manager can tell you if this mod may need an update.
 
 ## 0.4.0

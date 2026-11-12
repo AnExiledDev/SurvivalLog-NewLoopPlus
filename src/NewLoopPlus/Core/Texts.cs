@@ -21,14 +21,14 @@ public static class Texts
         "将获得信念点{0}：生存点{1}，危机{2}，生存天数{3}。");
 
     public static readonly Phrase PointsUnknown = new(
-        "The Planning Points you will get could not be worked out; the death screen shows them.",
+        "New Loop Plus couldn't work out your Planning Points. The death screen will show them.",
         "无法预估将获得的信念点，结算界面会显示实际数值。");
 
     public static readonly Phrase CasualLine = new("Casual mode gives no Planning Points.", "休闲模式不获得信念点。");
 
     public static readonly Phrase ModeSettlesLine = new(
-        "This mode settles the run on its own results screen.",
-        "本模式会在其结算界面结算本局。");
+        "This mode shows its own results screen when the run ends.",
+        "本模式会在本局结束时显示自己的结算界面。");
 
     public static readonly Phrase CannotEndNow = new("The run cannot be ended right now.", "当前无法结束本局。");
 
@@ -39,7 +39,7 @@ public static class Texts
     /// <summary>Who a toast is from, on its first line.</summary>
     public static readonly Phrase Source = new("New Loop Plus", "新轮回+");
 
-    public static readonly Phrase Failed = new("End Run failed, see BepInEx/new-loop-plus.log.", "结束本局失败，详见 BepInEx/new-loop-plus.log。");
+    public static readonly Phrase Failed = new("End Run failed. See BepInEx/new-loop-plus.log.", "结束本局失败，详见 BepInEx/new-loop-plus.log。");
 
     public static readonly Phrase TalentsSaved = new(
         "Saved. Changes apply the next time you start the game.",

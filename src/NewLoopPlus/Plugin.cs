@@ -17,7 +17,7 @@ namespace NewLoopPlus;
 public sealed class Plugin : BasePlugin
 {
     private const string Guid = "com.dev.survivallog.newloopplus";
-    private const string Version = "0.11.1";
+    private const string Version = "0.11.2";
 
     /// <summary>Exiled's Toolkit: its shared helpers, toasts, live settings and the End Run button's place in the pause menu all come from it.</summary>
     private const string ToolkitGuid = "com.dev.survivallog.exiledtoolkit";
@@ -119,8 +119,8 @@ public sealed class Plugin : BasePlugin
     private void WatchPoints(PointsTables tables, System.Action<string> log)
     {
         var overall = Multiplier("Points", "OverallMultiplier",
-            "Multiplies every Planning Point a run earns, on top of the three settings below. 1 is the game's amount, 2 doubles it, 0.5 halves it.\n" +
-            "一局获得的所有信念点都乘以这个倍数，并与下面三项叠加。1 为游戏原本的数量，2 为两倍，0.5 为一半。");
+            "Multiplies every Planning Point a run earns, on top of the three settings below. 1 changes nothing, 2 doubles it, 0.5 halves it.\n" +
+            "一局获得的所有信念点都乘以这个倍数，并与下面三项叠加。1 表示不变，2 为两倍，0.5 为一半。");
         var survival = Multiplier("Points", "SurvivalMultiplier",
             "Multiplies the Planning Points that survival points turn into when a run ends.\n" +
             "结算时由生存点换算出的信念点乘以这个倍数。");
@@ -151,15 +151,15 @@ public sealed class Plugin : BasePlugin
 
     private ConfigEntry<bool> BindEndlessEverywhere() =>
         Config.Bind("Loop", "EndlessRewardsEverywhere", false, new ConfigDescription(
-            "Offers the endless mode loop rewards in every mode, so they can be bought and work outside endless too. The camp rewards and Cartographer stay endless only. Applies at the next start.\n" +
-            "在所有模式中提供无尽模式的天赋，在无尽模式之外也能购买并生效。营地类天赋和「地图学家」仍只限无尽模式。下次启动时生效。",
+            "Offers the endless mode loop rewards in every mode, so they can be bought and work outside endless too. The camp rewards and Cartographer stay endless only. Applies at the next game start.\n" +
+            "在所有模式中提供无尽模式的天赋，在无尽模式之外也能购买并生效。营地类天赋和「地图学家」仍只限无尽模式。下次启动游戏时生效。",
             null, AppliesAtRestart));
 
     private CostMultipliers BindCosts(System.Action<string> log)
     {
         var overall = Rounded(Multiplier("Costs", "CostMultiplier",
-            "Multiplies what every loop reward upgrade costs in Planning Points. 1 is the game's price, 0.5 halves it, 0 makes upgrades free.\n" +
-            "所有天赋升级消耗的信念点乘以这个倍数。1 为游戏原价，0.5 为半价，0 为免费。",
+            "Multiplies what every loop reward upgrade costs in Planning Points. 1 keeps the normal price, 0.5 halves it, 0 makes upgrades free.\n" +
+            "所有天赋升级消耗的信念点乘以这个倍数。1 为原价，0.5 为半价，0 为免费。",
             AppliesAtRestart));
         var text = Config.Bind("Costs", "TalentCostOverrides", "", new ConfigDescription(
             "Gives single loop rewards their own cost multiplier in place of CostMultiplier, as talent ID:multiplier pairs separated by commas. Example: 1001:0.5, 2017:2\n" +
