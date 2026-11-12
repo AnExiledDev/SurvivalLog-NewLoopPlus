@@ -225,7 +225,7 @@
         {"cost": 35, "buff": 100400, "description": {"en": "Carry 6kg more weight.", "zh": "提升购物负重6KG"}}
       ],
       "effects": [
-        // IntValue0 is in 1/1200 kg, as in the game's levels.
+        // IntValue0 is in 1/1200 kg, the same unit the game's levels use.
         {"id": 200100360, "copyFrom": 200100350, "fields": {"IntValue0": 4200}},
         {"id": 200100370, "copyFrom": 200100350, "fields": {"IntValue0": 4800}},
         {"id": 200100380, "copyFrom": 200100350, "fields": {"IntValue0": 5400}},

@@ -17,7 +17,7 @@ namespace NewLoopPlus;
 public sealed class Plugin : BasePlugin
 {
     private const string Guid = "com.dev.survivallog.newloopplus";
-    private const string Version = "0.11.2";
+    private const string Version = "0.11.3";
 
     /// <summary>Exiled's Toolkit: its shared helpers, toasts, live settings and the End Run button's place in the pause menu all come from it.</summary>
     private const string ToolkitGuid = "com.dev.survivallog.exiledtoolkit";

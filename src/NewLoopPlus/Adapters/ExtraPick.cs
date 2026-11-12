@@ -49,7 +49,7 @@ internal static class ExtraPick
         }
         catch (Exception ex)
         {
-            _hooks?.Fail("adding Extra Pick rewards at the end of the day", ex);
+            _hooks?.Fail("adding Extra Pick rewards when the day ends", ex);
         }
     }
 

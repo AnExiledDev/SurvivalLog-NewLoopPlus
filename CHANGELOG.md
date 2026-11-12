@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.11.3
+
+- Clearer wording in the log and in the Talents tab.
+- Made for Survival Log 1.1.20719.
+
 ## 0.11.2
 
 - Clearer wording in the settings, on screen and in the Talents tab.
