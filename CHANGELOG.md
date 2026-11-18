@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.12.1
+
+- A reward you have not changed shows each of its levels, with what it costs and what it does. Click a level to see its card.
+- Fixed: the Talents tab had the first of all rewards open next to an empty list of your changes.
+- Now needs Exiled's Toolkit 0.27.0 or newer.
+- Made for Survival Log 1.1.21271.
+
 ## 0.12.0
 
 - The Talents tab has a search box that finds rewards by name or description. Press Enter to open the first match, Up and Down to move through the matches, and Esc to clear it.

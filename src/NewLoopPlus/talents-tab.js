@@ -19,7 +19,7 @@
     range, rawCache, rawFx, readsHtml, renderPicker, resetOrDelete, round2, roundTrips, saved, scriptOfGive, select,
     send, setPick, setText, showIconGroup, shown, showsAuto, stepper, tag, talentIcons, talentName, textIn, toRaw,
     unitOf, winEl, writeText, editorCss, searchHtml, noMatchHtml, clearSearch, onSearchKey, showSelectedRow, fitHeight,
-    watchHeight, renderAfterChange, watchPresses
+    watchHeight, renderAfterChange, watchPresses, keepSelectionInView
   } = window.ExiledEditor.make(T);
 
   const PREFIX = 'slmod|newloopplus|';
@@ -540,10 +540,8 @@
     });
     st.dirty = false;
 
-    const keep = keepId && entryOrGhost(keepId) ? keepId : 0;
-    const first = st.entries.find(e => !e.removed) || st.game.find(t => t.show === 1 || t.show === 2);
-
-    st.sel = keep || (first ? first.id : 0);
+    st.sel = keepId && entryOrGhost(keepId) ? keepId : 0;
+    keepSelectionInView();
     st.lv = Math.min(st.lv, Math.max(0, levelCount(st.sel) - 1));
   }
 
@@ -1278,7 +1276,7 @@
     const e = entryOf(st.sel);
 
     switch (a) {
-      case 'view': st.view = v === 'all' ? 'all' : 'file'; break;
+      case 'view': st.view = v === 'all' ? 'all' : 'file'; keepSelectionInView(); break;
       case 'new': {
         const made = newReward();
 
