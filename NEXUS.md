@@ -22,7 +22,7 @@ Want a fresh loop without waiting for your character to die? New Loop Plus adds 
 [*][b]Endless rewards everywhere[/b]: an option, off by default, that offers the endless mode loop rewards in every mode and makes them work there as they do in endless. The camp rewards and Cartographer stay endless only.[/*]
 [*][b]Talents tab[/b]: with the Mod Manager 0.7.0 or newer, New Loop Plus's page gets a Talents tab that edits the talents file for you. Change what any loop reward costs, how many levels it has, its numbers and its text, switch the file's rewards on or off, or click NEW REWARD to build your own from the effects the game's rewards use and the mod's own, with any talent or item image. The search box finds a reward by its name or description. SAVE writes the file, and the changes apply at the next game start.[/*]
 [/list]
-With every talent in the talents file switched off, New Loop Plus adds nothing of its own to your save. A talent you switched on can leave its levels in the save, so switch it off and play a run before you remove the mod. Once it's removed, points and costs go back to normal at the next start.
+With every talent in the talents file switched off, New Loop Plus adds nothing of its own to your save. Loop reward levels the game doesn't have would do nothing without the mod, so turn on UninstallPrep before you remove it. The steps are under Uninstall below. Once it's removed, points and costs go back to normal at the next start.
 
 Works in English and Chinese.
 
@@ -57,7 +57,7 @@ Works in English and Chinese.
 [/list]
 
 [size=5]Uninstall[/size]
-Delete [font=Courier New]NewLoopPlus.dll[/font] from the [font=Courier New]BepInEx\plugins[/font] folder. A starting bonus already paid stays paid.
+First turn on [font=Courier New]UninstallPrep[/font] and load a run. Within a few seconds every loop reward above the normal game's top level goes down to that level, each reward only the mod adds is taken off, and you get back the Planning Points they cost. Save and quit, then delete [font=Courier New]NewLoopPlus.dll[/font] from the [font=Courier New]BepInEx\plugins[/font] folder. A starting bonus already paid stays paid.
 
 [size=5]Configuration[/size]
 To change settings, use the Mod Manager's Mods screen in game, or edit [font=Courier New]BepInEx\config\com.dev.survivallog.newloopplus.cfg[/font] while the game is closed. The cfg file explains each setting in English and Chinese, and [url=https://github.com/AnExiledDev/SurvivalLog-NewLoopPlus/blob/main/CONFIG.md]CONFIG.md[/url] lists them all. The points multipliers and the starting bonus take effect at once, and cost settings take effect at the next game start.
@@ -89,7 +89,7 @@ Open source under MIT: [url=https://github.com/AnExiledDev/SurvivalLog-NewLoopPl
 [*][b]无尽天赋全模式可用[/b]：一个默认关闭的选项，在所有模式中提供无尽模式的天赋，并让它们像在无尽模式中一样生效。营地类天赋和「地图学家」仍只限无尽模式。[/*]
 [*][b]天赋页[/b]：装了 Mod Manager 0.7.0 或更新版本后，New Loop Plus 的页面会多出「天赋」页，替你编辑天赋文件。可以修改任意轮回奖励的消耗、等级数、数值和文字，开关文件中的奖励，也可以点击「新建奖励」，用游戏奖励中已有的效果和模组自己的效果做出你自己的奖励，并可选用任意天赋或物品的图标。用搜索框可以按名称或描述找到奖励。点击「保存」写入文件，改动在下次启动游戏时生效。[/*]
 [/list]
-天赋文件中所有天赋都关闭时，New Loop Plus 不会往存档里添加任何自己的数据。开启的天赋可能会把等级留在存档中；移除模组前请先关闭它并玩一局。信念点和消耗会在下次启动游戏时恢复为原来的数值。
+天赋文件中所有天赋都关闭时，New Loop Plus 不会往存档里添加任何自己的数据。游戏本身没有的轮回奖励等级，没有本模组就不起作用，所以移除前先打开 UninstallPrep。步骤见下面的「卸载」。信念点和消耗会在下次启动游戏时恢复为原来的数值。
 
 支持英文和中文。
 
@@ -123,7 +123,7 @@ Open source under MIT: [url=https://github.com/AnExiledDev/SurvivalLog-NewLoopPl
 [/list]
 
 [size=5]卸载[/size]
-从 [font=Courier New]BepInEx\plugins[/font] 文件夹中删除 [font=Courier New]NewLoopPlus.dll[/font]。已经发放的开局奖励不会收回。
+先打开 [font=Courier New]UninstallPrep[/font] 并读取一局游戏。几秒内，超出游戏原有最高等级的轮回奖励会降回该等级，只有本模组才有的奖励会被移除，花掉的信念点会退还给你。保存并退出，然后从 [font=Courier New]BepInEx\plugins[/font] 文件夹中删除 [font=Courier New]NewLoopPlus.dll[/font]。已经发放的开局奖励不会收回。
 
 [size=5]配置[/size]
 可以在游戏内 Mod Manager 的「模组」界面修改，也可以在游戏关闭时编辑 [font=Courier New]BepInEx\config\com.dev.survivallog.newloopplus.cfg[/font]。配置文件中每项设置都有中文说明，完整说明见 [url=https://github.com/AnExiledDev/SurvivalLog-NewLoopPlus/blob/main/CONFIG.md]CONFIG.md[/url]（英文）。信念点倍数和开局奖励的改动立即生效；消耗相关的设置在下次启动游戏时生效。

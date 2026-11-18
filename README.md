@@ -22,7 +22,7 @@ End a run whenever you like and go straight to the death screen, so you can star
 
 The button only shows in a loaded run past the tutorial that hasn't already ended. The button and the dialog follow the game's language, English or Simplified Chinese.
 
-With every talent in the talents file switched off, New Loop Plus adds nothing of its own to your save, and you can remove it any time. A talent you switched on can leave its levels in the save, and Last-Minute Preparation also leaves its door and window buffs. Switch those talents off and play a run before you remove the mod. Once it's removed, points and costs go back to normal at the next start. A starting bonus that was already paid stays paid. Settings are in [CONFIG.md](CONFIG.md).
+With every talent in the talents file switched off, New Loop Plus adds nothing of its own to your save, and you can remove it any time. Loop reward levels the game doesn't have would do nothing without the mod, so turn on `UninstallPrep` before you remove it (the steps are under Uninstall below). Last-Minute Preparation also leaves its door and window buffs, so switch it off and play a run first. Once it's removed, points and costs go back to normal at the next start. A starting bonus that was already paid stays paid. Settings are in [CONFIG.md](CONFIG.md).
 
 ## Known issues and limits
 
@@ -30,7 +30,7 @@ With every talent in the talents file switched off, New Loop Plus adds nothing o
 - Points are whole numbers, so changed values are rounded (halves round up). A small reward times a small multiplier can round to 0.
 - Crisis and event penalties that take Planning Points away are not changed by the multipliers.
 - The talents file is read once at game start. Changes need a restart, including changes saved from the Talents tab.
-- Saving from the Talents tab drops the comments in the talents file. The file as it was is kept next to it as `NewLoopPlus.Talents.json.bak`.
+- Saving from the Talents tab drops the comments in the talents file. The first save keeps the file as it was next to it as `NewLoopPlus.Talents.json.bak`, and later saves leave that copy alone.
 - The Talents tab can change the numbers of the five rewards New Loop Plus finished, but not which effects they give.
 - The effects of the five talents the game left unfinished were designed for this mod, and their text was rewritten to match what they do now.
 - With Seasoned Explorer, a few screens that show Max Exposure before a trip may still show the normal number. The trip itself uses the higher one.
@@ -53,15 +53,21 @@ With every talent in the talents file switched off, New Loop Plus adds nothing o
 
 ## Uninstall
 
-Delete `NewLoopPlus.dll` from the `BepInEx\plugins` folder. For a clean slate, also delete `BepInEx\config\com.dev.survivallog.newloopplus.cfg`, `BepInEx\config\NewLoopPlus.Talents.json`, `BepInEx\config\NewLoopPlus.MuscleMemory.txt` and `BepInEx\new-loop-plus.log`.
+Loop reward levels the game doesn't have, and the rewards New Loop Plus adds, would do nothing without the mod, and the game's reset wouldn't pay their points back. So do this first:
+
+1. Turn on `UninstallPrep` (on the Mods screen, or in the config file while the game is closed).
+2. Load a run. Within a few seconds every loop reward above the normal game's top level goes down to that level, each reward only the mod adds is taken off, and you get back the Planning Points they cost. `BepInEx\new-loop-plus.log` says what was changed.
+3. Save the game and quit.
+
+Then delete `NewLoopPlus.dll` from the `BepInEx\plugins` folder. For a clean slate, also delete `BepInEx\config\com.dev.survivallog.newloopplus.cfg`, `BepInEx\config\NewLoopPlus.Talents.json`, `BepInEx\config\NewLoopPlus.MuscleMemory.txt` and `BepInEx\new-loop-plus.log`.
 
 ## Troubleshooting
 
-Check `BepInEx\LogOutput.log` for a line like `===== New Loop Plus 0.11.3 started`. The same line, plus every confirm, the points preview and how the end went, is in `BepInEx\new-loop-plus.log`, which is kept across restarts.
+Check `BepInEx\LogOutput.log` for a line like `===== New Loop Plus 0.12.2 started`. The same line, plus every confirm, the points preview and how the end went, is in `BepInEx\new-loop-plus.log`, which is kept across restarts.
 
 With any multiplier set, the log also says what changed, such as `survival points now convert at ...` or `... loop reward levels now cost ...`. A per-talent entry it couldn't read is named there too. The talents file adds a line such as `talents file: enabled 1006, 2017; 10 table rows written`, plus a line for each entry it skipped and why.
 
-If End Run doesn't show in the pause menu, make sure you are in a loaded run past the tutorial and that Exiled's Toolkit 0.26.0 or newer is installed, since the Toolkit places the button. If the run didn't end after you confirmed, the message on screen and the log say why.
+If End Run doesn't show in the pause menu, make sure you are in a loaded run past the tutorial and that Exiled's Toolkit 0.27.0 or newer is installed, since the Toolkit places the button. If the run didn't end after you confirmed, the message on screen and the log say why.
 
 ## Feedback and bug reports
 

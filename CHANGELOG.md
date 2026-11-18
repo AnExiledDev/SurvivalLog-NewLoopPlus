@@ -3,6 +3,10 @@
 ## 0.12.2
 
 - Mod Manager's Conflicts tab can now see what New Loop Plus changes in the game, like the loop rewards from the talents file and the Planning Points a run pays, so it can show when another mod changes the same things.
+- New `UninstallPrep` setting, off at first. Turn it on before you remove the mod and load a run: every loop reward level the game doesn't have comes off, and you get back the Planning Points it cost.
+- Fixed: a new level from the talents file could take the row of a survival plan. That talent is now skipped, and the log says why.
+- The Talents tab no longer lists survival plans.
+- The first save from the Talents tab keeps the file as it was in `NewLoopPlus.Talents.json.bak`, and later saves leave that copy alone.
 - Made for Survival Log 1.1.21271.
 
 ## 0.12.1

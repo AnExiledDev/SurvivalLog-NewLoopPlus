@@ -1,6 +1,6 @@
 # New Loop Plus settings
 
-Settings live in `BepInEx\config\com.dev.survivallog.newloopplus.cfg`, created the first time the game starts with the mod. Change them in game on the Mod Manager's Mods screen, or edit the file while the game is closed. Points, Endless and Loop settings apply at once, except `EndlessRewardsEverywhere`. Costs settings apply at the next game start. Delete the file to get the defaults back. You set every multiplier from 0 to 100, and 1 changes nothing.
+Settings live in `BepInEx\config\com.dev.survivallog.newloopplus.cfg`, created the first time the game starts with the mod. Change them in game on the Mod Manager's Mods screen, or edit the file while the game is closed. Points, Endless and Loop settings apply at once, except `EndlessRewardsEverywhere`. Costs settings apply at the next game start. `UninstallPrep` applies at once. Delete the file to get the defaults back. You set every multiplier from 0 to 100, and 1 changes nothing.
 
 ## Points
 
@@ -35,9 +35,15 @@ Each part uses its own setting times `OverallMultiplier`, so `OverallMultiplier 
 
 Survival plans, bought with survival points during a run, are not changed by these settings.
 
+## Uninstall
+
+| Setting | Default | What it does |
+| --- | --- | --- |
+| `UninstallPrep` | `false` | Gets a save ready for removing the mod. While it's on, every loop reward above the normal game's top level goes down to that level and each reward only the mod adds is taken off, in the run you have loaded, and you get back the Planning Points they cost. Save and quit, then remove the DLL. Turning it off again doesn't put the levels back. |
+
 ## Talents file
 
-With the Mod Manager 0.7.0 or newer, the Talents tab on New Loop Plus's page edits this file for you, and SAVE writes it. Saving drops the comments, and the file as it was is kept as `NewLoopPlus.Talents.json.bak`. Saved changes apply at the next game start.
+With the Mod Manager 0.7.0 or newer, the Talents tab on New Loop Plus's page edits this file for you, and SAVE writes it. Saving drops the comments. The first save keeps the file as it was as `NewLoopPlus.Talents.json.bak`. Saved changes apply at the next game start.
 
 `BepInEx\config\NewLoopPlus.Talents.json` is written the first time the game starts with the mod. It is read once at game start, so edit it while the game is closed. Delete it to get the defaults back. Comments (`//`) and trailing commas are allowed. An entry that cannot be read is skipped and named in `BepInEx\new-loop-plus.log`, and the rest still apply. A file that is not valid JSON applies nothing.
 

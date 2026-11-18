@@ -37,6 +37,12 @@ public class TalentPlanTests
 
         public int? LevelBuff(int talentId, int lv) =>
             OddLevelBuffs.TryGetValue(talentId * 10 + lv, out var odd) ? odd : talentId == 1006 && lv <= 5 ? 100600 + lv * 10 : null;
+
+        /// <summary>Talent rows that belong to some other talent, as the game's survival plans have (row 30152 is plan 30152).</summary>
+        public HashSet<int> OtherRows { get; } = new();
+
+        public bool HasTalentRow(int rowId) =>
+            OtherRows.Contains(rowId) || (Talents.TryGetValue(rowId / 10, out var levels) && levels.Contains(rowId % 10));
     }
 
     private static TalentPlan Plan(string json) => Plan(json, new FakeTables());
@@ -93,6 +99,29 @@ public class TalentPlanTests
         Assert.Equal(new FieldValue.Number(3076), Field(added, "TalentID"));
         Assert.Equal(new FieldValue.Number(4), Field(added, "Lv"));
         Assert.Equal(new FieldValue.Number(50), Field(added, "LvUpCost"));
+    }
+
+    [Fact]
+    public void An_extra_level_that_would_land_on_another_talents_row_skips_the_talent_and_leaves_that_row_alone()
+    {
+        var tables = new FakeTables();
+
+        tables.OtherRows.Add(30764);
+
+        var plan = Plan("""{ "talents": [ { "id": 3076, "levels": [ {}, {}, {}, {} ] }, { "id": 1006 } ] }""", tables);
+
+        Assert.DoesNotContain(plan.Rows, row => row.Table == Table.Talent && row.Id / 10 == 3076);
+        Assert.Contains(plan.Rows, row => row.Id == 10061);
+        Assert.Contains("30764", Assert.Single(plan.Problems));
+    }
+
+    [Fact]
+    public void A_new_talent_listed_twice_makes_its_rows_once()
+    {
+        var plan = Plan("""{ "talents": [ { "id": 5001, "copyFrom": 3076 }, { "id": 5001, "copyFrom": 1006 } ] }""");
+
+        Assert.Equal(new[] { 50011, 50012, 50013 }, plan.Rows.Select(row => row.Id));
+        Assert.Contains("5001", Assert.Single(plan.Problems));
     }
 
     [Fact]

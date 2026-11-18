@@ -821,7 +821,8 @@
   // ---- The list ----
 
   function allIds() {
-    const ids = st.game.filter(t => t.show === 1 || t.show === 2).map(t => t.id);
+    // Type 2 rows are survival plans. They share the talent table but are not loop rewards, and their row IDs leave no room for more levels.
+    const ids = st.game.filter(t => t.type !== 2 && (t.show === 1 || t.show === 2)).map(t => t.id);
 
     st.entries.forEach(e => {
       if (!e.removed && !st.byId[e.id]) ids.push(e.id);

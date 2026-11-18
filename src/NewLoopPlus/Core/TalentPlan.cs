@@ -22,6 +22,9 @@ public interface ITableIndex
 
     /// <summary>The buff the game's row for that talent level gives; null when the game has no such row.</summary>
     int? LevelBuff(int talentId, int lv);
+
+    /// <summary>Whether the talent table has a row with that ID, whatever talent it belongs to.</summary>
+    bool HasTalentRow(int rowId);
 }
 
 /// <summary>The effect row and buff row a give is copied from.</summary>
@@ -90,6 +93,7 @@ public sealed record TalentPlan(IReadOnlyList<RowEdit> Rows, IReadOnlyList<TextE
         private readonly ITableIndex _tables;
         private readonly HashSet<int> _madeEffects = new();
         private readonly HashSet<int> _madeBuffs = new();
+        private readonly HashSet<int> _madeTalentRows = new();
 
         public Builder(ITableIndex tables)
         {
@@ -157,6 +161,13 @@ public sealed record TalentPlan(IReadOnlyList<RowEdit> Rows, IReadOnlyList<TextE
                 return;
             }
 
+            if (TakenLevel(talent.Id, existing, count) is { } taken)
+            {
+                Problems.Add($"talent {talent.Id} was skipped: its level {taken} needs talent row {RowId(talent.Id, taken)}, which is already in use");
+
+                return;
+            }
+
             if (talent.Gives.Count > 0 && !AddGives(talent, count)) return;
 
             for (var lv = 1; lv <= count; lv++) AddLevel(talent, existing, source, sourceLevels, lv);
@@ -198,6 +209,24 @@ public sealed record TalentPlan(IReadOnlyList<RowEdit> Rows, IReadOnlyList<TextE
             AddText(fields, "Dec", rowId, level?.Description ?? talent.Description);
             AddText(fields, "LvParaShow", rowId, level?.LevelText ?? talent.LevelText);
             Rows.Add(new RowEdit(Table.Talent, rowId, copyFrom, fields));
+            _madeTalentRows.Add(rowId);
+        }
+
+        /// <summary>
+        /// The first new level whose row is already in use. The game's survival plans number
+        /// their rows by their own five digit IDs, so plan 3015's second level is row 30152, and a third level for
+        /// talent 3015 would land on top of plan 30153.
+        /// </summary>
+        private int? TakenLevel(int talentId, IReadOnlyList<int> existing, int count)
+        {
+            for (var lv = 1; lv <= count; lv++)
+            {
+                var rowId = RowId(talentId, lv);
+
+                if (!existing.Contains(lv) && (_tables.HasTalentRow(rowId) || _madeTalentRows.Contains(rowId))) return lv;
+            }
+
+            return null;
         }
 
         /// <summary>

@@ -72,10 +72,13 @@ internal sealed class TalentsTab
 
         try
         {
-            if (File.Exists(_path)) File.Copy(_path, _path + ".bak", overwrite: true);
+            // Only the first save makes the .bak, so it keeps the file with its comments rather than the last save.
+            if (File.Exists(_path) && !File.Exists(_path + ".bak")) File.Copy(_path, _path + ".bak");
 
-            File.WriteAllText(_path, text);
-            _log($"Talents tab saved the talents file ({text.Length} characters); the old one is {_path}.bak");
+            // A save cut short leaves the .tmp behind, never half a talents file.
+            File.WriteAllText(_path + ".tmp", text);
+            File.Move(_path + ".tmp", _path, overwrite: true);
+            _log($"Talents tab saved the talents file ({text.Length} characters); the file from before the first save is {_path}.bak");
 
             return TalentsPage.SavedCall(true, Texts.TalentsSaved.Pick(chinese));
         }

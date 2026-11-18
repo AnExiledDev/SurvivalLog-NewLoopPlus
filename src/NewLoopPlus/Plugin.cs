@@ -60,6 +60,8 @@ public sealed class Plugin : BasePlugin
         EndlessRewardsSetting.On = BindEndlessEverywhere().Value;
         if (EndlessRewardsSetting.On) EndlessRewardHooks.Apply(hooks, log.Write);
         LiveSettings.Watch(BindStartingBonus(), bonus => LoopStartBonus.Bonus = bonus);
+        UninstallPrep.Log = log.Write;
+        LiveSettings.Watch(BindUninstallPrep(), UninstallPrep.Set);
         tab.HasWindPower = LinkWind(log.Write);
         var talents = TalentFileStore.Load(talentsPath, log.Write);
         StartScaling(BindCosts(log.Write), tab.HasWindPower ? talents : WindLink.WithoutWind(talents), tab, log.Write);
@@ -106,6 +108,7 @@ public sealed class Plugin : BasePlugin
         ScaleTicker.Checks.Add(new TalentTables(talents, tab, log, EndlessRewardsSetting.On).Tick);
         ScaleTicker.Checks.Add(new RunStartPerks(Path.Combine(Paths.ConfigPath, MuscleMemoryFileName), log).Tick);
         ScaleTicker.Checks.Add(new PerkTables(log).Tick);
+        ScaleTicker.Checks.Add(UninstallPrep.Tick);
 
         if (reinforce.Count > 0) ScaleTicker.Checks.Add(new DoorWindowReinforcement(reinforce, log).Tick);
 
@@ -148,6 +151,11 @@ public sealed class Plugin : BasePlugin
             "Extra Planning Points paid at the start of each new loop, as the loop reward screen opens after a run, so they can be spent there. 0 pays none.\n" +
             "每次开始新轮回时额外获得的信念点，在一局结束后打开轮回奖励界面时发放，可以当场使用。0 为不发放。",
             new AcceptableValueRange<int>(0, StartingBonus.Max)));
+
+    private ConfigEntry<bool> BindUninstallPrep() =>
+        Config.Bind("Uninstall", "UninstallPrep", false,
+            "Turn this on before you remove New Loop Plus, then load your save. Every loop reward level the game doesn't have comes off, and the Planning Points you paid for those levels come back: levels above a reward's normal top level, and the rewards New Loop Plus adds. Then save the game, quit, and remove NewLoopPlus.dll. new-loop-plus.log lists what was changed. Turning this off again does not give the levels back.\n" +
+            "移除 New Loop Plus 之前请先打开此项，然后读取存档。游戏本身没有的天赋等级都会被移除，买这些等级花的信念点会退还：包括超过天赋原本最高等级的部分，以及 New Loop Plus 新增的天赋。然后存档、退出游戏，再删除 NewLoopPlus.dll。改了哪些东西写在 new-loop-plus.log 里。再关掉此项，等级也不会回来。");
 
     private ConfigEntry<bool> BindEndlessEverywhere() =>
         Config.Bind("Loop", "EndlessRewardsEverywhere", false, new ConfigDescription(

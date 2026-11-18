@@ -261,5 +261,7 @@ public class TalentFileTests
         public GiveTemplate? Template(string script, int talentId, int lv) => GameScripts.Contains(script) ? new GiveTemplate(200000009, 9) : null;
 
         public int? LevelBuff(int talentId, int lv) => null;
+
+        public bool HasTalentRow(int rowId) => TalentLevels(rowId / 10).Contains(rowId % 10);
     }
 }

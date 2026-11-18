@@ -20,7 +20,7 @@
 //                 "effect" can also be "nlp:<name>", an effect New Loop Plus runs itself: interest, safety-net,
 //                 extra-pick, crisis-veteran, second-wind, lucky-finds, muscle-memory, scouts-notes, tinkerer,
 //                 family-recipe, drone-pilot, good-neighbor, max-exposure, vehicle-discount, travel-time,
-//                 drone-speed. The entries at the bottom of the list show what each one reads.
+//                 drone-speed, wind-power. The entries at the bottom of the list show what each one reads.
 //
 // A buff or effect entry: "id", an optional "copyFrom" (needed to make a new row), and "fields",
 // named as the game's tables name them (ConfigName, IntValue0, BuffSatietyDel, EffectConfigId...).

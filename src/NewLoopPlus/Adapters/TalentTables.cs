@@ -61,6 +61,18 @@ internal sealed class TalentTables
 
         var index = new GameTableIndex(talents, buffs, effects);
         var game = index.Snapshot(english, chinese);
+
+        var gameTopLevels = new Dictionary<int, int>();
+
+        foreach (var talent in game)
+        {
+            var top = talent.Levels.Count == 0 ? 0 : talent.Levels.Max(level => level.Lv);
+
+            gameTopLevels[talent.Id] = Math.Max(top, gameTopLevels.TryGetValue(talent.Id, out var seen) ? seen : 0);
+        }
+
+        UninstallPrep.UseGameLevels(gameTopLevels);
+
         var plan = TalentPlan.Build(_file, index);
         var problems = new List<string>(plan.Problems);
 
@@ -203,6 +215,7 @@ internal sealed class TalentTables
         private readonly Il2CppSystem.Collections.Generic.Dictionary<int, Config_Effect> _effects;
         private readonly Dictionary<int, List<Config_Talent>> _levels = new();
         private readonly Dictionary<string, GiveTemplate> _firstByScript = new();
+        private readonly HashSet<int> _rowIds = new();
 
         public GameTableIndex(
             Il2CppSystem.Collections.Generic.Dictionary<int, Config_Talent> talents,
@@ -216,7 +229,10 @@ internal sealed class TalentTables
 
             foreach (var row in talents.Values)
             {
-                if (row != null) rows.Add(row);
+                if (row == null) continue;
+
+                rows.Add(row);
+                _rowIds.Add(row._ID_k__BackingField);
             }
 
             foreach (var row in rows.OrderBy(row => row._ID_k__BackingField))
@@ -249,6 +265,8 @@ internal sealed class TalentTables
         }
 
         public int? LevelBuff(int talentId, int lv) => Level(talentId, lv)?._BuffID_k__BackingField;
+
+        public bool HasTalentRow(int rowId) => _rowIds.Contains(rowId);
 
         /// <summary>Every talent as the game made them, for the Talents tab, which lists the loop rewards and offers every talent's image.</summary>
         public List<GameTalent> Snapshot(LanguageMap english, LanguageMap chinese) =>
