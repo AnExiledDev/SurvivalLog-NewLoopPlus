@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.11.4
+
+- The Talents tab now uses the reward editor in Exiled's Toolkit, the same one More Rewards uses. It works as before.
+- Now needs Exiled's Toolkit 0.24.0 or newer.
+- Made for Survival Log 1.1.21271.
+
 ## 0.11.3
 
 - Clearer wording in the log and in the Talents tab.

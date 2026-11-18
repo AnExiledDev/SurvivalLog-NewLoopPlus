@@ -26,9 +26,11 @@ internal sealed class WebPage : IRunPage
     {
         _log = log;
 
-        // The pause menu script and the Talents tab travel together, so a reloaded page gets both back at once.
+        // The pause menu script and the Talents tab travel together, so a reloaded page gets both back at once. The
+        // tab draws with the Toolkit's reward editor, which goes first.
         _page = new ToolkitPage(typeof(WebPage).Assembly, PageResource, Global, PageCommand.Prefix + "noscript", log)
         {
+            ToolkitScripts = new[] { ToolkitPage.Editor },
             ExtraResources = new[] { TalentsTabResource },
         };
     }
