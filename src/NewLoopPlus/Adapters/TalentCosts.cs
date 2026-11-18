@@ -52,6 +52,7 @@ internal sealed class TalentCosts
             if (_costs.Next(key, row._LvUpCost_k__BackingField) is { } cost)
             {
                 row._LvUpCost_k__BackingField = cost;
+                Reported.Scaled(_costs, key, nameof(Config_Talent), row._ID_k__BackingField, nameof(Config_Talent.LvUpCost));
                 scaled++;
             }
 

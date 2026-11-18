@@ -160,6 +160,25 @@ public class ScaledValuesTests
         Assert.Null(Doubling().Next(1, 0));
     }
 
+    /// <summary>Mod Manager is told about a value only while it differs from the game's.</summary>
+    [Fact]
+    public void A_value_counts_as_changed_only_while_it_differs_from_the_game_s()
+    {
+        var factor = 2;
+        var values = new ScaledValues<int, int>((_, value) => value * factor);
+
+        values.Next(1, 10);
+
+        Assert.True(values.IsChanged(1));
+
+        factor = 1;
+        values.Rescale();
+        values.Next(1, 20);
+
+        Assert.False(values.IsChanged(1));
+        Assert.False(values.IsChanged(2));
+    }
+
     [Fact]
     public void Nothing_is_known_about_a_key_before_it_is_seen()
     {

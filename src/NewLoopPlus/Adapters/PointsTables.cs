@@ -87,6 +87,7 @@ internal sealed class PointsTables
         if (_rates.Next(key, entry._Params2_k__BackingField) is { } rate)
         {
             entry._Params2_k__BackingField = rate;
+            Reported.Scaled(_rates, key, nameof(Config_GlobalSetting), key, nameof(Config_GlobalSetting.Params2));
             _log($"survival points now convert at {rate:0.####} per point (game: {_rates.Original(key):0.####})");
         }
 
@@ -103,6 +104,7 @@ internal sealed class PointsTables
         if (_perDay.Next(key, entry._Params1_k__BackingField) is { } perDay)
         {
             entry._Params1_k__BackingField = perDay;
+            Reported.Scaled(_perDay, key, nameof(Config_GlobalSetting), key, nameof(Config_GlobalSetting.Params1));
             _log($"each survived day now pays {perDay} Planning Points (game: {_perDay.Original(key)})");
         }
 
@@ -127,6 +129,7 @@ internal sealed class PointsTables
             if (_rewards.Next(id, row._BeliefPoint_k__BackingField) is { } belief)
             {
                 row._BeliefPoint_k__BackingField = belief;
+                Reported.Scaled(_rewards, id, nameof(Config_RewardSet), id, nameof(Config_RewardSet.BeliefPoint));
                 scaled++;
             }
 
@@ -148,6 +151,7 @@ internal sealed class PointsTables
         if (_endlessGrant.Next(key, entry._Params1_k__BackingField) is { } grant)
         {
             entry._Params1_k__BackingField = grant;
+            Reported.Scaled(_endlessGrant, key, nameof(Config_GlobalSetting), key, nameof(Config_GlobalSetting.Params1));
             _log($"a new endless game now starts with {grant} Planning Points (game: {_endlessGrant.Original(key)})");
         }
 

@@ -52,6 +52,9 @@ public sealed class ScaledValues<TKey, TValue>
     /// <summary>The game's value for <paramref name="key"/>, or null before it was first seen.</summary>
     public TValue? Original(TKey key) => _known.TryGetValue(key, out var known) ? known.Original : null;
 
+    /// <summary>Whether the value last worked out for <paramref name="key"/> differs from the game's.</summary>
+    public bool IsChanged(TKey key) => _known.TryGetValue(key, out var known) && !known.Scaled.Equals(known.Original);
+
     /// <summary><paramref name="Replaced"/> is the value still in the table from before the scale changed, if any.</summary>
     private readonly record struct Known(TValue Original, TValue Scaled, TValue? Replaced)
     {

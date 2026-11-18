@@ -87,6 +87,7 @@ internal sealed class PerkTables
         if (_whole.Next(key, entry._Params1_k__BackingField) is { } value)
         {
             entry._Params1_k__BackingField = value;
+            Reported.Scaled(_whole, key, nameof(Config_GlobalSetting), key, nameof(Config_GlobalSetting.Params1));
             _log(string.Format(written, value, _whole.Original(key)));
         }
 
@@ -103,6 +104,7 @@ internal sealed class PerkTables
         if (_multiPot.Next(key, entry._Params2_k__BackingField) is { } level)
         {
             entry._Params2_k__BackingField = level;
+            Reported.Scaled(_multiPot, key, nameof(Config_GlobalSetting), key, nameof(Config_GlobalSetting.Params2));
             _log($"multi-pot cooking now unlocks at Cooking {level:0} (game: {_multiPot.Original(key):0})");
         }
 
@@ -135,6 +137,7 @@ internal sealed class PerkTables
             if (row == null || _vehiclePrice.Next(pair.Key, row._Price_k__BackingField) is not { } price) continue;
 
             row._Price_k__BackingField = price;
+            Reported.Scaled(_vehiclePrice, pair.Key, nameof(Config_Vehicle), pair.Key, nameof(Config_Vehicle.Price));
             _log($"vehicle {pair.Key} now costs {price} (game: {_vehiclePrice.Original(pair.Key)})");
         }
     }

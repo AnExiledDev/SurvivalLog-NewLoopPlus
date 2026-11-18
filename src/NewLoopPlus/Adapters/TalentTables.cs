@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using ExiledToolkit;
 using ExiledToolkit.Game;
 using GameCore.HotUpdate;
 using Il2CppInterop.Runtime.InteropTypes;
@@ -108,6 +109,7 @@ internal sealed class TalentTables
             if (row == null || !EndlessRewards.Unlocks(row._TalentID_k__BackingField) || row._EndlessMode_k__BackingField == 0) continue;
 
             row._EndlessMode_k__BackingField = 0;
+            Claims.Wrote(Plugin.Guid, nameof(Config_Talent), row._ID_k__BackingField, nameof(Config_Talent.EndlessMode), 0);
             rows++;
         }
 
@@ -132,6 +134,7 @@ internal sealed class TalentTables
 
     private static string? Apply<T>(Il2CppSystem.Collections.Generic.Dictionary<int, T> table, RowEdit edit, Func<T> make) where T : Il2CppObjectBase
     {
+        var isNew = !table.ContainsKey(edit.Id);
         T row;
 
         if (edit.CopyFrom is { } source)
@@ -144,14 +147,42 @@ internal sealed class TalentTables
         }
         else
         {
-            if (!table.ContainsKey(edit.Id)) return $"{edit.Table} {edit.Id} is gone";
+            if (isNew) return $"{edit.Table} {edit.Id} is gone";
 
             row = table[edit.Id];
         }
 
-        var refused = edit.Fields.Select(field => RowFields.Set(row, field.Field, field.Value)).OfType<string>().ToList();
+        var refused = new List<string>();
+        var set = new List<FieldSet>();
+
+        foreach (var field in edit.Fields)
+        {
+            if (RowFields.Set(row, field.Field, field.Value) is { } problem) refused.Add(problem);
+            else set.Add(field);
+        }
+
+        ReportRow(typeof(T).Name, edit, isNew, row, set);
 
         return refused.Count == 0 ? null : $"{edit.Table} {edit.Id}: " + string.Join("; ", refused);
+    }
+
+    /// <summary>
+    /// A row the game did not have is reported as added, and an edit as the fields it set. A copy over a row the game had
+    /// replaced the whole row, so every field of it is reported. Reading a row back leaves out lists, so the lists the
+    /// file set are reported too.
+    /// </summary>
+    private static void ReportRow(string table, RowEdit edit, bool isNew, object row, List<FieldSet> set)
+    {
+        if (isNew)
+        {
+            Reported.Added(table, edit.Id);
+
+            return;
+        }
+
+        var written = edit.CopyFrom == null ? set : RowFields.ReadAll(row).Concat(set.Where(field => field.Value is FieldValue.Numbers));
+
+        foreach (var field in written) Reported.Set(table, edit.Id, field);
     }
 
     private void Report(TalentPlan plan, List<string> problems)

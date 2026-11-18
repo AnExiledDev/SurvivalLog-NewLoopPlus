@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.12.2
+
+- Mod Manager's Conflicts tab can now see what New Loop Plus changes in the game, like the loop rewards from the talents file and the Planning Points a run pays, so it can show when another mod changes the same things.
+- Made for Survival Log 1.1.21271.
+
 ## 0.12.1
 
 - A reward you have not changed shows each of its levels, with what it costs and what it does. Click a level to see its card.

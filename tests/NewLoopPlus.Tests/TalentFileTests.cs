@@ -17,6 +17,18 @@ public class TalentFileTests
 
     private static TalentFile DefaultFile() => TalentFile.Parse(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "talents.default.json")));
 
+    /// <summary>Mod Manager checks a reported value against what the table holds, so it must read the way the table's value does.</summary>
+    [Fact]
+    public void A_field_value_reads_as_text_the_way_Mod_Manager_shows_a_table_value()
+    {
+        Assert.Equal("5", new FieldValue.Number(5).AsText());
+        Assert.Equal("0.25", new FieldValue.Number(0.25).AsText());
+        Assert.Equal("True", new FieldValue.Flag(true).AsText());
+        Assert.Equal("False", new FieldValue.Flag(false).AsText());
+        Assert.Equal("Buff/Buff_Empty", new FieldValue.Text("Buff/Buff_Empty").AsText());
+        Assert.Equal("3,4", new FieldValue.Numbers(new[] { 3, 4 }).AsText());
+    }
+
     [Fact]
     public void Comments_and_trailing_commas_are_allowed()
     {

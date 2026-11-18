@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.Json;
 
 namespace NewLoopPlus.Core;
@@ -18,6 +19,16 @@ public abstract record FieldValue
     public sealed record Flag(bool Value) : FieldValue;
 
     public sealed record Numbers(IReadOnlyList<int> Values) : FieldValue;
+
+    /// <summary>The value written the way Mod Manager shows a table's value, so it can tell whether the table still holds it. A list is its numbers with commas between.</summary>
+    public string AsText() => this switch
+    {
+        Number number => number.Value.ToString(CultureInfo.InvariantCulture),
+        Text text => text.Value,
+        Flag flag => flag.Value ? "True" : "False",
+        Numbers numbers => string.Join(",", numbers.Values),
+        _ => "",
+    };
 }
 
 /// <summary>One field set on a row, named as the game's table names it (LvUpCost, IntValue0, ConfigName...).</summary>
