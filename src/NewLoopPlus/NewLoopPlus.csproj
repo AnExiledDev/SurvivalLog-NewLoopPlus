@@ -40,6 +40,7 @@
     <AssemblyMetadata Include="ModManager.GameVersion" Value="1.1.21271" />
     <AssemblyMetadata Include="ModManager.Settings" Value="Restart" />
     <AssemblyMetadata Include="ModManager.GitHub" Value="AnExiledDev/SurvivalLog-NewLoopPlus" />
+    <AssemblyMetadata Include="ModManager.NexusId" Value="148" />
     <AssemblyMetadata Include="ModManager.Changelog" Value="https://github.com/AnExiledDev/SurvivalLog-NewLoopPlus/blob/main/CHANGELOG.md" />
   </ItemGroup>
 
