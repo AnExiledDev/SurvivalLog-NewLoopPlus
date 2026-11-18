@@ -18,7 +18,8 @@
     num, numText, numsOf, onDocDown, onInput, onPickerDouble, onPickerKey, paramRow, pct, pickHtml, picksOf, plural,
     range, rawCache, rawFx, readsHtml, renderPicker, resetOrDelete, round2, roundTrips, saved, scriptOfGive, select,
     send, setPick, setText, showIconGroup, shown, showsAuto, stepper, tag, talentIcons, talentName, textIn, toRaw,
-    unitOf, winEl, writeText, editorCss
+    unitOf, winEl, writeText, editorCss, searchHtml, noMatchHtml, clearSearch, onSearchKey, showSelectedRow, fitHeight,
+    watchHeight, renderAfterChange, watchPresses
   } = window.ExiledEditor.make(T);
 
   const PREFIX = 'slmod|newloopplus|';
@@ -84,6 +85,8 @@
     pending: null,
     textOpen: false,
     listScroll: 0,
+    edOpen: null,
+    q: '',
     problems: []
   };
 
@@ -769,11 +772,13 @@
 
     const list = root.querySelector('.nlp-list');
     const ed = root.querySelector('.ed');
-    const edScroll = ed ? ed.scrollTop : 0;
+    const edScroll = ed && st.sel === st.edOpen ? ed.scrollTop : 0;
 
     if (list) st.listScroll = list.scrollTop;
 
+    st.edOpen = st.sel;
     root.innerHTML = topHtml() + bannersHtml() + (st.data ? mainHtml() : '<div class="nlp-wait">' + L('Reading the loop rewards...', '正在读取轮回奖励...') + '</div>');
+    fitHeight();
 
     const newList = root.querySelector('.nlp-list');
     const newEd = root.querySelector('.ed');
@@ -791,13 +796,15 @@
     const chip = (v, en, zh, n) => '<span data-a="view" data-v="' + v + '"' + (st.view === v ? ' class="is-on"' : '') + '>' + L(en, zh) + ' ' + n + '</span>';
 
     return '<div class="nlp-top">' +
-      '<div><div class="nlp-title">' + L('LOOP REWARDS', '轮回奖励') + '</div>' +
+      '<div class="nlp-head"><div class="nlp-title">' + L('LOOP REWARDS', '轮回奖励') + '</div>' +
       '<div class="nlp-sub">' + L('What each reward costs, how many levels it has, and what it gives. Applies at the next game start.', '每个奖励的消耗、等级数和效果。下次启动游戏时生效。') + '</div></div>' +
-      '<span class="sp"></span>' +
-      '<span class="new-btn" data-a="new">+ ' + L('NEW REWARD', '新建奖励') + '</span>' +
-      '<div class="nlp-chips">' + chip('file', 'CHANGED', '已修改', fileCount) + chip('all', 'ALL REWARDS', '全部奖励', allCount) + '</div>' +
       '<span class="key-btn" data-a="discard">' + L('DISCARD', '放弃') + '</span>' +
-      '<span class="key-btn" data-a="save">' + L('SAVE', '保存') + '</span>' +
+      '<span class="key-btn' + (st.dirty ? ' is-due' : '') + '" data-a="save">' + L('SAVE', '保存') + '</span>' +
+      '</div>' +
+      '<div class="nlp-bar">' +
+      '<div class="nlp-chips">' + chip('file', 'CHANGED', '已修改', fileCount) + chip('all', 'ALL REWARDS', '全部奖励', allCount) + '</div>' +
+      searchHtml() +
+      '<span class="new-btn" data-a="new">+ ' + L('NEW REWARD', '新建奖励') + '</span>' +
       '</div>';
   }
 
@@ -835,19 +842,38 @@
     return t && (t.show === 1 || t.show === 2) ? t.show : id < 2000 ? 1 : 2;
   }
 
-  function mainHtml() {
-    const ids = listIds();
-    const col = (n, en, zh) => {
-      const mine = ids.filter(id => columnOf(id) === n);
+  // The list draws its first column above its second, so the search box's Up, Down and Enter go in that order too.
+  const compareIds = (a, b) => columnOf(a) - columnOf(b) || a - b;
 
-      return '<div class="col-h">' + L(en, zh) + '<small>' + mine.length + '</small></div>' + mine.map(rowHtml).join('');
-    };
+  function mainHtml() {
     const sel = entryOrGhost(st.sel);
 
     return '<div class="nlp-main">' +
-      '<div class="nlp-list">' + col(1, 'PREPARATION', '筹备能力') + col(2, 'SURVIVAL', '生存能力') + '</div>' +
+      '<div class="nlp-list" data-list="">' + rowsHtml() + '</div>' +
       '<div class="ed">' + (sel ? editorHtml(sel) : '') + '</div>' +
       '</div>';
+  }
+
+  // The rows of the list. A search redraws only these, and leaves out a column it finds nothing in.
+  function rowsHtml() {
+    const ids = listIds();
+    const isSearching = !!st.q.trim();
+    const col = (n, en, zh) => {
+      const mine = ids.filter(id => columnOf(id) === n);
+
+      if (!mine.length && isSearching) return '';
+
+      return '<div class="col-h">' + L(en, zh) + '<small>' + mine.length + '</small></div>' + mine.map(rowHtml).join('');
+    };
+
+    if (!ids.length && isSearching) return noMatchHtml();
+
+    if (!ids.length && st.view === 'file') {
+      return '<div class="nomatch">' + L('You have not changed any rewards yet.', '还没有改过任何奖励。') +
+        '<br><span class="gbtn dim" data-a="view" data-v="all">' + L('SHOW ALL REWARDS', '查看全部奖励') + '</span></div>';
+    }
+
+    return col(1, 'PREPARATION', '筹备能力') + col(2, 'SURVIVAL', '生存能力');
   }
 
   function rowTag(e, id) {
@@ -868,6 +894,8 @@
     const name = e ? nameOf(e, st.lang) : textIn(t.name, st.lang);
     const icon = e ? e.icon : t.icon;
     const count = e ? e.levels.length : t.levels.length;
+    const look = e || ghostOf(id);
+    const desc = look && count ? descOf(look, 0, st.lang) : '';
     const cls = ['ab'];
 
     if (id === st.sel) cls.push('is-sel');
@@ -881,7 +909,7 @@
 
     return '<div class="' + cls.join(' ') + '" data-a="sel" data-v="' + id + '">' +
       '<img src="' + esc(icon) + '" alt="">' +
-      '<div><div class="nm">' + esc(name) + '</div><div class="mt">' + rowTag(e, id) + '<span class="lvn">' + (st.lang === 'zh' ? count + '级' : count + (count === 1 ? ' level' : ' levels')) + '</span></div></div>' +
+      '<div><div class="nm">' + esc(name) + '</div>' + (desc ? '<div class="ds">' + esc(desc) + '</div>' : '') + '<div class="mt">' + rowTag(e, id) + '<span class="lvn">' + (st.lang === 'zh' ? count + '级' : count + (count === 1 ? ' level' : ' levels')) + '</span></div></div>' +
       toggle + '</div>';
   }
 
@@ -897,15 +925,13 @@
     const lineHtml = n > 1 && parts.length === n ? parts.map((p, k) => k === i ? '<b>' + esc(p) + '</b>' : esc(p)).join(' / ') : esc(line);
     const desc = descOf(e, i, lang);
     const cost = n ? e.levels[i].cost : 0;
-    const mini = (v, label) => '<span data-a="pvl" data-v="' + v + '"' + (lang === v ? ' class="is-on"' : '') + '>' + label + '</span>';
 
     return '<div class="pv">' +
       '<img src="' + esc(e.icon) + '" alt="">' +
       '<div><div class="pv-name">' + esc(nameOf(e, lang)) + '<span class="lvb">Lv.' + (i + 1) + ' / ' + n + '</span></div>' +
       '<div class="pv-lt">' + lineHtml + '</div>' +
-      (desc ? '<div class="pv-desc">' + esc(desc) + '</div>' : '<div class="pv-desc is-empty">' + Lp('Choose what it gives and the description writes itself here.', '选择效果后，这里会写出描述。') + '</div>') +
+      (desc ? '<div class="pv-desc">' + esc(desc) + '</div>' : '<div class="pv-desc is-empty">' + Lp('Pick what it gives and its description shows up here.', '选好效果后，描述会显示在这里。') + '</div>') +
       '<div class="pv-cost">' + Lp('Cost', '消耗') + ' <b>' + numText(cost) + '</b> ' + Lp('Planning Points', '信念点') + '</div></div>' +
-      '<div class="pv-tag">' + L('As the game shows it', '游戏内显示') + '<span class="mini">' + mini('en', 'EN') + mini('zh', '中文') + '</span></div>' +
       '</div>';
   }
 
@@ -1231,6 +1257,15 @@
 
   // ===== Events =====
 
+  // After a reward is made, the search is cleared so the list shows it, and the list scrolls to it.
+  function showMade(made) {
+    st.q = '';
+
+    select(made.id);
+    render();
+    showSelectedRow();
+  }
+
   function onClick(ev) {
     const t = ev.target.closest('[data-a]');
 
@@ -1247,11 +1282,13 @@
       case 'new': {
         const made = newReward();
 
-        if (made) select(made.id);
-        else toast(esc(L('There is no free reward number left.', '没有可用的奖励编号了。')));
+        if (made) { showMade(made); return; }
+
+        toast(esc(L('There is no free reward number left.', '没有可用的奖励编号了。')));
 
         break;
       }
+      case 'rqx': clearSearch(); return;
       case 'save': save(); return;
       case 'discard': closeOverlays(); discard(); return;
       case 'sel': select(Number(v)); clampLevel(); break;
@@ -1283,8 +1320,9 @@
       case 'copy': {
         const made = copyInto(st.sel);
 
-        if (made) select(made.id);
-        else toast(esc(L('There is no free reward number left.', '没有可用的奖励编号了。')));
+        if (made) { showMade(made); return; }
+
+        toast(esc(L('There is no free reward number left.', '没有可用的奖励编号了。')));
 
         break;
       }
@@ -1327,7 +1365,7 @@
     } else if (a === 'auto' && e) setAuto(e, t.checked);
     else return;
 
-    render();
+    renderAfterChange();
   }
 
   // ===== Wiring =====
@@ -1354,12 +1392,15 @@
       st.root.addEventListener('click', onClick);
       st.root.addEventListener('change', onChange);
       st.root.addEventListener('input', onInput);
+      st.root.addEventListener('keydown', onSearchKey);
     }
 
     if (st.root.parentNode !== el) el.appendChild(st.root);
 
     load();
     render();
+    watchHeight();
+    watchPresses();
   }
 
   function data(d) {
@@ -1385,9 +1426,9 @@
   }
 
   Object.assign(T, {
-    CSS, PREFIX, SCOPES, STYLE_ID, actionsHtml, allIds, buildEntries, canEditGives, detailHtml, editText,
+    CSS, PREFIX, SCOPES, STYLE_ID, actionsHtml, allIds, buildEntries, canEditGives, compareIds, detailHtml, editText,
     effectValues, firstTpl, footer, ghostOf, givesHtml, isAvailable, levelsHtml, lookHtml, makeGive, pickerHead,
-    previewHtml, render, srcTag, st, textHtml, toast, tplValues, whyHtml, writeGive
+    previewHtml, render, rowsHtml, srcTag, st, textHtml, toast, tplValues, whyHtml, writeGive
   });
 
   window.__slnlpTalents = { data, saved };

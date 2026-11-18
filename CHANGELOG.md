@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.12.0
+
+- The Talents tab has a search box that finds rewards by name or description. Press Enter to open the first match, Up and Down to move through the matches, and Esc to clear it.
+- Each reward in the list shows its description under its name.
+- The list and the editor fit the window, so the page no longer scrolls as a whole.
+- SAVE lights up when you have changes that are not saved yet, as soon as you start typing.
+- Fixed: after you typed a number, the next click did nothing, so clicking SAVE right away did not save.
+- Fixed: Tab after typing a number lost the cursor. It moves to the next box now.
+- A new or copied reward scrolls into view in the list, and the editor starts at the top when you open another reward.
+- The CHANGED view says so when you have not changed anything yet, with a button to show all rewards.
+- Now needs Exiled's Toolkit 0.26.0 or newer.
+- Made for Survival Log 1.1.21271.
+
 ## 0.11.4
 
 - The Talents tab now uses the reward editor in Exiled's Toolkit, the same one More Rewards uses. It works as before.

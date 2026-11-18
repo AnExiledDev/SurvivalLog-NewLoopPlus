@@ -37,7 +37,7 @@
     <AssemblyMetadata Include="ModManager.Description" Value="Tune how many Planning Points a run earns and what loop rewards cost, get extra points at the start of each loop, end a run early from the pause menu, and edit loop rewards in a talents file, including ten the game never offers and thirty-six new ones.&#10;调整每局获得的信念点和天赋升级的消耗，每次开始新轮回时额外获得信念点，可以从暂停菜单提前结束一局，并可在天赋文件中编辑天赋，包括十个游戏未开放的天赋和三十六个新天赋。" />
     <AssemblyMetadata Include="ModManager.Author" Value="AnExiledDev" />
     <AssemblyMetadata Include="ModManager.Category" Value="Balance" />
-    <AssemblyMetadata Include="ModManager.GameVersion" Value="1.1.20719" />
+    <AssemblyMetadata Include="ModManager.GameVersion" Value="1.1.21271" />
     <AssemblyMetadata Include="ModManager.Settings" Value="Restart" />
     <AssemblyMetadata Include="ModManager.GitHub" Value="AnExiledDev/SurvivalLog-NewLoopPlus" />
     <AssemblyMetadata Include="ModManager.Changelog" Value="https://github.com/AnExiledDev/SurvivalLog-NewLoopPlus/blob/main/CHANGELOG.md" />
