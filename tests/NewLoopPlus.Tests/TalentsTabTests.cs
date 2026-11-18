@@ -48,9 +48,28 @@ public class TalentsTabTests
 
         var raw = Text("T.detailHtml(T.st.entries[0], ed.cat.list)");
 
+        Assert.Contains("WHAT THE GAME SAYS", raw);
         Assert.Contains("Something rare happens.", raw);
         Assert.Contains(Text("ed.RAW_NOTE[0]"), raw);
         Assert.DoesNotContain("no friendly names", raw);
+    }
+
+    // The mod gives Resourceful a new effect, so its page must not quote the game's old card for that reward.
+    [Fact]
+    public void A_mod_effect_does_not_quote_the_game_card_it_replaces()
+    {
+        Load(scripts: "['PreDisaster_AddRandomItem']", game: """
+            [
+              { id: 2004, type: 1, name: { en: 'Resourceful', zh: '物尽其用' }, levelText: { en: '', zh: '' }, levels: [
+                { cost: 10, buff: 0, desc: { en: 'Turn junk items into raw materials.', zh: '把废品变成原材料。' }, script: 'PreDisaster_AddRandomItem', values: { IntValue0: 1 } } ] }
+            ]
+            """);
+        _engine.Execute("T.st.picker = { selId: 'nlp:junk' };");
+
+        var html = Text("T.detailHtml(T.st.entries[0], ed.cat.list)");
+
+        Assert.DoesNotContain("WHAT THE GAME SAYS", html);
+        Assert.DoesNotContain("Turn junk items into raw materials.", html);
     }
 
     // The tab used to add its own drone and generator effects next to the editor's, so both showed up in the effect

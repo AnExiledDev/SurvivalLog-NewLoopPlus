@@ -4,7 +4,8 @@
 
 - Talents tab: every effect the game's rewards use has a name now, with boxes that say what each number does.
 - Talents tab: when you pick an effect for WHAT IT GIVES, its page shows the card text of up to three game rewards that use it, with the numbers for each level.
-- Talents tab: if a game update adds an effect with no name yet, its boxes are numbered from 1 and show a percent where the game's cards do. HOW IT READS shows "Number 1: -30%" instead of "Number 0 0.3".
+- Talents tab: if a game update adds an effect with no name yet, its boxes are numbered from 1. A number shows as a percent when the game's card writes it as one.
+- Talents tab: HOW IT READS for an effect with no name shows "Number 1: -30%" instead of "Number 0 0.3".
 - Talents tab: the drone foraging and diesel generator effects are listed once. Before, each one was in the list twice.
 - Needs Exiled's Toolkit 0.30.0 or newer.
 - Made for Survival Log 1.1.21271.

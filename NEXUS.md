@@ -57,7 +57,7 @@ Works in English and Chinese.
 [/list]
 
 [size=5]Uninstall[/size]
-First turn on [font=Courier New]UninstallPrep[/font] and load a run. Within a few seconds every loop reward above the normal game's top level goes down to that level, each reward only the mod adds is taken off, and you get back the Planning Points they cost. Save and quit, then delete [font=Courier New]NewLoopPlus.dll[/font] from the [font=Courier New]BepInEx\plugins[/font] folder. A starting bonus already paid stays paid.
+First turn on [font=Courier New]UninstallPrep[/font] and load a run. Within a few seconds every loop reward above the normal game's top level goes down to that level, each reward only the mod adds is taken off, and you get back the Planning Points they cost. Save and quit, then delete [font=Courier New]NewLoopPlus.dll[/font] from the [font=Courier New]BepInEx\plugins[/font] folder. A starting bonus already paid stays paid. If you turned on Last-Minute Preparation, switch it off and play a run first, since it leaves buffs on your doors and windows.
 
 [size=5]Configuration[/size]
 To change settings, use the Mod Manager's Mods screen in game, or edit [font=Courier New]BepInEx\config\com.dev.survivallog.newloopplus.cfg[/font] while the game is closed. The cfg file explains each setting in English and Chinese, and [url=https://github.com/AnExiledDev/SurvivalLog-NewLoopPlus/blob/main/CONFIG.md]CONFIG.md[/url] lists them all. The points multipliers and the starting bonus take effect at once, and cost settings take effect at the next game start.
@@ -123,7 +123,7 @@ Open source under MIT: [url=https://github.com/AnExiledDev/SurvivalLog-NewLoopPl
 [/list]
 
 [size=5]卸载[/size]
-先打开 [font=Courier New]UninstallPrep[/font] 并读取一局游戏。几秒内，超出游戏原有最高等级的轮回奖励会降回该等级，只有本模组才有的奖励会被移除，花掉的信念点会退还给你。保存并退出，然后从 [font=Courier New]BepInEx\plugins[/font] 文件夹中删除 [font=Courier New]NewLoopPlus.dll[/font]。已经发放的开局奖励不会收回。
+先打开 [font=Courier New]UninstallPrep[/font] 并读取一局游戏。几秒内，超出游戏原有最高等级的轮回奖励会降回该等级，只有本模组才有的奖励会被移除，花掉的信念点会退还给你。保存并退出，然后从 [font=Courier New]BepInEx\plugins[/font] 文件夹中删除 [font=Courier New]NewLoopPlus.dll[/font]。已经发放的开局奖励不会收回。如果打开过「临阵磨枪」，请先关掉它并玩一局，因为它会在门窗上留下增益效果。
 
 [size=5]配置[/size]
 可以在游戏内 Mod Manager 的「模组」界面修改，也可以在游戏关闭时编辑 [font=Courier New]BepInEx\config\com.dev.survivallog.newloopplus.cfg[/font]。配置文件中每项设置都有中文说明，完整说明见 [url=https://github.com/AnExiledDev/SurvivalLog-NewLoopPlus/blob/main/CONFIG.md]CONFIG.md[/url]（英文）。信念点倍数和开局奖励的改动立即生效；消耗相关的设置在下次启动游戏时生效。
