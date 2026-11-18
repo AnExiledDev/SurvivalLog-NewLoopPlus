@@ -19,7 +19,7 @@
     range, rawCache, rawFx, readsHtml, renderPicker, resetOrDelete, round2, roundTrips, saved, scriptOfGive, select,
     send, setPick, setText, showIconGroup, shown, showsAuto, stepper, tag, talentIcons, talentName, textIn, toRaw,
     unitOf, winEl, writeText, editorCss, searchHtml, noMatchHtml, clearSearch, onSearchKey, showSelectedRow, fitHeight,
-    watchHeight, renderAfterChange, watchPresses, keepSelectionInView
+    watchHeight, renderAfterChange, watchPresses, keepSelectionInView, gameCardsHtml, RAW_NOTE
   } = window.ExiledEditor.make(T);
 
   const PREFIX = 'slmod|newloopplus|';
@@ -199,18 +199,6 @@
     params: [num('IntValue0', 'Seconds shorter', '缩短秒数', ['s', '秒'], [600, 900, 1200], { min: 0, step: 60 })],
     line: (v, zh) => '-' + fmt(v.IntValue0 / 60) + (zh ? '分钟' : ' min'),
     desc: (v, zh) => zh ? '无人机交易往返时间缩短' + fmt(v.IntValue0 / 60) + '分钟' : 'Trade drone trips take ' + plural(v.IntValue0 / 60, 'minute') + ' less.' });
-
-  fx({ id: 'game:drone-scavenge', src: 'game', cat: 'items', script: 'AE_DroneForagingExtraTrip',
-    en: 'More drone scavenging a day', zh: '无人机拾荒次数', what: ['The drone can go scavenging more times each day.', '无人机每日可外出拾荒的次数增加。'],
-    params: [num('FloatValue0', 'More trips', '额外次数', ['', '次'], [1, 2, 3], { min: 0 })],
-    line: v => '+' + fmt(v.FloatValue0),
-    desc: (v, zh) => zh ? '无人机每日可外出拾荒次数+' + fmt(v.FloatValue0) : 'The drone can go scavenging ' + plural(v.FloatValue0, 'more time') + ' a day.' });
-
-  fx({ id: 'game:generator', src: 'game', cat: 'home', script: 'AE_PowerGeneratorEfficiency',
-    en: 'Better generators', zh: '发电机增效', what: ['Generators make more power.', '发电机产电效率提高。'],
-    params: [pct('FloatValue0', 'More power', '产电提高', [10, 20, 30])],
-    line: v => '+' + fmt(v.FloatValue0) + '%',
-    desc: (v, zh) => zh ? '发电机产电效率提高' + fmt(v.FloatValue0) + '%' : 'Generator output increased by ' + fmt(v.FloatValue0) + '%.' });
 
   fx({ id: 'nlp:good-neighbor', src: 'nlp', nlp: 'good-neighbor', cat: 'body', scripts: [],
     en: 'More affinity per basket', zh: '吊篮好感度', what: ['Each basket sent to the neighbor or your companion gives more affinity.', '每次用吊篮给邻居或同伴送物，增加的好感度提高。'],
@@ -1125,7 +1113,7 @@
     if (f.nlp) notes.push(L('New Loop Plus runs this effect itself.', '由新轮回+自身实现。'));
     else if (f.src === 'nlp') notes.push(L('Written by New Loop Plus to finish a reward the game left empty.', '由新轮回+编写，用于补完游戏留空的奖励。'));
 
-    if (f.raw) notes.push(L('A game script with no friendly names yet. Its numbers are the raw fields from the game\'s tables.', '尚未命名的游戏脚本。数值为游戏表中的原始字段。'));
+    if (f.raw) notes.push(L(RAW_NOTE[0], RAW_NOTE[1]));
 
     if (!numsOf(f).length) notes.push(L('This effect has no numbers, so a reward with only this effect is the same at every level.', '此效果没有数值，所以只有此效果的奖励每级都一样。'));
 
@@ -1137,6 +1125,7 @@
     if (shownParams.length) html += '<h4>' + L('NUMBERS IT TAKES', '数值') + '</h4><table>' + shownParams.map(p => paramRow(p, count)).join('') + '</table>';
 
     html += '<h4>' + (st.lang === 'zh' ? '显示效果：' + count + '级' : 'HOW IT READS AT ' + count + (count === 1 ? ' LEVEL' : ' LEVELS')) + '</h4>' + readsHtml(e, f, count);
+    html += gameCardsHtml(f);
 
     if (users.length) html += '<h4>' + L('REWARDS THAT USE IT', '使用它的奖励') + '</h4><div class="ub">' + users.map(id => '<span><img src="' + esc(st.byId[id] ? st.byId[id].icon : '') + '" alt="">' + esc(talentName(id)) + '</span>').join('') + '</div>';
 
