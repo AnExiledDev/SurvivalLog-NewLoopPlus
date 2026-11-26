@@ -21,7 +21,7 @@ internal sealed class TalentCosts
     private readonly Action<string> _log;
     private readonly ScaledValues<(int RowId, int TalentId), int> _costs;
     private readonly SweepGate<(int RowId, int TalentId), int> _gate = new();
-    private float _nextCheckAt;
+    private readonly WakeGate _wake = new(CheckSeconds);
 
     public TalentCosts(CostMultipliers multipliers, Action<string> log)
     {
@@ -30,15 +30,17 @@ internal sealed class TalentCosts
         _costs = new ScaledValues<(int RowId, int TalentId), int>((row, cost) => multipliers.Cost(row.TalentId, cost));
     }
 
-    public void Tick(float now)
+    public void Tick(double now)
     {
-        if (now < _nextCheckAt) return;
-
-        _nextCheckAt = now + CheckSeconds;
+        if (!_wake.IsDue(now, ScaleTicker.Wakes)) return;
 
         var rows = GameSingleton.Existing<ConfigManager>()?._Config_Talent_Dict;
 
-        if (rows == null || rows.Count == 0 || !_gate.IsDue(rows.Pointer.ToInt64(), rows.Count, key => CostOf(rows, key))) return;
+        if (rows == null || rows.Count == 0) return;
+
+        _wake.Done();
+
+        if (!_gate.IsDue(rows.Pointer.ToInt64(), rows.Count, key => CostOf(rows, key))) return;
 
         var scaled = 0;
         var changed = new List<((int, int), int)>();

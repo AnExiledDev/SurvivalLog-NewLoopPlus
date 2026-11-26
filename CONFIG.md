@@ -94,7 +94,7 @@ Every talent in the default file starts switched off. Set `"enabled": true` on o
 | Crisis Veteran | 5114 | Crises and events reward 10 / 20 / 30% more Planning Points. |
 | Second Wind | 5115 | Once / twice per run, running out of Life leaves you at 30 Life instead. |
 | Lucky Finds | 5116 | Searching a container has a 10 / 20 / 30% chance to turn up one more of what you find. |
-| Muscle Memory | 5117 | Each run starts with 25 / 50% of the skill levels the last run gained, kept in `BepInEx\config\NewLoopPlus.MuscleMemory.txt` (delete it to start over). |
+| Muscle Memory | 5117 | Each run starts with 25 / 50% of the skill levels the last run gained, kept for each save in `BepInEx\config\NewLoopPlus.MuscleMemory.txt` (delete it to start over). |
 | Scout's Notes | 5118 | Start each run with 1 / 2 / 3 drone trading posts already found. |
 | Tinkerer | 5119 | Crafting at a workbench has a 5 / 10 / 15 / 20 / 30% chance to give one of the materials back. |
 | Family Recipe | 5120 | Fresh ingredients and exact recipes add +3 / +6 / +9 / +12 / +15 more cooking quality (normally +10 each). From level 3, multi-pot cooking unlocks at Cooking Level 1 instead of 3. |

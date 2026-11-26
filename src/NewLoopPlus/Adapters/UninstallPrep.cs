@@ -18,8 +18,8 @@ internal static class UninstallPrep
 {
     private const float CheckSeconds = 3f;
 
+    private static readonly WakeGate Gate = new(CheckSeconds);
     private static volatile bool _isOn;
-    private static float _nextCheckAt;
     private static IReadOnlyDictionary<int, int>? _gameTopLevels;
 
     internal static Action<string> Log = _ => { };
@@ -28,17 +28,15 @@ internal static class UninstallPrep
     public static void Set(bool isOn)
     {
         _isOn = isOn;
-        _nextCheckAt = 0;
+        ScaleTicker.Wake();
     }
 
     /// <summary>The highest level the game itself has for each talent, read before the talents file changed the table.</summary>
     public static void UseGameLevels(IReadOnlyDictionary<int, int> topLevels) => _gameTopLevels = topLevels;
 
-    public static void Tick(float now)
+    public static void Tick(double now)
     {
-        if (!_isOn || now < _nextCheckAt || _gameTopLevels is not { } topLevels) return;
-
-        _nextCheckAt = now + CheckSeconds;
+        if (!_isOn || _gameTopLevels is not { } topLevels || !Gate.IsDue(now, ScaleTicker.Wakes)) return;
 
         var world = GameSingleton.Existing<BattleLogicWorld>();
         var config = GameSingleton.Existing<ConfigManager>();
@@ -52,6 +50,8 @@ internal static class UninstallPrep
         foreach (var pair in owned) levels.Add(new KeyValuePair<int, int>(pair.Key, pair.Value));
 
         var steps = Uninstall.Plan(levels, talentId => topLevels.TryGetValue(talentId, out var top) ? top : 0, (talentId, lv) => config.GetTalentConfig(talentId, lv)?._LvUpCost_k__BackingField ?? 0);
+
+        Gate.Done();
 
         if (steps.Reverts.Count == 0) return;
 

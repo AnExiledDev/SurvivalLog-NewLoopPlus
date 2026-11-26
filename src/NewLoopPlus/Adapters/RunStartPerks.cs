@@ -14,8 +14,8 @@ namespace NewLoopPlus.Adapters;
 /// Scout's Notes marks trading posts as already found. Each is done once per run: the run's own counters (GameCounter,
 /// saved with the run) say it was, so a reload does not do it again. A run counts as started a few seconds after it has
 /// loaded and the clock runs, so the game's start-of-run levels and tags are in first. The tutorial is left alone.
-/// While a run goes on, its skill levels are written to <see cref="MuscleMemory"/>'s file whenever they change, for
-/// the next run to read.
+/// While a run goes on, its skill levels are written to <see cref="MuscleMemory"/>'s file under the save's name
+/// whenever they change, for the next run in that save to read.
 /// </summary>
 internal sealed class RunStartPerks
 {
@@ -28,8 +28,9 @@ internal sealed class RunStartPerks
     private readonly Action<string> _log;
     private readonly HashSet<string> _reportedFailures = new();
     private Dictionary<int, int> _recorded = new();
-    private float _nextCheckAt;
-    private float? _readySince;
+    private string? _recordedSave;
+    private double _nextCheckAt;
+    private double? _readySince;
 
     public RunStartPerks(string levelsPath, Action<string> log)
     {
@@ -37,7 +38,7 @@ internal sealed class RunStartPerks
         _log = log;
     }
 
-    public void Tick(float now)
+    public void Tick(double now)
     {
         if (now < _nextCheckAt) return;
 
@@ -93,9 +94,9 @@ internal sealed class RunStartPerks
         var share = Perks.Share(NlpEffect.MuscleMemory);
         var skills = world._ProficiencyManager;
 
-        if (share <= 0 || skills == null || !File.Exists(_levelsPath)) return;
+        if (share <= 0 || skills == null || SaveName() is not { } save || !File.Exists(_levelsPath)) return;
 
-        var last = MuscleMemory.Parse(File.ReadAllText(_levelsPath));
+        var last = MuscleMemory.ParseFor(File.ReadAllText(_levelsPath), save);
         var raised = new List<string>();
 
         foreach (var skill in MuscleMemory.Skills)
@@ -151,7 +152,13 @@ internal sealed class RunStartPerks
     {
         var skills = world._ProficiencyManager;
 
-        if (skills == null) return;
+        if (skills == null || SaveName() is not { } save) return;
+
+        if (save != _recordedSave)
+        {
+            _recordedSave = save;
+            _recorded = new Dictionary<int, int>();
+        }
 
         var levels = new Dictionary<int, int>();
 
@@ -161,7 +168,9 @@ internal sealed class RunStartPerks
 
         try
         {
-            File.WriteAllText(_levelsPath, MuscleMemory.Format(levels));
+            var text = File.Exists(_levelsPath) ? File.ReadAllText(_levelsPath) : "";
+
+            File.WriteAllText(_levelsPath, MuscleMemory.FormatFor(text, save, levels));
             _recorded = levels;
         }
         catch (Exception ex)
@@ -169,6 +178,9 @@ internal sealed class RunStartPerks
             Report("recording skill levels", ex);
         }
     }
+
+    /// <summary>The loaded save's file name, which a new loop keeps; null with no save loaded.</summary>
+    private static string? SaveName() => GameSingleton.Existing<GameSaveManager>()?.GetGameSave()?.FileName is { Length: > 0 } name ? name : null;
 
     private static bool IsSame(Dictionary<int, int> a, Dictionary<int, int> b)
     {

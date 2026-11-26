@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using ExiledToolkit.Game;
+using ExiledToolkit.Kit;
 using ExiledToolkit.Web;
 using NewLoopPlus.Core;
 using UnityEngine;
@@ -36,7 +37,7 @@ public sealed class EndRunTicker : MonoBehaviour
 
         try
         {
-            Page.KeepInstalled(Time.unscaledTime);
+            Page.KeepInstalled(Clock.Now);
             TakePageCommands(Flow, Page);
 
             if (IsAskPending)
@@ -45,7 +46,7 @@ public sealed class EndRunTicker : MonoBehaviour
                 Flow.Ask();
             }
 
-            Flow.Tick(Time.unscaledTime);
+            Flow.Tick(Clock.Now);
         }
         catch (Exception ex)
         {
@@ -65,7 +66,7 @@ public sealed class EndRunTicker : MonoBehaviour
                     flow.Ask();
                     break;
                 case PageCommand.End:
-                    flow.Confirm(Time.unscaledTime);
+                    flow.Confirm(Clock.Now);
                     break;
                 case PageCommand.Ready:
                     Log("page script is running");

@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.12.5
+
+- Muscle Memory keeps the skill levels for each save on its own, so a run in one save no longer changes what another save's next run starts with.
+- The mod now checks the game's tables only when a setting changes, a run starts or loads, or the game saves. It used to check every second.
+- Made for Survival Log 1.1.21671.
+
 ## 0.12.4
 
 - If a game update breaks the loan, exposure or travel time rewards, the mod now logs it and the game carries on as if the reward were not there.

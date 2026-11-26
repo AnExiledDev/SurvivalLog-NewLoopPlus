@@ -17,7 +17,7 @@ namespace NewLoopPlus;
 public sealed class Plugin : BasePlugin
 {
     internal const string Guid = "com.dev.survivallog.newloopplus";
-    private const string Version = "0.12.4";
+    private const string Version = "0.12.5";
 
     /// <summary>Exiled's Toolkit: its shared helpers, toasts, live settings and the End Run button's place in the pause menu all come from it.</summary>
     private const string ToolkitGuid = "com.dev.survivallog.exiledtoolkit";
@@ -55,6 +55,7 @@ public sealed class Plugin : BasePlugin
         LuckyFinds.Apply(hooks);
         Tinkerer.Apply(hooks, log.Write);
         MentalToughnessUses.Apply(hooks, log.Write);
+        TableWakes.Apply(hooks);
         ExploreTravelHooks.Prepare(hooks);
         LoanTierHooks.Prepare(hooks);
         EndlessRewardsSetting.On = BindEndlessEverywhere().Value;

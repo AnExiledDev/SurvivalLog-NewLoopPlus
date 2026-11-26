@@ -48,7 +48,7 @@ public sealed class EndRun
     private readonly IRunGame _game;
     private readonly IRunPage _page;
     private readonly Action<string> _log;
-    private float? _giveUpAt;
+    private double? _giveUpAt;
 
     public EndRun(IRunGame game, IRunPage page, Action<string> log)
     {
@@ -78,7 +78,7 @@ public sealed class EndRun
         _page.ShowConfirm(Dialog(isChinese));
     }
 
-    public void Confirm(float now)
+    public void Confirm(double now)
     {
         if (IsEnding) return;
 
@@ -95,7 +95,7 @@ public sealed class EndRun
     }
 
     /// <summary>Runs once a frame; ends the run on the first frame the clock runs after a confirm.</summary>
-    public void Tick(float now)
+    public void Tick(double now)
     {
         if (_giveUpAt is not { } giveUpAt) return;
 

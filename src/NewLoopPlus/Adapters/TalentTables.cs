@@ -26,7 +26,7 @@ internal sealed class TalentTables
     private readonly Action<string> _log;
     private readonly bool _endlessEverywhere;
     private (IntPtr Talents, IntPtr Buffs, IntPtr Effects) _applied;
-    private float _nextCheckAt;
+    private readonly WakeGate _wake = new(CheckSeconds);
 
     public TalentTables(TalentFile file, TalentsTab tab, Action<string> log, bool endlessEverywhere)
     {
@@ -36,11 +36,9 @@ internal sealed class TalentTables
         _endlessEverywhere = endlessEverywhere;
     }
 
-    public void Tick(float now)
+    public void Tick(double now)
     {
-        if (now < _nextCheckAt) return;
-
-        _nextCheckAt = now + CheckSeconds;
+        if (!_wake.IsDue(now, ScaleTicker.Wakes)) return;
 
         var config = GameSingleton.Existing<ConfigManager>();
         var talents = config?._Config_Talent_Dict;
@@ -55,7 +53,12 @@ internal sealed class TalentTables
 
         var tables = (talents.Pointer, buffs.Pointer, effects.Pointer);
 
-        if (tables == _applied) return;
+        if (tables == _applied)
+        {
+            _wake.Done();
+
+            return;
+        }
 
         _applied = tables;
 
@@ -106,6 +109,8 @@ internal sealed class TalentTables
         Perks.Grants = plan.Grants;
         _tab.Started(game, index.Scripts, ItemIcons(config), problems);
         Report(plan, problems);
+        _wake.Done();
+        ScaleTicker.Wake();
     }
 
     /// <summary>

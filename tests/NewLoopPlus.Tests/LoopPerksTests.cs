@@ -184,6 +184,27 @@ public class MuscleMemoryTests
     }
 
     [Fact]
+    public void Each_save_brings_back_its_own_levels()
+    {
+        var text = MuscleMemory.FormatFor("", "Save_A", new Dictionary<int, int> { [1] = 9 });
+
+        text = MuscleMemory.FormatFor(text, "Save_B", new Dictionary<int, int> { [1] = 2, [3] = 4 });
+        text = MuscleMemory.FormatFor(text, "Save_A", new Dictionary<int, int> { [1] = 10 });
+
+        Assert.Equal(new Dictionary<int, int> { [1] = 10 }, MuscleMemory.ParseFor(text, "Save_A"));
+        Assert.Equal(new Dictionary<int, int> { [1] = 2, [3] = 4 }, MuscleMemory.ParseFor(text, "Save_B"));
+    }
+
+    [Fact]
+    public void A_save_with_no_lines_of_its_own_reads_the_lines_from_before_saves_were_told_apart()
+    {
+        var text = MuscleMemory.FormatFor("1=6\n2=5\n", "Save_A", new Dictionary<int, int> { [1] = 3 });
+
+        Assert.Equal(new Dictionary<int, int> { [1] = 6, [2] = 5 }, MuscleMemory.ParseFor(text, "Save_B"));
+        Assert.Equal(new Dictionary<int, int> { [1] = 3 }, MuscleMemory.ParseFor(text, "Save_A"));
+    }
+
+    [Fact]
     public void A_line_that_is_not_a_known_skill_and_level_is_skipped()
     {
         var levels = MuscleMemory.Parse("1=3\r\n9=5\ngarbage\n2=-1\n3=x\n4=2");

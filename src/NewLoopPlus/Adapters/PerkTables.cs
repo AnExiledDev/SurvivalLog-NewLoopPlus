@@ -24,7 +24,7 @@ internal sealed class PerkTables
     private readonly ScaledValues<string, float> _multiPot;
     private readonly ScaledValues<int, int> _vehiclePrice;
     private Amounts _amounts = default;
-    private float _nextCheckAt;
+    private readonly WakeGate _wake = new(CheckSeconds);
 
     public PerkTables(Action<string> log)
     {
@@ -34,16 +34,19 @@ internal sealed class PerkTables
         _multiPot = new ScaledValues<string, float>((_, level) => PerkSettings.MultiPotLevel(level, _amounts.LevelsSooner));
     }
 
-    public void Tick(float now)
+    public void Tick(double now)
     {
-        if (now < _nextCheckAt) return;
-
-        _nextCheckAt = now + CheckSeconds;
+        if (!_wake.IsDue(now, ScaleTicker.Wakes)) return;
 
         LoanTierHooks.Use(Perks.Level(LoanTierHooks.TalentId));
 
         // With neither effect offered and nothing written, the game's values stand and there is nothing to check.
-        if (!IsAnyOffered() && _amounts == default) return;
+        if (!IsAnyOffered() && _amounts == default)
+        {
+            _wake.Done();
+
+            return;
+        }
 
         var amounts = new Amounts(Perks.Whole(NlpEffect.DronePilot), Perks.Whole(NlpEffect.FamilyRecipe), (int)Math.Round(Perks.Value(NlpEffect.FamilyRecipe, NlpPerks.SecondWhole)),
             Perks.Whole(NlpEffect.GoodNeighbor), Math.Round(Perks.Share(NlpEffect.VehicleDiscount), 4), Perks.Whole(NlpEffect.MaxExposure), Math.Round(Perks.Share(NlpEffect.TravelTime), 4), Math.Round(Perks.Share(NlpEffect.DroneSpeed), 4));
@@ -75,6 +78,8 @@ internal sealed class PerkTables
         VehiclePrices(config);
 
         if (MultiPot(config) is { } level && GameCache.Next(GameKey._GlobalSetting_CookingMultiPot_UnlockLevel, level) is { } cachedLevel) GameKey._GlobalSetting_CookingMultiPot_UnlockLevel = cachedLevel;
+
+        if (config._Config_GlobalSetting_Dict is { Count: > 0 }) _wake.Done();
     }
 
     /// <summary>Writes a Params1 setting; returns the value it should hold, or null before the table is loaded.</summary>

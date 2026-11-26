@@ -21,7 +21,7 @@ internal sealed class DoorWindowReinforcement
 
     private readonly IReadOnlyList<IReadOnlyList<ReinforceRule>> _groups;
     private readonly Action<string> _log;
-    private float _nextCheckAt;
+    private double _nextCheckAt;
 
     public DoorWindowReinforcement(IReadOnlyList<IReadOnlyList<ReinforceRule>> groups, Action<string> log)
     {
@@ -29,7 +29,7 @@ internal sealed class DoorWindowReinforcement
         _log = log;
     }
 
-    public void Tick(float now)
+    public void Tick(double now)
     {
         if (now < _nextCheckAt) return;
 

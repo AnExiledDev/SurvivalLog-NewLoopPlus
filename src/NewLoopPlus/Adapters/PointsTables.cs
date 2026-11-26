@@ -28,7 +28,7 @@ internal sealed class PointsTables
     private readonly ScaledValues<string, int> _endlessGrant;
     private PointsMultipliers _settings = PointsMultipliers.None;
     private PointsMultipliers _multipliers = PointsMultipliers.None;
-    private float _nextCheckAt;
+    private readonly WakeGate _wake = new(CheckSeconds);
 
     public PointsTables(Action<string> log)
     {
@@ -39,18 +39,16 @@ internal sealed class PointsTables
         _endlessGrant = new ScaledValues<string, int>((_, belief) => _multipliers.EndlessGrant(belief));
     }
 
-    /// <summary>Takes the settings' multipliers; the next check writes them, and checks again at once.</summary>
+    /// <summary>Takes the settings' multipliers; the next check writes them. Safe from any thread.</summary>
     public void Use(PointsMultipliers multipliers)
     {
         _settings = multipliers;
-        _nextCheckAt = 0;
+        ScaleTicker.Wake();
     }
 
-    public void Tick(float now)
+    public void Tick(double now)
     {
-        if (now < _nextCheckAt) return;
-
-        _nextCheckAt = now + CheckSeconds;
+        if (!_wake.IsDue(now, ScaleTicker.Wakes)) return;
 
         var multipliers = _settings.WithCrisisBonus(Perks.Share(NlpEffect.CrisisVeteran));
 
@@ -64,6 +62,8 @@ internal sealed class PointsTables
         ScaleRecordReward(config);
         ScaleEventRewards(config);
         ScaleEndlessGrant(config);
+
+        if (config._Config_GlobalSetting_Dict is { Count: > 0 } && config._Config_RewardSet_Dict is { Count: > 0 }) _wake.Done();
     }
 
     /// <summary>Every value is scaled again from the game's on this check.</summary>
