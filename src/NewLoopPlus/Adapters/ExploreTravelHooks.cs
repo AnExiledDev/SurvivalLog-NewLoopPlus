@@ -1,3 +1,4 @@
+using System;
 using ExiledToolkit.Game;
 using GameCore.HotUpdate;
 using GameCore.HotUpdate.Battle.Logic;
@@ -53,15 +54,25 @@ internal static class ExploreTravelHooks
 
     private static void AfterExposureBonus(ref int __result)
     {
-        if (ExposureAdded <= 0) return;
-
-        __result = PerkSettings.ExposureBonus(__result, ExposureAdded);
+        try
+        {
+            if (ExposureAdded > 0) __result = PerkSettings.ExposureBonus(__result, ExposureAdded);
+        }
+        catch (Exception ex)
+        {
+            _hooks?.Fail("adding to the max exposure", ex);
+        }
     }
 
     private static void AfterTimeCoeff(ref float __result)
     {
-        if (TravelCut <= 0) return;
-
-        __result = PerkSettings.TravelCoeff(__result, TravelCut);
+        try
+        {
+            if (TravelCut > 0) __result = PerkSettings.TravelCoeff(__result, TravelCut);
+        }
+        catch (Exception ex)
+        {
+            _hooks?.Fail("cutting the travel time", ex);
+        }
     }
 }

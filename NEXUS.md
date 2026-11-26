@@ -40,7 +40,7 @@ Works in English and Chinese.
 
 [size=5]Requirements[/size]
 [list]
-[*]Survival Log 1.1.21271. A game update can break it until the mod is updated.[/*]
+[*]Survival Log 1.1.21671. A game update can break it until the mod is updated.[/*]
 [*][url=https://www.nexusmods.com/survivallog/mods/12]BepInEx for Survival Log[/url]. Install it first.[/*]
 [*][url=https://www.nexusmods.com/survivallog/mods/61]Exiled's Toolkit[/url] 0.30.0 or newer. New Loop Plus does not load without it. It shows New Loop Plus's messages as toasts and applies the points multipliers and the starting bonus changed on the Mod Manager's Mods screen without a restart. Cost settings always apply at the next game start.[/*]
 [*]Optional: Mod Manager 0.7.0 or newer, for the Talents tab. Without it, edit the talents file by hand.[/*]
@@ -106,7 +106,7 @@ Open source under MIT: [url=https://github.com/AnExiledDev/SurvivalLog-NewLoopPl
 
 [size=5]前置要求[/size]
 [list]
-[*]Survival Log 1.1.21271。游戏更新后模组可能暂时失效，直到模组更新为止。[/*]
+[*]Survival Log 1.1.21671。游戏更新后模组可能暂时失效，直到模组更新为止。[/*]
 [*][url=https://www.nexusmods.com/survivallog/mods/12]BepInEx for Survival Log[/url]，请先安装。[/*]
 [*][url=https://www.nexusmods.com/survivallog/mods/61]Exiled's Toolkit[/url] 0.30.0 或更新版本。没有它本模组不会加载。它把 New Loop Plus 的消息显示为弹出通知，并让在 Mod Manager 的「模组」界面改动的信念点倍数和开局奖励无需重启游戏即可生效。消耗相关的设置始终在下次启动游戏时生效。[/*]
 [*]可选：Mod Manager 0.7.0 或更新版本，用于「天赋」页。没装的话，可以手动编辑天赋文件。[/*]

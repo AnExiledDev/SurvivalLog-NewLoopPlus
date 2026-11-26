@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.12.4
+
+- If a game update breaks the loan, exposure or travel time rewards, the mod now logs it and the game carries on as if the reward were not there.
+- Made for Survival Log 1.1.21671.
+
 ## 0.12.3
 
 - Talents tab: every effect the game's rewards use has a name now, with boxes that say what each number does.

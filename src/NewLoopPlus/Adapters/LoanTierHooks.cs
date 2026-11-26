@@ -1,3 +1,4 @@
+using System;
 using ExiledToolkit.Game;
 using GameCore.HotUpdate;
 using GameCore.HotUpdate.Battle.Logic;
@@ -43,18 +44,32 @@ internal static class LoanTierHooks
 
     private static void BeforeShownBonus(ref int __0)
     {
-        __0 = PerkSettings.LoanLevel(__0, Owned);
+        try
+        {
+            __0 = PerkSettings.LoanLevel(__0, Owned);
+        }
+        catch (Exception ex)
+        {
+            _hooks?.Fail("showing the loan bonus", ex);
+        }
     }
 
     private static void AfterTierBonus(int __0, ref int __result)
     {
-        if (Owned <= PerkSettings.PhoneLoanLevels || __0 < 4 || __0 > 6) return;
+        try
+        {
+            if (Owned <= PerkSettings.PhoneLoanLevels || __0 < 4 || __0 > 6) return;
 
-        var config = GameSingleton.Existing<ConfigManager>();
-        var talent = config?.GetTalentConfig(TalentId, PerkSettings.LoanLevel(__0 - 3, Owned));
-        var buff = talent == null || talent._BuffID_k__BackingField <= 0 ? null : config!.Get_Config_Buff(talent._BuffID_k__BackingField);
-        var effect = buff == null || buff._EffectConfigId_k__BackingField <= 0 ? null : config!.Get_Config_Effect(buff._EffectConfigId_k__BackingField);
+            var config = GameSingleton.Existing<ConfigManager>();
+            var talent = config?.GetTalentConfig(TalentId, PerkSettings.LoanLevel(__0 - 3, Owned));
+            var buff = talent == null || talent._BuffID_k__BackingField <= 0 ? null : config!.Get_Config_Buff(talent._BuffID_k__BackingField);
+            var effect = buff == null || buff._EffectConfigId_k__BackingField <= 0 ? null : config!.Get_Config_Effect(buff._EffectConfigId_k__BackingField);
 
-        if (effect != null) __result = effect._IntValue0_k__BackingField;
+            if (effect != null) __result = effect._IntValue0_k__BackingField;
+        }
+        catch (Exception ex)
+        {
+            _hooks?.Fail("reading the loan bonus", ex);
+        }
     }
 }
